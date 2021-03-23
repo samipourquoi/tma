@@ -1,0 +1,8 @@
+# build
+dist
+.cache
+node_modules
+
+# editors
+.idea
+.vscode
