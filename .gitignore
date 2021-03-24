@@ -3,7 +3,6 @@ dist
 .cache
 .next
 node_modules
-next-env.d.ts
 
 # editors
 .idea

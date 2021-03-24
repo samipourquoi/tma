@@ -1,0 +1,11 @@
+{
+	"name": "romeo",
+	"description": "Version-independent litematics.",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "test",
+		"start": "test"
+	},
+	"dependencies": {
+	}
+}
