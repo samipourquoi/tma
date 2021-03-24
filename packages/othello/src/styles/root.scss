@@ -1,0 +1,10 @@
+@use "abstracts/colors" as *;
+
+:root {
+  --cl-constrast-300: #{$white};
+  --cl-constrast-400: #{$light-gray};
+  --cl-constrast-500: #{$gray};
+  --cl-constrast-600: #{$dark-gray};
+  --cl-constrast-700: #{$very-dark-gray};
+  --cl-constrast-800: #{$black};
+}

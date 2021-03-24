@@ -1,0 +1,20 @@
+.header-link {
+  font-size: 1.8rem;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  margin: 1em 0;
+  color: var(--cl-constrast-600);
+
+  &:hover {
+    color: var(--cl-constrast-700);
+  }
+
+  .material-icon {
+    color: inherit;
+  }
+
+  .name {
+    margin-left: 1ch;
+  }
+}

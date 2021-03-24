@@ -1,0 +1,38 @@
+@use "../abstracts/fonts";
+@use "../abstracts/colors";
+
+header {
+  @import "header/profile-picture";
+  @import "header/search-bar";
+  @import "header/tag-list";
+
+  background: var(--cl-constrast-400);
+  max-width: 25rem;
+  min-height: 100vh;
+  font-family: fonts.$default;
+
+  > * {
+    padding: 10px 30px;
+  }
+
+  .header-links {
+    @import "header/header-link";
+
+    padding-top: 0;
+  }
+
+  .section {
+    border-top: 1px solid colors.$gray;
+
+    @each $face in [top, bottom] {
+      padding-#{$face}: 3.2rem;
+    }
+
+    h1 {
+      color: var(--cl-constrast-600);
+      font-weight: 400;
+      margin: 0 0 1.2rem;
+      font-size: 2.2rem;
+    }
+  }
+}

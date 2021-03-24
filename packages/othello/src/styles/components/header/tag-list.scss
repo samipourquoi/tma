@@ -1,0 +1,22 @@
+.tag-list {
+  list-style: none;
+  padding: 0;
+  color: var(--cl-constrast-600);
+  font-size: 1.8rem;
+  font-weight: 300;
+
+  :hover {
+    color: var(--cl-constrast-700);
+  }
+
+  li {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .tag-name {
+    margin-left: 1ch;
+  }
+}
