@@ -1,3 +1,5 @@
+// I really hate this file, I need to refactor this.
+
 @use "../abstracts/colors";
 
 .table {
@@ -27,7 +29,8 @@
     border: 2px solid #d1d1d1;
 
     &:nth-child(#{$author-row-index}) {
-      width: 16%;
+      width: 12%;
+      text-overflow: ellipsis;
     }
 
     &:nth-child(#{$title-row-index}) {
@@ -35,6 +38,10 @@
     }
 
     &:nth-child(#{$version-row-index}) {
+      width: 10%;
+    }
+
+    &:nth-child(#{$date-row-index}) {
       width: 10%;
     }
   }
@@ -66,4 +73,9 @@
 
   th:first-child   { border-left:   none; }
   th:last-child    { border-right:  none; }
+
+  .row-id {
+    color: var(--cl-constrast-500);
+    margin-right: 1rem;
+  }
 }

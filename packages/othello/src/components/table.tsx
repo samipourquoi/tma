@@ -43,7 +43,7 @@ export default function Table({ rows }: TableProps) {
                 <span className="tags">{row.tags}</span>
               </th>
               <th>{row.version}</th>
-              <th>{row.date.toDateString()}</th>
+              <th>{formatDate(row.date)}</th>
             </tr>
           ) : (
             <tr key={i}>
@@ -57,4 +57,16 @@ export default function Table({ rows }: TableProps) {
       </table>
     </div>
   )
+}
+
+function formatDate(timestamp: Date | number):
+  string
+{
+  const date = new Date(timestamp);
+  let year = date.getFullYear();
+  let month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : "0" + month;
+  let day = date.getDate().toString();
+  day = day.length > 1 ? day : "0" + day;
+  return day + "/" + month + "/" + year;
 }
