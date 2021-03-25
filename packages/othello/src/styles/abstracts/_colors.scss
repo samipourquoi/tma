@@ -4,3 +4,14 @@ $gray: #bcbcbc;
 $dark-gray: #969696;
 $very-dark-gray: #4c4c4c;
 $black: #1c1c1c;
+
+$tags: (
+  redstone: #f29ea0,
+  slimestone: #b0d9af,
+  storage: #46504e,
+  farms: #f1e0a4,
+  mob-farms: #aeb2d7,
+  bedrock: $very-dark-gray,
+  computational: orange,
+  other: #d5d9d5
+);

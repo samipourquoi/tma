@@ -1,0 +1,17 @@
+@use "../abstracts/colors";
+
+.tag {
+  border-radius: 1em;
+  color: var(--cl-constrast-300);
+  padding: 0.2rem 1rem;
+  margin-left: 10px;
+  background: map-get(colors.$tags, "other");
+  font-weight: 300 !important;
+  font-size: 0.9em;
+}
+
+@each $type, $color in colors.$tags {
+  .#{$type}-tag {
+    background: $color;
+  }
+}
