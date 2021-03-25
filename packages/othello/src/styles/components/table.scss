@@ -14,8 +14,14 @@
     border-collapse: collapse;
   }
 
-  tbody * { font-weight: 400; }
-  thead * { font-weight: 500; }
+  tbody * {
+    font-weight: 300;
+    color: var(--cl-constrast-600);
+  }
+
+  thead * {
+    font-weight: 400;
+  }
 
   th {
     border: 2px solid #d1d1d1;

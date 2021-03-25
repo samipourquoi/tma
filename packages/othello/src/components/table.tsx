@@ -6,6 +6,7 @@ export interface Row {
   version: string,
   tags: React.ReactNode,
   date: Date,
+  id: number
 }
 
 interface TableProps {
@@ -21,17 +22,22 @@ export default function Table({ rows }: TableProps) {
     <div className="table">
       <table>
         <thead>
-        <tr>
-          <th>Author</th>
-          <th>Title</th>
-          <th>Version</th>
-          <th>Date</th>
-        </tr>
+          <tr>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Version</th>
+            <th>Date</th>
+          </tr>
         </thead>
         <tbody>
-          {rows.map(row => row ? (
-            <tr>
-              <th>{row.author}</th>
+          {rows.map((row,i) => row ? (
+            <tr key={i}>
+              <th>
+                <span className="row-id">
+                  #{row.id}
+                </span>
+                {row.author}
+                </th>
               <th>
                 {row.title}
                 <span className="tags">{row.tags}</span>
@@ -39,7 +45,14 @@ export default function Table({ rows }: TableProps) {
               <th>{row.version}</th>
               <th>{row.date.toDateString()}</th>
             </tr>
-          ) : <tr>{new Array(4).fill(<th/>)}</tr>)}
+          ) : (
+            <tr key={i}>
+              <th/>
+              <th/>
+              <th/>
+              <th/>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

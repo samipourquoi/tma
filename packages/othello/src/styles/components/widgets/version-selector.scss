@@ -1,0 +1,9 @@
+@use "widget" as *;
+
+.version-selector {
+  @extend %widget;
+
+  .text-display {
+    margin-right: 0;
+  }
+}

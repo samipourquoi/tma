@@ -10,7 +10,7 @@ export default function SearchBar() {
     "Chunk loader",
     "Villager hall"
   ];
-  const placeholder = `${placeholders[Math.round(Math.random() * placeholders.length)]}...`;
+  const placeholder = `${placeholders[new Date().getMinutes() % placeholders.length]}...`;
 
   return (
     <div className="search-bar">

@@ -2,3 +2,17 @@
   overflow: scroll;
   height: 100vh;
 }
+
+.layout-text {
+  display: flex;
+}
+
+.desc {
+  display: inline-block;
+}
+
+.desc-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

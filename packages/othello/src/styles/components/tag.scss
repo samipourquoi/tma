@@ -2,7 +2,7 @@
 
 .tag {
   border-radius: 1em;
-  color: var(--cl-constrast-300);
+  color: var(--cl-constrast-300) !important;
   padding: 0.2rem 1rem;
   margin-left: 10px;
   background: map-get(colors.$tags, "other");

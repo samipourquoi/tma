@@ -3,6 +3,7 @@ import Layout from "../components/layout";
 import Table, { Row } from "../components/table";
 import styles from "../styles/pages/archive.module.scss";
 import Tag from "../components/tag";
+import VersionSelector from "../components/widgets/version-selector";
 
 export default function ArchivePage() {
   const rows: Row[] = [
@@ -16,7 +17,8 @@ export default function ArchivePage() {
           <Tag type="farms"/>
           <Tag type="redstone"/>
         </>
-      )
+      ),
+      id: 1
     },
   ];
 
@@ -25,10 +27,16 @@ export default function ArchivePage() {
       <div className={styles["table-container"]}>
         <div className="layout-text">
           <h1>📖 Archive</h1>
-          <p>TMA is a place to archive Minecraft contraptions for Technical gameplay.</p>
+
+          <div className={styles["desc-container"]}>
+            <p className={styles["desc"]}>
+              TMA is a place to archive Minecraft contraptions for Technical gameplay.
+            </p>
+            <VersionSelector/>
+          </div>
         </div>
 
-          <Table rows={rows}/>
+        <Table rows={rows}/>
       </div>
     </Layout>
   );
