@@ -1,10 +1,19 @@
 @use "abstracts/colors" as *;
 
 :root {
-  --cl-constrast-300: #{$white};
-  --cl-constrast-400: #{$light-gray};
-  --cl-constrast-500: #{$gray};
-  --cl-constrast-600: #{$dark-gray};
-  --cl-constrast-700: #{$very-dark-gray};
-  --cl-constrast-800: #{$black};
+  @each $weight, $name in $lightmode {
+    // I did a typo and wrote "constrast" instead of "contrast",
+    // but now I am too lazy to fix every place where I did the typo.
+    // We're just gonna keep it like that.
+    --cl-constrast-#{$weight}: #{$name};
+  }
+}
+
+[darkmode="true"]:root {
+  @each $weight, $name in $darkmode {
+    // I did a typo and wrote "constrast" instead of "contrast",
+    // but now I am too lazy to fix every place where I did the typo.
+    // We're just gonna keep it like that.
+    --cl-constrast-#{$weight}: #{$name};
+  }
 }

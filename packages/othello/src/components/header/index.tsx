@@ -2,6 +2,7 @@ import ProfilePicture from "./profile-picture";
 import SearchBar from "./search-bar";
 import TagList from "./tag-list";
 import HeaderLink from "./header-link";
+import { LightsButton } from "./lights-button";
 
 export default function Header() {
   return (
@@ -23,6 +24,8 @@ export default function Header() {
         <h1>Tags</h1>
         <TagList/>
       </div>
+
+      <LightsButton/>
     </header>
   );
 }
