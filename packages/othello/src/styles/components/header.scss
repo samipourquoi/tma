@@ -7,7 +7,7 @@ header {
   @import "header/tag-list";
 
   background: var(--cl-constrast-400);
-  max-width: 25rem;
+  min-width: 25rem;
   min-height: 100vh;
   font-family: fonts.$default;
 

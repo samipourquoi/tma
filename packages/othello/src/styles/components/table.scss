@@ -1,0 +1,52 @@
+@use "../abstracts/colors";
+
+.table {
+  $author-row-index:  1;
+  $title-row-index:   2;
+  $version-row-index: 3;
+  $date-row-index:    4;
+
+  margin-top: 7rem;
+
+  table {
+    width: 100%;
+
+    border-collapse: collapse;
+  }
+
+  tbody * { font-weight: 400; }
+  thead * { font-weight: 500; }
+
+  th {
+    border: 1px solid colors.$gray;
+
+    &:nth-child(#{$title-row-index}) {
+      width: 50%;
+    }
+
+    &:nth-child(#{$version-row-index}) {
+      width: 10%;
+    }
+  }
+
+  tr {
+    height: 4rem;
+
+    &:nth-child(2n) {
+      background: var(--cl-constrast-400);
+    }
+  }
+
+  tbody th {
+    text-align: left;
+
+    &:nth-child(#{$title-row-index}) {
+      text-align: left;
+      padding-left: 3rem;
+    }
+  }
+
+  tr:last-child th { border-bottom: none; }
+  th:first-child   { border-left:   none; }
+  th:last-child    { border-right:  none; }
+}

@@ -1,0 +1,28 @@
+@use "../abstracts/fonts";
+
+.layout {
+  display: flex;
+  background: var(--cl-constrast-400);
+}
+
+.layout-content {
+  margin-left: auto;
+  width: 100%;
+  font-size: 1.8rem;
+  background: var(--cl-constrast-300);
+  border-radius: 40px 0 0 40px;
+  font-family: fonts.$default;
+  font-weight: 300;
+  color: var(--cl-constrast-700);
+
+  h1 {
+    margin: 0;
+    font-size: 4.4rem;
+    font-weight: 400;
+    color: var(--cl-constrast-800);
+  }
+}
+
+.layout-text {
+  padding: 6.5rem 7.5rem 0;
+}
