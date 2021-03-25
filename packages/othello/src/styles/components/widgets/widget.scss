@@ -1,9 +1,13 @@
 %widget {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 20px;
   background: var(--cl-constrast-400);
-  padding: .4rem 1.8rem;
+  padding: 1rem 1.8rem;
   color: var(--cl-constrast-800);
   box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+  height: 50px;
 
   .text-display {
     $spacing: .3em;

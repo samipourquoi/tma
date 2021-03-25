@@ -1,5 +1,3 @@
-import TextDisplay from "./text-display";
-
 export default function VersionSelector() {
   return (
     <label className="version-selector">
@@ -14,7 +12,6 @@ export default function VersionSelector() {
         <option>1.16</option>
         <option>1.17</option>
       </select>
-      {/*Version <TextDisplay display="any"/>*/}
     </label>
   )
 }

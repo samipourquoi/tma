@@ -15,4 +15,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .desc-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > * {
+      margin: .5rem 1rem;
+    }
+  }
 }

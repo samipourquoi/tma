@@ -4,6 +4,7 @@ import Table, { Row } from "../components/table";
 import styles from "../styles/pages/archive.module.scss";
 import Tag from "../components/tag";
 import VersionSelector from "../components/widgets/version-selector";
+import PageSelector from "../components/widgets/page-selector";
 
 export default function ArchivePage() {
   const rows: Row[] = [
@@ -32,7 +33,11 @@ export default function ArchivePage() {
             <p className={styles["desc"]}>
               TMA is a place to archive Minecraft contraptions for Technical gameplay.
             </p>
-            <VersionSelector/>
+
+            <div className={styles["desc-buttons"]}>
+              <VersionSelector/>
+              <PageSelector pageAmount={10}/>
+            </div>
           </div>
         </div>
 
