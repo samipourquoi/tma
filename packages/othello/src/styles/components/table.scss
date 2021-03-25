@@ -18,7 +18,11 @@
   thead * { font-weight: 500; }
 
   th {
-    border: 1px solid colors.$gray;
+    border: 2px solid #d1d1d1;
+
+    &:nth-child(#{$author-row-index}) {
+      width: 16%;
+    }
 
     &:nth-child(#{$title-row-index}) {
       width: 50%;
@@ -32,21 +36,28 @@
   tr {
     height: 4rem;
 
-    &:nth-child(2n) {
+    &:not(thead *):nth-child(2n-1) {
       background: var(--cl-constrast-400);
     }
   }
 
   tbody th {
     text-align: left;
+    border-bottom: none;
+    border-top: none;
+    padding: 0 2.5rem;
 
-    &:nth-child(#{$title-row-index}) {
-      text-align: left;
-      padding-left: 3rem;
+    &:nth-child(#{$author-row-index}) {
+      text-align: right;
+    }
+
+    &:nth-child(#{$version-row-index}),
+    &:nth-child(#{$date-row-index}) {
+      text-align: center;
+      padding: initial;
     }
   }
 
-  tr:last-child th { border-bottom: none; }
   th:first-child   { border-left:   none; }
   th:last-child    { border-right:  none; }
 }
