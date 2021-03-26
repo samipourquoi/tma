@@ -1,4 +1,6 @@
-import { TagType } from "othello/src/components/tag";
+export interface GET_Query_Archives {
+	page?: number
+}
 
 export interface GET_ArchiveEntryInfo {
 	author: string,
@@ -7,6 +9,10 @@ export interface GET_ArchiveEntryInfo {
 	tags: TagType[],
 	date: Date,
 	id: number
+}
+
+export interface POST_Archive {
+
 }
 
 export type TagType = "redstone"

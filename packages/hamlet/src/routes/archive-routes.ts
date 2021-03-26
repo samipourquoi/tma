@@ -3,7 +3,7 @@ import { ArchiveController } from "../controllers/archive-controller";
 
 export default Router()
 	.get("/", ArchiveController.index)
-	.get("/:id", ArchiveController.getPost)
-	.post("/:id", ArchiveController.createPost)
-	.patch("/:id", ArchiveController.updatePost)
-	.delete("/:id", ArchiveController.deletePost);
+	.get("/:id", ArchiveController.getArchive)
+	.post("/:id", ArchiveController.createArchive)
+	.patch("/:id", ArchiveController.updateArchive)
+	.delete("/:id", ArchiveController.deleteArchive);
