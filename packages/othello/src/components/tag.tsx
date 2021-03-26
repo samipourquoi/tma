@@ -1,12 +1,4 @@
-export type TagType = "redstone"
-  | "slimestone"
-  | "storage"
-  | "farms"
-  | "mob-farms"
-  | "bedrock"
-  | "computational"
-  | "other"
-  | string;
+import { TagType } from "hamlet/api";
 
 export interface TagProps {
   type: TagType
