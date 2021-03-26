@@ -1,13 +1,8 @@
 import React from "react";
+import Tag, { TagType } from "./tag";
+import { GET_ArchiveEntryInfo } from "hamlet/api";
 
-export interface Row {
-  author: string,
-  title: string,
-  version: string,
-  tags: React.ReactNode,
-  date: Date,
-  id: number
-}
+export type Row = GET_ArchiveEntryInfo;
 
 interface TableProps {
   rows: (Row | null)[]
@@ -30,7 +25,7 @@ export default function Table({ rows }: TableProps) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row,i) => row ? (
+          {rows.map((row, i) => row ? (
             <tr key={i}>
               <th>
                 <span className="row-id">
@@ -40,7 +35,11 @@ export default function Table({ rows }: TableProps) {
                 </th>
               <th>
                 {row.title}
-                <span className="tags">{row.tags}</span>
+                <span className="tags">
+                  {row.tags.map((tag, j) =>
+                    <Tag key={j} type={tag}/>
+                  )}
+                </span>
               </th>
               <th>{row.version}</th>
               <th>{formatDate(row.date)}</th>

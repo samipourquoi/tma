@@ -15,5 +15,9 @@
 
   .disabled-icon {
     color: var(--cl-constrast-600) !important;
+
+    &:hover {
+      cursor: not-allowed;
+    }
   }
 }

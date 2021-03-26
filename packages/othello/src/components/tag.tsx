@@ -1,4 +1,4 @@
-type TagType = "redstone"
+export type TagType = "redstone"
   | "slimestone"
   | "storage"
   | "farms"

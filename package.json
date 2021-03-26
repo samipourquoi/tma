@@ -6,6 +6,8 @@
 	"author": "samipourquoi",
 	"license": "MIT",
 	"scripts": {
+		"hamlet": "yarn workspace hamlet",
+		"othello": "yarn workspace othello",
 		"build": "yarn workspaces run build"
 	},
 	"workspaces": [ "packages/*" ]

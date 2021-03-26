@@ -2,27 +2,16 @@ import Header from "../components/header";
 import Layout from "../components/layout";
 import Table, { Row } from "../components/table";
 import styles from "../styles/pages/archive.module.scss";
-import Tag from "../components/tag";
 import VersionSelector from "../components/widgets/version-selector";
 import PageSelector from "../components/widgets/page-selector";
+import { GetServerSideProps, GetServerSidePropsResult } from "next";
+import { fetcher } from "../api";
 
-export default function ArchivePage() {
-  const rows: Row[] = [
-    {
-      title: "birch farm",
-      author: "samipourquoi",
-      date: new Date(1616710063557),
-      version: "1.16.2",
-      tags: (
-        <>
-          <Tag type="farms"/>
-          <Tag type="redstone"/>
-        </>
-      ),
-      id: 1
-    },
-  ];
+interface ArchivePageProps {
+  entries: Row[]
+}
 
+export default function ArchivePage({ entries: rows }: ArchivePageProps) {
   return (
     <Layout header>
       <div className={styles["table-container"]}>
@@ -45,4 +34,14 @@ export default function ArchivePage() {
       </div>
     </Layout>
   );
+}
+
+export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async context => {
+  const entries: Row[] = await fetcher("/api/archive");
+
+  return {
+    props: {
+      entries
+    }
+  }
 }
