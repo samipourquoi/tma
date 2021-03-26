@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { GET_ArchiveEntryInfo } from "../../api";
 
 export module ArchiveController {
 	export function index(req: Request, res: Response) {
@@ -11,7 +12,7 @@ export module ArchiveController {
 				tags: ["redstone"],
 				id: 1
 			},
-		]);
+		] as GET_ArchiveEntryInfo[]);
 	}
 
 	export function getPost(req: Request, res: Response) {
