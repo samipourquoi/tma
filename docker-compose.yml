@@ -2,16 +2,11 @@ version: "3.8"
 
 services:
   db:
-    image: mysql
-    command: >
-      --default-authentication-plugin=mysql_native_password
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
+    image: library/postgres:13-alpine
     restart: always
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 1
-      MYSQL_DATABASE: tmadb
-      MYSQL_USER: tma
-      MYSQL_PASSWORD: supersecret
+      POSTGRES_DB: tmadb
+      POSTGRES_USER: tma
+      POSTGRES_PASSWORD: supersecret
     ports:
-      - "3002:3306"
+      - "3002:5432"

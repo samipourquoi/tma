@@ -1,15 +1,19 @@
-export interface GET_Query_Archives {
+import { ArchiveAttributes } from "./src/models/archive-model";
+import { AuthorAttributes } from "./src/models/user-model";
+
+export interface GET_ArchivesQuery {
 	page?: number
 }
 
-export interface GET_ArchiveEntryInfo {
-	author: string,
-	title: string,
-	version: string,
-	tags: TagType[],
-	date: Date,
-	id: number
-}
+export type GET_ArchivesResult = {
+	archives: GET_ArchiveResult[],
+	amount: number
+};
+
+export type GET_ArchiveResult = ArchiveAttributes & {
+	createdAt: string,
+	author: AuthorAttributes
+};
 
 export interface POST_Archive {
 

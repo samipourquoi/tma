@@ -1,13 +1,14 @@
 import { useState } from "react";
 
 export interface PageSelectorProps {
-  pageAmount: number
+  pageAmount: number,
+  page: number,
+  setPage: (page: number) => void
 }
 
 export default function PageSelector(
-  { pageAmount }: PageSelectorProps
+  { pageAmount, page, setPage }: PageSelectorProps
 ) {
-  const [page, setPage] = useState(1);
   const isAtStart = page == 1;
   const isAtEnd   = page == pageAmount;
 

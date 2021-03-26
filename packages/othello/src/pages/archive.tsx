@@ -1,17 +1,26 @@
 import Header from "../components/header";
 import Layout from "../components/layout";
-import Table, { Row } from "../components/table";
+import Table from "../components/table";
 import styles from "../styles/pages/archive.module.scss";
 import VersionSelector from "../components/widgets/version-selector";
 import PageSelector from "../components/widgets/page-selector";
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
 import { fetcher } from "../api";
+import useSWR from "swr";
+import { GET_ArchivesResult } from "hamlet/api";
+import { useState } from "react";
 
 interface ArchivePageProps {
-  entries: Row[]
+  initialData: GET_ArchivesResult
 }
 
-export default function ArchivePage({ entries: rows }: ArchivePageProps) {
+export default function ArchivePage({ initialData }: ArchivePageProps) {
+  const [page, setPage] = useState(1);
+  const { data } = useSWR<GET_ArchivesResult>(
+    `/api/archive?page=${page-1}`,
+    fetcher,
+    { initialData: page == 1 ? initialData : void 0 });
+
   return (
     <Layout header>
       <div className={styles["table-container"]}>
@@ -25,23 +34,25 @@ export default function ArchivePage({ entries: rows }: ArchivePageProps) {
 
             <div className={styles["desc-buttons"]}>
               <VersionSelector/>
-              <PageSelector pageAmount={10}/>
+              <PageSelector page={page}
+                            setPage={setPage}
+                            pageAmount={initialData.amount}/>
             </div>
           </div>
         </div>
 
-        <Table rows={rows}/>
+        <Table rows={data?.archives || []}/>
       </div>
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async context => {
-  const entries: Row[] = await fetcher("/api/archive");
+  const initialData: GET_ArchivesResult = await fetcher("/api/archive");
 
   return {
     props: {
-      entries
+      initialData
     }
   }
 }

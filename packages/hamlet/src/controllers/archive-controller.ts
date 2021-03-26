@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import { GET_ArchiveEntryInfo, GET_Query_Archives } from "../../api";
 import { Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
+import { GET_ArchivesQuery, GET_ArchivesResult } from "../../api";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
-		const { page = 0 } = req.query as GET_Query_Archives;
+		const { page = 0 } = req.query as GET_ArchivesQuery;
 
 		try {
 			const archives = await Archive.findAll({
 				limit: 22,
-				offset: page * 22
+				offset: page * 22,
+				include: User
 			});
 
-			res.send(archives);
+			res.send({
+				archives,
+				amount: Math.ceil(await Archive.count() / 22)
+			} as GET_ArchivesResult);
 		} catch {
 			res.status(400)
 				.end();
