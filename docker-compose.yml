@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: tmadb
+      MYSQL_USER: tma
+      MYSQL_PASSWORD: supersecret
+    ports:
+      - "3002:3306"

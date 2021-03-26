@@ -11,7 +11,8 @@
 		"moduleResolution": "Node",
 		"declaration": true,
 		"composite": true,
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"emitDecoratorMetadata": true
 	},
 	"exclude": [
 		"node_modules",

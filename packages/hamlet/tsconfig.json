@@ -4,5 +4,6 @@
 		"rootDir": "src",
 		"outDir": "dist",
 		"tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+		"strictPropertyInitialization": false
 	}
 }
