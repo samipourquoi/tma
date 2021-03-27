@@ -1,19 +1,19 @@
 import Layout from "../../components/layout";
 import { GetServerSideProps } from "next";
 import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
-import { fetcher } from "../../api";
+import { fetcher, ip } from "../../api";
 import Tag from "../../components/tag";
 import styles from "../../styles/pages/archive/[id].module.scss";
 import FileBrowser from "../../components/filebrowser";
+import MarkdownEditor from "../../components/filebrowser/markdown-editor";
 
 export interface ArchiveViewProps {
   archive: GET_ArchiveResult,
-  files: GET_ArchiveFilesResult
+  files: GET_ArchiveFilesResult,
+  readme: string
 }
 
-export default function ArchiveView({ archive, files }: ArchiveViewProps) {
-  console.log(files);
-
+export default function ArchiveView({ archive, files, readme }: ArchiveViewProps) {
   return (
     <Layout header>
       <div className="layout-text">
@@ -26,11 +26,7 @@ export default function ArchiveView({ archive, files }: ArchiveViewProps) {
           </span>
         </div>
 
-        <h2>Author:</h2>
-        {archive.author.name}
-
-        <h2>Version:</h2>
-        <Tag type={archive.version}/>
+        <MarkdownEditor initialContent={readme}/>
 
         <FileBrowser initialData={files} archive={archive}/>
       </div>
@@ -42,12 +38,14 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
   try {
     const { id } = context.query;
     const archive = await fetcher(`/api/archive/${id}`);
-    const files: GET_ArchiveFilesResult = await fetch(`http://localhost:3001/archive/store/${id}`).then(res => res.json());
+    const files: GET_ArchiveFilesResult = await fetcher(`/api/archive/store/${id}`);
+    const readme: string = await fetch(`${ip}/api/archive/store/${id}/README.md`).then(res => res.text());
 
     return {
       props: {
         archive,
-        files
+        files,
+        readme
       }
     }
   } catch (e) {
