@@ -15,6 +15,8 @@ export type GET_ArchiveResult = ArchiveAttributes & {
 	author: AuthorAttributes
 };
 
+export type GET_ArchiveFilesResult = string[];
+
 export interface POST_Archive {
 
 }

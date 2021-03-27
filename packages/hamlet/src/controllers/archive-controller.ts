@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
-import { GET_ArchivesQuery, GET_ArchivesResult } from "../../api";
+import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult } from "../../api";
+import * as fs from "fs";
+import * as express from "express";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
@@ -11,7 +13,10 @@ export module ArchiveController {
 			const archives = await Archive.findAll({
 				limit: 22,
 				offset: page * 22,
-				include: User
+				include: {
+					model: User,
+					attributes: ["name"]
+				}
 			});
 
 			res.send({
@@ -26,18 +31,24 @@ export module ArchiveController {
 	}
 
 	export async function getArchive(req: Request, res: Response) {
-		const archive = await Archive.findOne({
-			where: {
-				id: req.params.id
-			},
-			include: User
-		});
+		try {
+			const archive = await Archive.findOne({
+				where: {
+					id: req.params.id
+				},
+				include: {
+					model: User,
+					attributes: [ "name" ]
+				}
+			});
+			if (!archive) {
+				res.status(404).end();
+				return;
+			}
 
-		if (archive) {
 			res.send(archive.toJSON());
-		} else {
-			res.status(404)
-				.end();
+		} catch {
+			res.status(500).end();
 		}
 	}
 
@@ -51,5 +62,18 @@ export module ArchiveController {
 
 	export function deleteArchive(req: Request, res: Response) {
 		res.end();
+	}
+
+	export function getFiles(req: Request, res: Response) {
+		fs.readdir(`../..${req.url}`, (err, files) => {
+			if (err)
+				res.status(404).end()
+			else
+				res.send(files as GET_ArchiveFilesResult);
+		});
+	}
+
+	export function getFile(req: Request, res: Response, next: NextFunction) {
+		express.static("../..")(req, res, next);
 	}
 }
