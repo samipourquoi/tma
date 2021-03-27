@@ -8,6 +8,7 @@
   color: var(--cl-constrast-800);
   box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
   height: 50px;
+  white-space: nowrap;
 
   .text-display {
     $spacing: .3em;

@@ -65,15 +65,20 @@ export module ArchiveController {
 	}
 
 	export function getFiles(req: Request, res: Response) {
-		fs.readdir(`../..${req.url}`, (err, files) => {
-			if (err)
-				res.status(404).end()
-			else
-				res.send(files as GET_ArchiveFilesResult);
+		const path = `../..${req.url}`;
+
+		fs.readdir(path, (err, files) => {
+			if (err) {
+				res.status(404).end();
+				return;
+			}
+
+			const isDir = (file: string) => fs.lstatSync(`${path}/${file}`).isDirectory();
+			res.send(files.map(file => `${file}${isDir(file) ? "/" : ""}`) as GET_ArchiveFilesResult);
 		});
 	}
 
 	export function getFile(req: Request, res: Response, next: NextFunction) {
-		express.static("../..")(req, res, next);
+		express.static("../..", { redirect: false })(req, res, next);
 	}
 }

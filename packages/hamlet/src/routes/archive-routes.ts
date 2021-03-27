@@ -3,7 +3,7 @@ import { ArchiveController } from "../controllers/archive-controller";
 import * as express from "express";
 import * as serveIndex from "serve-index";
 
-export default Router()
+export default Router({ strict: true })
 	.get("/", ArchiveController.index)
 	.get("/:id", ArchiveController.getArchive)
 	.post("/:id", ArchiveController.createArchive)

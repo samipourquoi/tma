@@ -1,11 +1,11 @@
-import Header from "../components/header";
-import Layout from "../components/layout";
-import Table from "../components/table";
-import styles from "../styles/pages/archive.module.scss";
-import VersionSelector from "../components/widgets/version-selector";
-import PageSelector from "../components/widgets/page-selector";
+import Header from "../../components/header";
+import Layout from "../../components/layout";
+import Table from "../../components/table";
+import styles from "../../styles/pages/archive.module.scss";
+import VersionSelector from "../../components/widgets/version-selector";
+import PageSelector from "../../components/widgets/page-selector";
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
-import { fetcher } from "../api";
+import { fetcher } from "../../api";
 import useSWR from "swr";
 import { GET_ArchivesResult } from "hamlet/api";
 import { useState } from "react";
@@ -14,7 +14,7 @@ interface ArchivePageProps {
   initialData: GET_ArchivesResult
 }
 
-export default function ArchivePage({ initialData }: ArchivePageProps) {
+export default function ArchiveListPage({ initialData }: ArchivePageProps) {
   const [page, setPage] = useState(1);
   const { data } = useSWR<GET_ArchivesResult>(
     `/api/archive?page=${page-1}`,

@@ -11,8 +11,8 @@
   margin-top: 7rem;
 
   table {
+    table-layout: fixed;
     width: 100%;
-
     border-collapse: collapse;
   }
 
@@ -27,14 +27,17 @@
 
   th {
     border: 2px solid #d1d1d1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:nth-child(#{$author-row-index}) {
       width: 12%;
-      text-overflow: ellipsis;
     }
 
     &:nth-child(#{$title-row-index}) {
       width: 50%;
+      text-overflow: initial;
     }
 
     &:nth-child(#{$version-row-index}) {

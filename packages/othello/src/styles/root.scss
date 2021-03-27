@@ -11,9 +11,6 @@
 
 [darkmode="true"]:root {
   @each $weight, $name in $darkmode {
-    // I did a typo and wrote "constrast" instead of "contrast",
-    // but now I am too lazy to fix every place where I did the typo.
-    // We're just gonna keep it like that.
     --cl-constrast-#{$weight}: #{$name};
   }
 }

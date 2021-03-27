@@ -3,11 +3,11 @@
 .tag {
   border-radius: 1em;
   color: var(--cl-constrast-300) !important;
-  padding: 0.2rem 1rem;
+  padding: 0.3rem 1rem;
   margin-left: 10px;
   background: map-get(colors.$tags, "other");
   font-weight: 300 !important;
-  font-size: 0.9em;
+  font-size: .85em;
 }
 
 @each $type, $color in colors.$tags {

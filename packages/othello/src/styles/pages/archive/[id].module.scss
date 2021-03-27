@@ -1,0 +1,16 @@
+.titles {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  h1 {
+    text-wrap: normal;
+  }
+}
+
+.tags {
+  * {
+    white-space: nowrap;
+  }
+}
