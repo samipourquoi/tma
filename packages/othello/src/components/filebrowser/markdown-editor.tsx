@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 
+// @ts-ignore
 const Markdown = dynamic(() => import("@uiw/react-markdown-preview/lib/esm/unstyled"), { ssr: false });
 import { useState } from "react";
 

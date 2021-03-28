@@ -14,22 +14,30 @@ export interface ArchiveViewProps {
 }
 
 export default function ArchiveView({ archive, files, readme }: ArchiveViewProps) {
+  readme = `### Author: ${archive.author.name}\n${readme}`;
+
   return (
     <Layout header>
-      <div className="layout-text">
-        <div className={styles.titles}>
-          <h1>
-            {archive.title}
-          </h1>
-          <span className={styles.tags}>
-            {archive.tags.map(tag => <Tag key={tag} type={tag}/>)}
-          </span>
+      <div className={styles["archive-view-page"] + " layout-text"}>
+          <div className={styles.titles}>
+            <h1>
+              {archive.title}
+            </h1>
+
+            <span className={styles.tags}>
+              {archive.tags.map(tag => <Tag key={tag} type={tag}/>)}
+              <Tag type={archive.version}/>
+            </span>
+          </div>
+
+          <div className={styles.readme}>
+            <MarkdownEditor initialContent={readme}/>
+          </div>
+
+          <div className={styles.files}>
+            <FileBrowser initialData={files} archive={archive}/>
+          </div>
         </div>
-
-        <MarkdownEditor initialContent={readme}/>
-
-        <FileBrowser initialData={files} archive={archive}/>
-      </div>
     </Layout>
   );
 }
