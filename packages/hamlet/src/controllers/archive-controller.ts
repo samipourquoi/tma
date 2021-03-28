@@ -27,7 +27,6 @@ export module ArchiveController {
 			res.status(400)
 				.end();
 		}
-
 	}
 
 	export async function getArchive(req: Request, res: Response) {

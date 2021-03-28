@@ -6,18 +6,28 @@ import {
 	ForeignKey, HasMany,
 	Model,
 	PrimaryKey,
-	Table
+	Table, Unique
 } from "sequelize-typescript";
 import { Archive } from "./archive-model";
+import { STRING } from "sequelize";
 
 export interface AuthorAttributes {
+	discordID: string,
 	name: string
+	email: string
 }
 
 @Table
 export class User
-	extends Model
+	extends Model<AuthorAttributes>
 {
+	@Unique
+	@Column
+	discordID!: string;
+
+	@Column
+	email!: string;
+
 	@Column
 	name!: string;
 

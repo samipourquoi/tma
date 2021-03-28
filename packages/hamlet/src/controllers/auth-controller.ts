@@ -1,7 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export module AuthController {
-	export function onDiscordCallback(req: Request, res: Response) {
+	export function authed(req: Request, res: Response, next: NextFunction) {
+		if (req.isAuthenticated())
+			return next();
+		res.status(401).end();
+	}
 
+	export function onDiscordCallback(req: Request, res: Response) {
+		res.redirect("/");
 	}
 }

@@ -1,7 +1,7 @@
 import { loadConfig } from "./config";
-
 export const config = loadConfig();
-console.log(config);
+
+import "./models";
 
 import * as express from "express";
 import "./auth/strategies";
