@@ -1,8 +1,14 @@
+import { useState } from "react";
 import dynamic from "next/dynamic";
 
-// @ts-ignore
-const Markdown = dynamic(() => import("@uiw/react-markdown-preview/lib/esm/unstyled"), { ssr: false });
-import { useState } from "react";
+// PLEASE DON'T LOOK AT THIS, IT'S HORRIBLE AND
+// I DON'T KNOW HOW TO FIX THIS SHIT
+const MarkdownPreview = dynamic(
+  // @ts-ignore
+  () => import("@uiw/react-markdown-preview/lib/esm/unstyled").then(mod => mod.default),
+  { ssr: false }
+) as any;
+
 
 export interface MarkdownEditorProps {
   initialContent?: string
@@ -12,6 +18,6 @@ export default function MarkdownEditor({ initialContent = "" }: MarkdownEditorPr
   const [content, setContent] = useState(initialContent);
 
   return (
-    <Markdown source={content}/>
+    <MarkdownPreview source={content}/>
   )
 }
