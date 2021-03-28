@@ -6,6 +6,7 @@ import Tag from "../../components/tag";
 import styles from "../../styles/pages/archive/[id].module.scss";
 import FileBrowser from "../../components/filebrowser";
 import MarkdownEditor from "../../components/filebrowser/markdown-editor";
+import Link from "next/link";
 
 export interface ArchiveViewProps {
   archive: GET_ArchiveResult,
@@ -19,25 +20,29 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
   return (
     <Layout header>
       <div className={styles["archive-view-page"] + " layout-text"}>
-          <div className={styles.titles}>
-            <h1>
-              {archive.title}
-            </h1>
+        <Link href="/archive">
+          <a><span className="material-icons">first_page</span></a>
+        </Link>
 
-            <span className={styles.tags}>
-              {archive.tags.map(tag => <Tag key={tag} type={tag}/>)}
-              <Tag type={archive.version}/>
-            </span>
-          </div>
+        <div className={styles.titles}>
+          <h1>
+            {archive.title}
+          </h1>
 
-          <div className={styles.readme}>
-            <MarkdownEditor initialContent={readme}/>
-          </div>
-
-          <div className={styles.files}>
-            <FileBrowser initialData={files} archive={archive}/>
-          </div>
+          <span className={styles.tags}>
+            {archive.tags.map(tag => <Tag key={tag} type={tag}/>)}
+            <Tag type={archive.version}/>
+          </span>
         </div>
+
+        <div className={styles.readme}>
+          <MarkdownEditor initialContent={readme}/>
+        </div>
+
+        <div className={styles.files}>
+          <FileBrowser initialData={files} archive={archive}/>
+        </div>
+      </div>
     </Layout>
   );
 }

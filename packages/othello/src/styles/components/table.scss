@@ -52,6 +52,10 @@
   tr {
     height: 4rem;
 
+    &:not(.disabled) {
+      cursor: pointer;
+    }
+
     &:not(thead *):nth-child(2n-1) {
       background: var(--cl-constrast-400);
     }

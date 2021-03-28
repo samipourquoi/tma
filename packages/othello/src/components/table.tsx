@@ -1,6 +1,7 @@
 import React from "react";
 import Tag from "./tag";
 import { GET_ArchiveResult } from "hamlet/api";
+import Link from "next/link";
 
 interface TableProps {
   rows: (GET_ArchiveResult | null)[]
@@ -24,32 +25,29 @@ export default function Table({ rows }: TableProps) {
         </thead>
         <tbody>
           {rows.map((row, i) => row ? (
-            <tr key={i}>
-              <th>
+            <Link href={`/archive/${row.id}`}>
+              <tr key={i}>
+                <th>
                 <span className="row-id">
                   #{row.id}
                 </span>
-                {row.author.name}
+                  {row.author.name}
                 </th>
-              <th>
-                {row.title}
-                <span className="tags">
+                <th>
+                  {row.title}
+                  <span className="tags">
                   {row.tags.map((tag, j) =>
                     <Tag key={j} type={tag}/>
                   )}
                 </span>
-              </th>
-              <th>{row.version}</th>
-              <th>{formatDate(new Date(row.createdAt))}</th>
-            </tr>
+                </th>
+                <th>{row.version}</th>
+                <th>{formatDate(new Date(row.createdAt))}</th>
+              </tr>
+            </Link>
           ) : (
-            <tr key={i}>
-              <th/>
-              <th/>
-              <th/>
-              <th/>
-            </tr>
-          ))}
+              <tr key={i} className="disabled"><th/><th/><th/><th/></tr>
+            ))}
         </tbody>
       </table>
     </div>
