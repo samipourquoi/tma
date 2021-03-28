@@ -1,20 +1,24 @@
 import { FtpSrv } from "ftp-srv";
 import { PermsFs } from "./perms-fs";
+import { FtpController } from "../controllers/ftp-controller";
 
 export const ftp = new FtpSrv({
-	url: "ftp://127.0.0.1:6900"
+	url: "ftp://127.0.0.1:6900",
+	greeting: "welcome to blocky game archive"
 });
 
 const writeCommands = ["ALLO", "APPE", "DELE", "MKD", "RMD", "RNRF", "RNTO", "STOR", "STRU"];
 
-ftp.on("login", (data, resolve, reject) => {
-	const { connection } = data;
+ftp.on("login", async (data, resolve, reject) => {
+	const { connection, username: email, password } = data;
 
+	const ftpUser = await FtpController.getFtpUser(email, password);
 
+	if (!ftpUser)
+		return reject(new Error("invalid credentials"));
 
 	resolve({
-		// blacklist: writeCommands
-		fs: new PermsFs(connection, 4)
+		fs: new PermsFs(connection, ftpUser.user.id)
 	});
 });
 

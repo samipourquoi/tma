@@ -3,13 +3,14 @@ import {
 	BelongsTo,
 	BelongsToMany,
 	Column,
-	ForeignKey, HasMany,
+	ForeignKey, HasMany, HasOne,
 	Model,
 	PrimaryKey,
 	Table, Unique
 } from "sequelize-typescript";
 import { Archive } from "./archive-model";
 import { STRING } from "sequelize";
+import { FtpUser } from "./ftp-user";
 
 export interface AuthorAttributes {
 	discordID: string,
@@ -25,6 +26,7 @@ export class User
 	@Column
 	discordID!: string;
 
+	@Unique
 	@Column
 	email!: string;
 
@@ -33,4 +35,7 @@ export class User
 
 	@HasMany(() => Archive)
 	archives!: Archive[];
+
+	@HasOne(() => FtpUser)
+	ftp!: FtpUser;
 }

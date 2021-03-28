@@ -23,5 +23,4 @@ passport.use(new DiscordStrategy({
 	} catch(e) {
 		cb(e);
 	}
-
 }));
