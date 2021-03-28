@@ -1,4 +1,5 @@
 import { FtpSrv } from "ftp-srv";
+import { PermsFs } from "./perms-fs";
 
 export const ftp = new FtpSrv({
 	url: "ftp://127.0.0.1:6900"
@@ -9,9 +10,11 @@ const writeCommands = ["ALLO", "APPE", "DELE", "MKD", "RMD", "RNRF", "RNTO", "ST
 ftp.on("login", (data, resolve, reject) => {
 	const { connection } = data;
 
+
+
 	resolve({
-		root: "../../store",
-		blacklist: writeCommands
+		// blacklist: writeCommands
+		fs: new PermsFs(connection, 4)
 	});
 });
 
