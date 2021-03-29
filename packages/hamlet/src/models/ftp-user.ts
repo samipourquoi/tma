@@ -1,4 +1,4 @@
-import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { User } from "./user-model";
 import { BOOLEAN, Optional } from "sequelize";
 
@@ -22,6 +22,7 @@ export class FtpUser
 	@Column({ type: BOOLEAN, defaultValue: false })
 	admin!: boolean;
 
+	@Unique
 	@ForeignKey(() => User)
 	@Column
 	userID!: number;

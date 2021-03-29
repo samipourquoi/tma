@@ -12,15 +12,15 @@ import { Archive } from "./archive-model";
 import { STRING } from "sequelize";
 import { FtpUser } from "./ftp-user";
 
-export interface AuthorAttributes {
+export interface UserAttributes {
 	discordID: string,
-	name: string
+	name: string,
 	email: string
 }
 
 @Table
 export class User
-	extends Model<AuthorAttributes>
+	extends Model<UserAttributes>
 {
 	@Unique
 	@Column
