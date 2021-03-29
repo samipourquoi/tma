@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
-import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult } from "../../api";
+import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult, POST } from "../../api";
 import * as fs from "fs";
 import * as express from "express";
 
@@ -51,8 +51,18 @@ export module ArchiveController {
 		}
 	}
 
-	export function createArchive(req: Request, res: Response) {
-		console.log(req.body);
+	export async function createArchive(req: Request, res: Response) {
+		const { title, readme } = req.body as Partial<POST.Archive>;
+		if (!title || !readme)
+			return res.status(400).end();
+
+		await Archive.create({
+			title,
+			tags: [],
+			version: "",
+			authorID: req.user!.id
+		});
+
 		res.end();
 	}
 

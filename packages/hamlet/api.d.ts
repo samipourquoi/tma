@@ -19,7 +19,9 @@ export type GET_ArchiveFilesResult = string[];
 
 export module POST {
 	export interface Archive {
-
+		title: string,
+		readme: string,
+		files?: unknown[]
 	}
 }
 

@@ -1,7 +1,7 @@
 import { AutoIncrement, BelongsTo, Column, ForeignKey, HasOne, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./user-model";
 import { TagType } from "../../api";
-import { ARRAY, STRING } from "sequelize";
+import { ARRAY, Optional, STRING } from "sequelize";
 
 export interface ArchiveAttributes {
 	id: number,
@@ -13,7 +13,11 @@ export interface ArchiveAttributes {
 
 @Table
 export class Archive
-	extends Model<ArchiveAttributes>
+	extends Model<
+		ArchiveAttributes,
+		Optional<
+			ArchiveAttributes,
+			"id">>
 {
 	@Column
 	title!: string;
