@@ -1,11 +1,11 @@
-import Header from "../../components/header";
-import Layout from "../../components/layout";
-import Table from "../../components/table";
-import styles from "../../styles/pages/archive.module.scss";
-import VersionSelector from "../../components/widgets/version-selector";
-import PageSelector from "../../components/widgets/page-selector";
+import Header from "../components/header";
+import Layout from "../components/layout";
+import Table from "../components/table";
+import styles from "../styles/pages/archive.module.scss";
+import VersionSelector from "../components/widgets/version-selector";
+import PageSelector from "../components/widgets/page-selector";
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
-import { fetcher } from "../../api";
+import { fetcher } from "../api";
 import useSWR from "swr";
 import { GET_ArchivesResult } from "hamlet/api";
 import { useState } from "react";

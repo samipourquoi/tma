@@ -1,0 +1,46 @@
+.file-uploader {
+  background: var(--cl-constrast-400);
+  padding: 2rem;
+  border-radius: 2rem;
+  max-width: 70ch;
+
+  .drop-zone {
+    color: var(--cl-constrast-600);
+    padding: 10rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--cl-constrast-500);
+
+    p {
+      margin: 0;
+      text-align: center;
+    }
+
+    input {
+      display: none;
+    }
+  }
+
+  .entries {
+    list-style: none;
+    padding: 1rem 0 0;
+  }
+
+  .entry {
+    color: var(--cl-constrast-500);
+    display: flex;
+    margin: .6rem 0;
+
+    .clear {
+      user-select: none;
+      cursor: pointer;
+      margin-right: .4rem;
+
+      &:hover {
+        color: var(--cl-constrast-600);
+      }
+    }
+  }
+}

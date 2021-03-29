@@ -52,6 +52,7 @@ export module ArchiveController {
 	}
 
 	export function createArchive(req: Request, res: Response) {
+		console.log(req.body);
 		res.end();
 	}
 

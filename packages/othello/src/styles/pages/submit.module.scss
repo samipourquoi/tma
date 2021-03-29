@@ -1,0 +1,62 @@
+@use "../abstracts/breakpoints" as *;
+
+.submit-page {
+  display: grid;
+  margin-top: 1rem;
+  grid-gap: 2.5rem;
+
+  form {
+    all: inherit;
+  }
+
+  input[type="text"] {
+    grid-column: 1 / 3;
+    color: var(--cl-constrast-700);
+    background: var(--cl-constrast-300);
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid var(--cl-constrast-500);
+    padding: 1rem;
+    font-size: 2.5rem;
+  }
+
+  .editor {
+    grid-column: 1 / 3;
+    user-select: none;
+
+    * {
+      background: var(--cl-constrast-400);
+      color: var(--cl-constrast-800);
+      -webkit-text-fill-color: var(--cl-constrast-800);
+    }
+  }
+
+  .file-uploader {
+    grid-column: 3;
+    user-select: none;
+  }
+
+  input[type="submit"] {
+    grid-column: 3;
+    width: 11rem;
+    font-size: 1.4rem;
+    padding: 1rem;
+    background: #aeb2d7;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    border-radius: 1rem;
+    color: var(--cl-constrast-300);
+    margin-left: auto;
+
+    &:hover {
+      background: darken(#aeb2d7, 10);
+    }
+  }
+}
+
+@include medium {
+  .submit-page form > * {
+    grid-column: 1 / 3 !important;
+  }
+}

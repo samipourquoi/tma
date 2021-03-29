@@ -17,8 +17,10 @@ export type GET_ArchiveResult = ArchiveAttributes & {
 
 export type GET_ArchiveFilesResult = string[];
 
-export interface POST_Archive {
+export module POST {
+	export interface Archive {
 
+	}
 }
 
 export module PUT {

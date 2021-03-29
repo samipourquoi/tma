@@ -10,7 +10,7 @@ export default function Header() {
       <ProfilePicture/>
 
       <div className="header-links">
-        <HeaderLink href="/archive" icon="home" name="Home"/>
+        <HeaderLink href="/" icon="home" name="Home"/>
         <HeaderLink href="/submit" icon="add_to_photos" name="Submit"/>
         <HeaderLink href="/saved" icon="bookmark" name="Saved"/>
       </div>

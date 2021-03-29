@@ -20,7 +20,7 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
   return (
     <Layout header>
       <div className={styles["archive-view-page"] + " layout-text"}>
-        <Link href="/archive">
+        <Link href="/">
           <a><span className="material-icons">first_page</span></a>
         </Link>
 

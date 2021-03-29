@@ -1,8 +1,10 @@
 @use "../abstracts/fonts";
+@use "../abstracts/breakpoints" as *;
 
 .layout {
   display: flex;
   background: var(--cl-constrast-400);
+  min-height: 100vh;
 }
 
 .layout-content {
@@ -14,6 +16,7 @@
   font-family: fonts.$default;
   font-weight: 300;
   color: var(--cl-constrast-700);
+  transition: border-radius .2s ease;
 
   h1 {
     margin: 0;
@@ -25,4 +28,10 @@
 
 .layout-text {
   padding: 6.5rem 7.5rem 0;
+}
+
+@include small {
+  .layout-content {
+    border-radius: 0;
+  }
 }
