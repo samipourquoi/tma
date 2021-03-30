@@ -6,6 +6,7 @@ import * as fs from "fs";
 import * as express from "express";
 import { Multer } from "multer";
 import * as multer from "multer";
+import { isString } from "util";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
@@ -54,14 +55,15 @@ export module ArchiveController {
 	}
 
 	export async function createArchive(req: Request, res: Response, next: NextFunction) {
-		const { title, readme } = req.body as Partial<POST.Archive>;
-		if (!title || !readme)
-			return res.status(400).end();
+		const { title, readme, version } = req.body as Partial<POST.Archive>;
+		if (typeof title   != "string" ||
+			typeof readme  != "string" ||
+			typeof version != "string") return res.status(400).end();
 
 		const { id } = await Archive.create({
 			title,
 			tags: [],
-			version: "",
+			version,
 			authorID: req.user?.id || 4
 		});
 

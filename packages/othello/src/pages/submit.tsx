@@ -3,6 +3,7 @@ import Layout from "../components/layout";
 import FileUploader from "../components/file-uploader";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import VersionSelector from "../components/widgets/version-selector";
 const MDEditor = dynamic(() => import("@uiw/react-md-editor/lib/esm/unstyled"), { ssr: false });
 
 export default function SubmitPage() {
@@ -16,6 +17,10 @@ export default function SubmitPage() {
         <div className={styles["submit-page"]}>
           <form>
             <input type="text" placeholder="Title" name="title" required/>
+
+            <div className={styles["version-selector"]}>
+              <VersionSelector/>
+            </div>
 
             <div className={styles["editor"]}>
               <MDEditor value={readme} onChange={str => setReadme(str || "")}/>

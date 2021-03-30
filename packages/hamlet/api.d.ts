@@ -21,7 +21,8 @@ export module POST {
 	export interface Archive {
 		title: string,
 		readme: string,
-		files?: unknown[]
+		files?: unknown[],
+		version: string
 	}
 }
 

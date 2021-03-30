@@ -3,7 +3,7 @@ export default function VersionSelector() {
     <label className="version-selector">
       Version
 
-      <select className="text-display">
+      <select className="text-display" name="version">
         <option>any</option>
         <option>1.12</option>
         <option>1.13</option>
