@@ -8,6 +8,14 @@
   background: map-get(colors.$tags, "other");
   font-weight: 300 !important;
   font-size: .85em;
+  display: inline-flex;
+  align-items: center;
+
+  .material-icons {
+    margin-left: .2rem;
+    font-size: 1em;
+    cursor: pointer;
+  }
 }
 
 @each $type, $color in colors.$tags {

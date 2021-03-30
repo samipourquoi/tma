@@ -1,13 +1,20 @@
 import { TagType } from "hamlet/api";
 
 export interface TagProps {
-  type: TagType
+  type: TagType,
+  onDelete?(): void;
 }
 
-export default function Tag({ type }: TagProps) {
+export default function Tag({ type, onDelete }: TagProps) {
   return (
     <span className={`tag ${type}-tag`}>
       {typeToName(type)}
+      {onDelete ?
+        <span className="material-icons" onClick={onDelete}>
+          clear
+        </span> :
+
+        null}
     </span>
   )
 }

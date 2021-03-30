@@ -4,6 +4,7 @@ import FileUploader from "../components/file-uploader";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import VersionSelector from "../components/widgets/version-selector";
+import TagsSelector from "../components/widgets/tags-selector";
 const MDEditor = dynamic(() => import("@uiw/react-md-editor/lib/esm/unstyled"), { ssr: false });
 
 export default function SubmitPage() {
@@ -16,9 +17,10 @@ export default function SubmitPage() {
 
         <div className={styles["submit-page"]}>
           <form>
-            <input type="text" placeholder="Title" name="title" required/>
+            <input className={styles["title"]} type="text" placeholder="Title" name="title" required/>
 
-            <div className={styles["version-selector"]}>
+            <div className={styles["selectors"]}>
+              <TagsSelector/>
               <VersionSelector/>
             </div>
 

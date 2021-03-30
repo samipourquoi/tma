@@ -22,7 +22,9 @@ export module POST {
 		title: string,
 		readme: string,
 		files?: unknown[],
-		version: string
+		version: string,
+		// List of `TagType` separated by commas.
+		tags: string
 	}
 }
 
@@ -34,7 +36,8 @@ export module PUT {
 	}
 }
 
-export type TagType = "redstone"
+export type TagType =
+	"redstone"
 	| "slimestone"
 	| "storage"
 	| "farms"

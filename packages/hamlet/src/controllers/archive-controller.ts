@@ -55,14 +55,16 @@ export module ArchiveController {
 	}
 
 	export async function createArchive(req: Request, res: Response, next: NextFunction) {
-		const { title, readme, version } = req.body as Partial<POST.Archive>;
+		const { title, readme, version, tags = "" } = req.body as Partial<POST.Archive>;
+		console.log(req.body);
 		if (typeof title   != "string" ||
 			typeof readme  != "string" ||
-			typeof version != "string") return res.status(400).end();
+			typeof version != "string" ||
+			typeof tags    != "string") return res.status(400).redirect("/submit");
 
 		const { id } = await Archive.create({
 			title,
-			tags: [],
+			tags: tags.split(","),
 			version,
 			authorID: req.user?.id || 4
 		});
