@@ -26,7 +26,7 @@ export default function SubmitPage() {
               <FileUploader/>
             </div>
 
-            <input type="submit" value="Archive"
+            <input type="submit" value="Archive" formEncType="multipart/form-data"
                    formMethod="post" formAction="/api/archive"/>
           </form>
         </div>

@@ -4,6 +4,8 @@ import { User } from "../models/user-model";
 import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult, POST } from "../../api";
 import * as fs from "fs";
 import * as express from "express";
+import { Multer } from "multer";
+import * as multer from "multer";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
@@ -51,19 +53,30 @@ export module ArchiveController {
 		}
 	}
 
-	export async function createArchive(req: Request, res: Response) {
+	export async function createArchive(req: Request, res: Response, next: NextFunction) {
 		const { title, readme } = req.body as Partial<POST.Archive>;
 		if (!title || !readme)
 			return res.status(400).end();
 
-		await Archive.create({
+		const { id } = await Archive.create({
 			title,
 			tags: [],
 			version: "",
-			authorID: req.user!.id
+			authorID: req.user?.id || 4
 		});
 
-		res.end();
+		const files = req.files as Express.Multer.File[];
+
+		fs.mkdirSync(`../../store/${id}`)
+		files.forEach(file => {
+			fs.renameSync(
+				file.path,
+				`../../store/${id}/${file.originalname}`
+			);
+		});
+		fs.writeFileSync(`../../store/${id}/README.md`, readme, { encoding: "utf-8" });
+
+		res.redirect("/");
 	}
 
 	export function updateArchive(req: Request, res: Response) {

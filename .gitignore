@@ -2,6 +2,7 @@
 *.db
 store
 config
+tmp
 
 # build
 dist
