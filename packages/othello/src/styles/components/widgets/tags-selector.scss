@@ -4,6 +4,7 @@
   @extend %widget;
   flex-wrap: wrap;
   height: unset;
+  justify-content: flex-start;
   min-height: 50px;
   max-width: 50%;
 

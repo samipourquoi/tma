@@ -9,6 +9,7 @@ import { fetcher } from "../api";
 import useSWR from "swr";
 import { GET_ArchivesResult } from "hamlet/api";
 import { useState } from "react";
+import TagsSelector from "../components/widgets/tags-selector";
 
 interface ArchivePageProps {
   initialData: GET_ArchivesResult
@@ -33,6 +34,7 @@ export default function ArchiveListPage({ initialData }: ArchivePageProps) {
             </p>
 
             <div className={styles["desc-buttons"]}>
+              <TagsSelector/>
               <VersionSelector/>
               <PageSelector page={page}
                             setPage={setPage}

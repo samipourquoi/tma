@@ -2,7 +2,7 @@ import { ArchiveAttributes } from "./src/models/archive-model";
 import { UserAttributes } from "./src/models/user-model";
 
 export interface GET_ArchivesQuery {
-	page?: number
+	page?: number,
 }
 
 export type GET_ArchivesResult = {
