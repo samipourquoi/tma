@@ -9,8 +9,8 @@
 		"start": "next start"
 	},
 	"dependencies": {
-		"@uiw/react-md-editor": "git+https://github.com/samipourquoi/react-md-editor",
 		"@uiw/react-markdown-preview": "git+https://github.com/samipourquoi/react-markdown-preview",
+		"@uiw/react-md-editor": "git+https://github.com/samipourquoi/react-md-editor",
 		"next": "^10.0.9",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
@@ -21,6 +21,9 @@
 		"@types/node": "^14.14.35",
 		"@types/react": "^17.0.3",
 		"@types/react-dom": "^17.0.3",
+		"autoprefixer": "^10.2.5",
+		"postcss": "^8.2.9",
+		"tailwindcss": "^2.0.4",
 		"typescript": "^4.2.3"
 	}
 }
