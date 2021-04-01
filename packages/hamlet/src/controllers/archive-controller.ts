@@ -7,10 +7,12 @@ import * as express from "express";
 import { Multer } from "multer";
 import * as multer from "multer";
 import { isString } from "util";
+import { Op } from "sequelize";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
-		const { page = 0 } = req.query as GET_ArchivesQuery;
+		const { page = 0, version, tags } = req.query as GET_ArchivesQuery;
+		console.log(req.query);
 
 		try {
 			const archives = await Archive.findAll({
@@ -19,6 +21,14 @@ export module ArchiveController {
 				include: {
 					model: User,
 					attributes: ["name"]
+				},
+				where: {
+					...(version ? {
+						version: String(version)
+					} : {}),
+					...(tags ? { tags: {
+						[ Op.contains ]: tags.split(",")
+					}} : {})
 				}
 			});
 
@@ -26,9 +36,9 @@ export module ArchiveController {
 				archives,
 				amount: Math.ceil(await Archive.count() / 22)
 			} as GET_ArchivesResult);
-		} catch {
+		} catch (e) {
 			res.status(400)
-				.end();
+				.send(e.message);
 		}
 	}
 

@@ -3,6 +3,9 @@ import { UserAttributes } from "./src/models/user-model";
 
 export interface GET_ArchivesQuery {
 	page?: number,
+	version?: string | number,
+	// List of `TagType` separated by commas.
+	tags?: string
 }
 
 export type GET_ArchivesResult = {
