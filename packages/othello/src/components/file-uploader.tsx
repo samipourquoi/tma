@@ -6,22 +6,7 @@ export interface FileUploaderProps {
 
 export default function FileUploader(props: FileUploaderProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [inputValue, setInputValue] = useState<string[]>([]);
   const hasFiles = files.length == 0;
-
-  /*useEffect(() => {
-    const toBase64 = (file: File) => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-
-    Promise.all(
-      files.map(async file =>
-        `${file.name}:${await toBase64(file)}`))
-      .then(str => console.info(str));
-  }, [files])*/
 
   return (
     <div className="file-uploader">

@@ -8,7 +8,7 @@ interface LayoutProps {
 
 export default function Layout({ children, header }: LayoutProps) {
   return (
-    <div className="layout">
+    <div className="old layout">
       {header ? <Header/> : void 0}
 
       <div className="layout-content">

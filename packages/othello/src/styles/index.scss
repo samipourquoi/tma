@@ -1,5 +1,4 @@
-@use "components";
-@use "root";
+@use "new/header";
 
 @tailwind base;
 @tailwind components;
@@ -9,22 +8,31 @@
 @import url("http://fonts.cdnfonts.com/css/arlon");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-* {
-  box-sizing: border-box;
-  transition: color, background .2s ease;
+.material-icons {
+  user-select: none;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+.old {
+  //@import "root";
+  //@import "components";
 
-html {
-  font-size: 62.5%;
-}
+  * {
+    box-sizing: border-box;
+    transition: color, background .2s ease;
+  }
 
-a {
-  color: unset;
-  text-decoration: none;
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 62.5%;
+  }
+
+  a {
+    color: unset;
+    text-decoration: none;
+  }
 }
