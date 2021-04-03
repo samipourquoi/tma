@@ -1,58 +1,54 @@
 import React from "react";
-import Tag from "./tag";
 import { GET_ArchiveResult } from "hamlet/api";
-import Link from "next/link";
+import { Tag } from "./tag";
 
-interface TableProps {
-  rows: (GET_ArchiveResult | null)[]
-}
-
-export default function Table({ rows }: TableProps) {
-  rows = new Array(22)
+export const Table: React.FC<{
+  rows: GET_ArchiveResult[]
+}> = ({ rows }) => {
+  const shownRows = Array(22)
     .fill(null)
-    .map((_, i) => rows[i] || null)
+    .map((_, i) => rows[i] || null);
 
   return (
-    <div className="table">
-      <table>
-        <thead>
-          <tr>
-            <th>Author</th>
-            <th>Title</th>
-            <th>Version</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => row ? (
-            <Link href={`/archive/${row.id}`}>
-              <tr key={i}>
-                <th>
-                <span className="row-id">
-                  #{row.id}
-                </span>
-                  {row.author.name}
-                </th>
-                <th>
-                  {row.title}
-                  <span className="tags">
-                  {row.tags.map((tag, j) =>
-                    <Tag key={j} type={tag}/>
-                  )}
-                </span>
-                </th>
-                <th>{row.version}</th>
-                <th>{formatDate(new Date(row.createdAt))}</th>
-              </tr>
-            </Link>
-          ) : (
-              <tr key={i} className="disabled"><th/><th/><th/><th/></tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
-  )
+    <table className="w-full">
+      <thead className="text-gray-600">
+        <tr className="table-row border-t-2 border-b-2">
+          <th className="w-2/6 md:w-1/6 font-medium">Author</th>
+          <th className="max-w-full font-medium">Title</th>
+          <th className="w-1/6 hidden md:table-cell font-medium">Date</th>
+        </tr>
+      </thead>
+      <tbody className="text-gray-400 font-light">
+        {shownRows.map((row,i) => (
+          <Row key={i} row={row}/>
+        ))}
+      </tbody>
+    </table>
+  );
 }
+
+const Row: React.FC<{
+  row: GET_ArchiveResult | null
+}> = ({ row }) => (
+  <tr className="table-row odd:bg-gray-100">
+    <td className="text-center">
+      {row?.author.name || ""}
+    </td>
+    <td>
+      {row?.title || ""}
+      <ul className="inline">
+        {row?.tags.map((tag, i) => (
+          <li key={i} className="inline ml-2">
+            <Tag type={tag}/>
+          </li>
+        ))}
+      </ul>
+    </td>
+    <td className="text-center hidden md:table-cell">
+      {row ? formatDate(new Date(row.createdAt)) : ""}
+    </td>
+  </tr>
+)
 
 function formatDate(timestamp: Date | number):
   string

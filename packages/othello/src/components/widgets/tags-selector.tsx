@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TagType } from "hamlet/api";
-import Tag from "../tag";
+import { Tag } from "../tag";
 
 export default function TagsSelector() {
   const [tags, setTags] = useState<TagType[]>([]);

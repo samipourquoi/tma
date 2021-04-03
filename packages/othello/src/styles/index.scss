@@ -1,31 +1,14 @@
-@use "new/header";
-@use "new/widget";
+@use "components/header";
+@use "components/widget";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap");
+@import url("http://fonts.cdnfonts.com/css/arlon");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 .material-icons {
   user-select: none;
-}
-
-.old {
-  //@import "root";
-  //@import "components";
-
-  * {
-    box-sizing: border-box;
-    transition: color, background .2s ease;
-  }
-
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-  }
-
-  html {
-    font-size: 62.5%;
-  }
-
-  a {
-    color: unset;
-    text-decoration: none;
-  }
 }

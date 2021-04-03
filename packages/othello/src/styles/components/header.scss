@@ -1,46 +1,17 @@
-@use "../abstracts/fonts";
-@use "../abstracts/colors";
-@use "../abstracts/breakpoints" as *;
+.table-row {
+  @apply bg-white w-full h-8;
 
-header {
-  @import "header/profile-picture";
-  @import "header/search-bar";
-  @import "header/tag-list";
-  @import "header/lights-button";
+  th,
+  td {
+    @apply border-l-2 border-r-2 border-gray-200 overflow-ellipsis
+      py-2 px-4 overflow-hidden max-w-max;
 
-  background: var(--cl-constrast-400);
-  min-width: 25rem;
-  min-height: 100vh;
-  font-family: fonts.$default;
-
-  > * {
-    padding: 10px 30px;
-  }
-
-  .header-links {
-    @import "header/header-link";
-
-    padding-top: 0;
-  }
-
-  .section {
-    border-top: 1px solid colors.$gray;
-
-    @each $face in [top, bottom] {
-      padding-#{$face}: 3.2rem;
+    &:first-child {
+      @apply border-l-0;
     }
 
-    h1 {
-      color: var(--cl-constrast-600);
-      font-weight: 400;
-      margin: 0 0 1.2rem;
-      font-size: 2.2rem;
+    &:last-child {
+      @apply border-r-0;
     }
-  }
-}
-
-@include small {
-  header {
-    display: none;
   }
 }

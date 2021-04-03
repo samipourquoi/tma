@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export interface PageSelectorProps {
   pageAmount: number,
@@ -6,33 +6,49 @@ export interface PageSelectorProps {
   setPage: (page: number) => void
 }
 
-export default function PageSelector(
-  { pageAmount, page, setPage }: PageSelectorProps
-) {
+export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, setPage }) => {
+  const [value, setValue] = useState<string>(String(page));
+
   const isAtStart = page == 1;
   const isAtEnd   = page == pageAmount;
 
   const updatePage = (number: -1 | 1) => () => {
-    const newPage = page + number;
-
     if ((isAtStart && number == -1)
-      || isAtEnd && number == +1)
-    {
-      return;
-    }
-
-    setPage(page + number);
+      || isAtEnd && number == +1) return;
+    const newPage = page + number;
+    setValue(String(newPage));
+    setPage(newPage);
   }
 
   return (
-    <label className="page-selector">
-      Page {page} on <span className="text-display">{pageAmount}</span>
+    <label className="widget">
+      Page <input type="text" className="mx-1 rounded-lg bg-white text-center"
+                  style={{ width: `${value.length+1}ch` }}
+                  value={value}
+                  name="page"
+                  onBlurCapture={(ev) => {
+                    ev.preventDefault();
+                    console.log("test");
+                    const value = +ev.target.value;
+                    if (value && 0 < value && value <= pageAmount) {
+                      setPage(value);
+                    } else
+                      setValue(String(page));
+                  }}
+                  onChange={(ev) => setValue(ev.target.value)}/>
+        on {pageAmount}
 
-      <span className={`material-icons ${isAtStart ? "disabled-icon" : ""}`}
-            onClick={updatePage(-1)}>
+      <span className={`material-icons ${isAtStart ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+            onClick={ev => {
+              ev.preventDefault();
+              updatePage(-1)();
+            }}>
         arrow_back</span>
-      <span className={`material-icons ${isAtEnd ? "disabled-icon" : ""}`}
-            onClick={updatePage(1)}>
+      <span className={`material-icons ${isAtEnd ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+            onClick={ev => {
+              ev.preventDefault();
+              updatePage(1)();
+            }}>
         arrow_forward</span>
     </label>
   );
