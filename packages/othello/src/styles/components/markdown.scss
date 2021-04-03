@@ -1,0 +1,22 @@
+.markdown {
+  > * {
+    @apply my-4;
+  }
+
+  /* Set h1, h2, h3... */
+  @for $i from 1 through 6 {
+    h#{$i} {
+      $size: "";
+      @if $i < 6 { $size: 7 - $i; }
+      @apply text-#{$size}xl mb-2;
+    }
+  }
+
+  p {
+    @apply text-gray-700;
+  }
+
+  code {
+    @apply text-red-400 bg-gray-50 p-4 block rounded-xl;
+  }
+}

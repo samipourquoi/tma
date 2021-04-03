@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@uiw/react-markdown-preview": "git+https://github.com/samipourquoi/react-markdown-preview",
 		"@uiw/react-md-editor": "git+https://github.com/samipourquoi/react-md-editor",
+		"marked": "^2.0.1",
 		"next": "^10.0.9",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
@@ -19,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/jit": "^0.1.18",
+		"@types/marked": "^2.0.1",
 		"@types/node": "^14.14.35",
 		"@types/react": "^17.0.3",
 		"@types/react-dom": "^17.0.3",

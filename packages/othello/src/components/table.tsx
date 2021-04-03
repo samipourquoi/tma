@@ -1,6 +1,7 @@
 import React from "react";
 import { GET_ArchiveResult } from "hamlet/api";
 import { Tag } from "./tag";
+import Link from "next/link";
 
 export const Table: React.FC<{
   rows: GET_ArchiveResult[]
@@ -35,7 +36,12 @@ const Row: React.FC<{
       {row?.author.name || ""}
     </td>
     <td>
-      {row?.title || ""}
+      <Link href={`/archive/${row?.id || ""}`}>
+        <a className="hover:underline">
+          {row?.title}
+        </a>
+      </Link>
+
       <ul className="inline">
         {row?.tags.map((tag, i) => (
           <li key={i} className="inline ml-2">
