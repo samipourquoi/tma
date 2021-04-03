@@ -30,9 +30,14 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
           </span>
         </h1>
 
-        <div>
-          <Preview content={readme}/>
-          <FileBrowser initialData={files} archive={archive}/>
+        <div className="block xl:flex">
+          <section className="w-full xl:w-4/5 xl:pr-10">
+            <Preview content={readme}/>
+          </section>
+
+          <section className="w-full xl:w-2/5 2xl:w-1/5">
+            <FileBrowser initialData={files} archive={archive}/>
+          </section>
         </div>
       </section>
     </Page>
