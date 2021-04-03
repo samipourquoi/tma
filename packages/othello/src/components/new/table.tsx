@@ -1,5 +1,6 @@
 import React from "react";
 import { GET_ArchiveResult } from "hamlet/api";
+import { Tag } from "./tag";
 
 export const Table: React.FC<{
   rows: GET_ArchiveResult[]
@@ -19,22 +20,35 @@ export const Table: React.FC<{
       </thead>
       <tbody>
         {shownRows.map((row,i) => (
-          <tr key={i} className="table-row odd:bg-gray-100">
-            <td className="text-center">
-              {row?.author.name || ""}
-            </td>
-            <td>
-              {row?.title || ""}
-            </td>
-            <td className="text-center hidden md:table-cell">
-              {row ? formatDate(new Date(row.createdAt)) : ""}
-            </td>
-          </tr>
+          <Row key={i} row={row}/>
         ))}
       </tbody>
     </table>
   );
 }
+
+const Row: React.FC<{
+  row: GET_ArchiveResult | null
+}> = ({ row }) => (
+  <tr className="table-row odd:bg-gray-100">
+    <td className="text-center">
+      {row?.author.name || ""}
+    </td>
+    <td>
+      {row?.title || ""}
+      <ul className="inline">
+        {row?.tags.map((tag, i) => (
+          <li key={i} className="inline ml-2">
+            <Tag type={tag}/>
+          </li>
+        ))}
+      </ul>
+    </td>
+    <td className="text-center hidden md:table-cell">
+      {row ? formatDate(new Date(row.createdAt)) : ""}
+    </td>
+  </tr>
+)
 
 function formatDate(timestamp: Date | number):
   string
