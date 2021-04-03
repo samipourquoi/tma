@@ -11,14 +11,14 @@ export const Table: React.FC<{
 
   return (
     <table className="w-full">
-      <thead>
-        <tr className="table-row">
-          <th className="w-2/6 md:w-1/6">Author</th>
-          <th className="max-w-full">Title</th>
-          <th className="w-1/6 hidden md:table-cell">Date</th>
+      <thead className="text-gray-600">
+        <tr className="table-row border-t-2 border-b-2">
+          <th className="w-2/6 md:w-1/6 font-medium">Author</th>
+          <th className="max-w-full font-medium">Title</th>
+          <th className="w-1/6 hidden md:table-cell font-medium">Date</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="text-gray-400 font-light">
         {shownRows.map((row,i) => (
           <Row key={i} row={row}/>
         ))}

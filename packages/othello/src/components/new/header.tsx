@@ -6,7 +6,7 @@ export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
 
   return (
-    <div className="flex h-screen min-w-max">
+    <div className="flex h-screen min-w-max absolute md:relative">
       <header className={`
         ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-xl text-black
         flex flex-col relative border
@@ -34,8 +34,10 @@ export const NewHeader: React.FC = () => {
 
 const Profile: React.FC = () => (
   <div className="flex items-center">
-    <Image className="rounded-xl block" src="/images/default-user.png" width={65} height={65}/>
-    <div className="w-full ml-4 flex items-center flex-wrap">
+    <div className="md:hidden lg:block">
+      <Image className="rounded-xl" src="/images/default-user.png" width={65} height={65}/>
+    </div>
+    <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
       <div className="w-full font-logo text-2xl">TMA</div>
       <div className="w-full">samipourquoi</div>
     </div>

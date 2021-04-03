@@ -24,7 +24,7 @@ function typeToColor(type: TagType): string {
 export const Tag: React.FC<TagProps> = ({ type, onDelete }) => (
   <div className={`
     ${typeToColor(type)} rounded-full px-2 py-0.5 text-white font-light 
-    inline-flex justify-center items-center
+    inline-flex justify-center items-center text-sm
   `}>
     <span className="lowercase bg-t">
       {type.replace(/-/g, " ")}
