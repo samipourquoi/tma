@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Archive } from "../models/archive-model";
+import { Archive, ArchiveAttributes } from "../models/archive-model";
 import { User } from "../models/user-model";
 import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult, POST } from "../../api";
 import * as fs from "fs";
@@ -7,14 +7,21 @@ import * as express from "express";
 import { Multer } from "multer";
 import * as multer from "multer";
 import { isString } from "util";
-import { Op } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
-		const { page = 0, version, tags } = req.query as GET_ArchivesQuery;
-		console.log(req.query);
+		const { page = 0, version = "any", tags } = req.query as GET_ArchivesQuery;
 
 		try {
+		  const where: WhereOptions<ArchiveAttributes> = {
+        ...(version != "any" ? {
+          version: String(version)
+        } : {}),
+        ...(tags ? { tags: {
+            [ Op.contains ]: tags.split(",")
+          }} : {})
+      };
 			const archives = await Archive.findAll({
 				limit: 22,
 				offset: page * 22,
@@ -22,19 +29,12 @@ export module ArchiveController {
 					model: User,
 					attributes: ["name"]
 				},
-				where: {
-					...(version ? {
-						version: String(version)
-					} : {}),
-					...(tags ? { tags: {
-						[ Op.contains ]: tags.split(",")
-					}} : {})
-				}
+				where
 			});
 
 			res.send({
 				archives,
-				amount: Math.ceil(await Archive.count() / 22)
+				amount: Math.ceil(await Archive.count({ where }) / 22)
 			} as GET_ArchivesResult);
 		} catch (e) {
 			res.status(400)

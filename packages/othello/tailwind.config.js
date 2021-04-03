@@ -26,5 +26,12 @@ module.exports = {
       "sans": ["Rubik", "sans-serif"]
     }
 	},
-	plugins: [],
+  variants: {
+    extend: {
+      backgroundColor: [ "odd", "children" ]
+    },
+  },
+	plugins: [
+	  require("tailwindcss-children")
+  ],
 }

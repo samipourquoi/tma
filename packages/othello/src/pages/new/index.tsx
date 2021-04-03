@@ -14,8 +14,9 @@ interface ArchivePageProps {
 
 export default function ArchivePage({ initialData }: ArchivePageProps) {
   const [page, setPage] = useState(1);
+  const [version, setVersion] = useState("any");
   const { data } = useSWR<GET_ArchivesResult>(
-    `/api/archive?page=${page-1}`,
+    `/api/archive?page=${page-1}&version=${version}`,
     fetcher,
     { initialData: page == 1 ? initialData : void 0 });
 
@@ -31,9 +32,9 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
               TMA is a place to archive Minecraft contraptions for Technical gameplay.
             </p>
 
-            <div className="flex mt-4 md:mt-0 md:ml-auto gap-2">
+            <div className="flex mt-4 md:mt-0 md:ml-auto children:mx-2">
               <PageSelector pageAmount={data?.amount || 1} page={page} setPage={setPage}/>
-              <VersionSelector/>
+              <VersionSelector version={version} setVersion={setVersion}/>
             </div>
           </div>
         </section>
