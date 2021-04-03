@@ -8,8 +8,9 @@ export const NewHeader: React.FC = () => {
   return (
     <div className="flex h-screen min-w-max absolute md:relative">
       <header className={`
-        ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-xl
-        flex flex-col relative border
+        ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-lg
+        flex flex-col relative border shadow-xl
+        md:shadow-none
         md:flex md:rounded-r-none
       `}>
         <div className="overflow-y-auto p-7">
@@ -39,7 +40,7 @@ const Profile: React.FC = () => (
     </div>
     <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
       <div className="w-full font-logo text-2xl">TMA</div>
-      <div className="w-full">samipourquoi</div>
+      <div className="w-full font-light">samipourquoi</div>
     </div>
   </div>
 );
@@ -53,7 +54,7 @@ const Navigation: React.FC = () => (
     ].map(([href, emote, name]) => (
       <Link href={href} key={name}>
         <a className="
-          flex items-center my-4 font-light
+          flex items-center my-3 font-light
           hover:text-gray-500
         ">
           <span className="material-icons mr-2">{emote}</span>
@@ -80,7 +81,7 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="py-9 my-9 border-t border-b border-gray-300">
-      <h2 className="mb-5 text-2xl">Search</h2>
+      <h2 className="mb-4 text-2xl">Search</h2>
       <input type="text" placeholder={placeholder} className="
         w-full outline-none border-none p-3.5 rounded-xl text-base font-light
         text-gray-600 shadow
@@ -91,29 +92,28 @@ const SearchBar: React.FC = () => {
 
 const TagList: React.FC = () => {
   const tags: {
-    emoji: string,
+    color: string,
     name: string
   }[] = [
-    { emoji: "⚡️", name: "Redstone" },
-    { emoji: "🐸", name: "Slimestone" },
-    { emoji: "💾", name: "Storage" },
-    { emoji: "🚜", name: "Farms" },
-    { emoji: "🐲", name: "Mob farms" },
-    { emoji: "💥", name: "Bedrock break." },
-    { emoji: "📺", name: "Computational" },
-    { emoji: "🌈", name: "Other" }
+    { color: "bg-tags-redstone", name: "Redstone" },
+    { color: "bg-tags-slimestone", name: "Slimestone" },
+    { color: "bg-tags-storage", name: "Storage" },
+    { color: "bg-tags-farms", name: "Farms" },
+    { color: "bg-tags-mob-farms", name: "Mob farms" },
+    { color: "bg-tags-bedrock", name: "Bedrock break." },
+    { color: "bg-tags-computational", name: "Computational" },
+    { color: "bg-tags-other", name: "Other" }
   ];
 
   return (
     <div>
-      <h2 className="mb-5 text-2xl">Tags</h2>
+      <h2 className="mb-4 text-2xl">Tags</h2>
       <ul>
         {tags.map(tag => (
           <li key={tag.name} className="my-5">
             <Link href="">
-              <a>
-                <span>
-                  {tag.emoji}</span>
+              <a className="flex items-center">
+                <div className={`${tag.color} w-5 h-5 rounded-full`}/>
                 <span className="ml-4 font-light text-gray-400 hover:text-gray-500">
                   {tag.name}</span>
               </a>
