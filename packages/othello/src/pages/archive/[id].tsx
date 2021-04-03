@@ -7,6 +7,7 @@ import { GetServerSideProps } from "next";
 import { fetcher, ip } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
+import { Tag } from "../../components/tag";
 
 interface ArchiveViewProps {
   archive: GET_ArchiveResult;
@@ -28,6 +29,14 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
           <span className="mb-1.5">
             {archive.title}
           </span>
+
+          <ul className="mb-2 block ml-2.5">
+            {archive.tags.map(tag => (
+              <span className="mr-1.5">
+                <Tag type={tag} key={tag}/>
+              </span>
+            ))}
+          </ul>
         </h1>
 
         <div className="block xl:flex">
