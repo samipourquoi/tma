@@ -1,13 +1,5 @@
 @use "new/header";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap");
-@import url("http://fonts.cdnfonts.com/css/arlon");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-
 .material-icons {
   user-select: none;
 }

@@ -15,7 +15,7 @@ export type GET_ArchivesResult = {
 
 export type GET_ArchiveResult = ArchiveAttributes & {
 	createdAt: string,
-	author: UserAttributes
+	author: Pick<UserAttributes, "name">
 };
 
 export type GET_ArchiveFilesResult = string[];

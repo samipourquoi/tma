@@ -6,12 +6,11 @@ export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen min-w-max">
       <header className={`
         ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-xl text-black
         flex flex-col relative border
-        md:flex
-        md:rounded-r-none
+        md:flex md:rounded-r-none
       `}>
         <div className="overflow-y-auto p-7">
           <Profile/>
@@ -24,9 +23,9 @@ export const NewHeader: React.FC = () => {
 
       <div className={`
         material-icons text-gray-400 shadow ${isForcedVisible ? "" : "absolute"}
-        top-0 bg-gray-50 w-12 h-12 rounded-xl m-3 flex justify-center items-center
+        top-0 bg-gray-50 w-12 h-12 rounded-xl m-3 flex justify-center items-center cursor-pointer
         md:hidden
-        `} onClick={() => setForcedVisible(!isForcedVisible)}>
+      `} onClick={() => setForcedVisible(!isForcedVisible)}>
         {isForcedVisible ? "navigate_before" : "navigate_next"}
       </div>
     </div>
