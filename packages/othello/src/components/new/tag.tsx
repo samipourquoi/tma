@@ -7,18 +7,17 @@ export interface TagProps {
 }
 
 function typeToColor(type: TagType): string {
-  return ([
-    "redstone",
-    "slimestone",
-    "storage",
-    "farms",
-    "mob-farms",
-    "bedrock",
-    "computational",
-    "other"
-  ] as TagType[]).includes(type) ?
-    `bg-tags-${type}` :
-    "bg-gray-300";
+  return ({
+    "redstone": "bg-tags-redstone",
+    "slimestone": "bg-tags-slimestone",
+    "storage": "bg-tags-storage",
+    "farms": "bg-tags-farms",
+    "mob-farms": "bg-tags-mob-farms",
+    "bedrock": "bg-tags-bedrock",
+    "computational": "bg-tags-computational",
+    "other": "bg-tags-other"
+  } as { [k: string]: string })[type]
+    || "bg-gray-300";
 }
 
 export const Tag: React.FC<TagProps> = ({ type, onDelete }) => (

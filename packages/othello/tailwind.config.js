@@ -1,7 +1,9 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-	purge: [],
+	purge: [
+	  "./src/**/*.tsx"
+  ],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
     extend: {
@@ -23,11 +25,6 @@ module.exports = {
       "logo": ["Arlon", "sans-serif"],
       "sans": ["Rubik", "sans-serif"]
     }
-	},
-	variants: {
-		extend: {
-		  backgroundColor: ["odd"]
-    },
 	},
 	plugins: [],
 }

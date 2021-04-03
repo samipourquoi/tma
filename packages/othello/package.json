@@ -18,6 +18,7 @@
 		"swr": "^0.5.4"
 	},
 	"devDependencies": {
+		"@tailwindcss/jit": "^0.1.18",
 		"@types/node": "^14.14.35",
 		"@types/react": "^17.0.3",
 		"@types/react-dom": "^17.0.3",

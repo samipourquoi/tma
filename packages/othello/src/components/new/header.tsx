@@ -8,7 +8,7 @@ export const NewHeader: React.FC = () => {
   return (
     <div className="flex h-screen min-w-max absolute md:relative">
       <header className={`
-        ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-xl text-black
+        ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-xl
         flex flex-col relative border
         md:flex md:rounded-r-none
       `}>
