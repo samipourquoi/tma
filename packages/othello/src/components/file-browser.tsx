@@ -5,7 +5,7 @@ import { fetcher } from "../api";
 
 
 // These are just copy pasted from Github... (they look cool though)
-const dirSVG = (
+export const dirSVG = (
   <svg aria-label="Directory" height="16" viewBox="0 0 16 16" version="1.1" width="16" role="img">
     <path fillRule="evenodd"
           d="M1.75 1A1.75 1.75 0 000 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0016 13.25v-8.5A1.75 1.75 0
@@ -13,7 +13,7 @@ const dirSVG = (
   </svg>
 );
 
-const fileSVG = (
+export const fileSVG = (
   <svg aria-label="File" height="16" viewBox="0 0 16 16" version="1.1" width="16" role="img">
     <path fillRule="evenodd"
           d="M3.75 1.5a.25.25 0 00-.25.25v11.5c0 .138.112.25.25.25h8.5a.25.25 0 00.25-.25V6H9.75A1.75 1.75 0 018
@@ -78,9 +78,9 @@ const Entry: React.FC<{
 
   return (
     <div className="flex items-center my-1.5">
-    <span className="fill-current">
-      {type == "directory" ? dirSVG : fileSVG}
-    </span>
+      <span className="fill-current">
+        {type == "directory" ? dirSVG : fileSVG}
+      </span>
       <span className="ml-2 hover:underline cursor-pointer" onClick={() => {
         if (type == "directory") {
           if (name == "../") {
@@ -93,14 +93,14 @@ const Entry: React.FC<{
           }
         }
       }}>
-      {type == "directory" ?
-        name.slice(0, -1) :
-        <a href={`/api/archive/store/${ctx.archive.id}${ctx.path || "/"}${name}`}
-           download
-        >
-          {name}
-        </a>}
-    </span>
+        {type == "directory" ?
+          name.slice(0, -1) :
+          <a href={`/api/archive/store/${ctx.archive.id}${ctx.path || "/"}${name}`}
+             download
+          >
+            {name}
+          </a>}
+      </span>
     </div>
   );
 }
