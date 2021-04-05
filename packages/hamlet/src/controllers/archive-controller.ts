@@ -8,6 +8,7 @@ import { Multer } from "multer";
 import * as multer from "multer";
 import { isString } from "util";
 import { Op, WhereOptions } from "sequelize";
+import { redis } from "../index";
 
 export module ArchiveController {
 	export async function index(req: Request, res: Response) {
@@ -66,7 +67,7 @@ export module ArchiveController {
 		}
 	}
 
-	export async function createArchive(req: Request, res: Response, next: NextFunction) {
+	export async function createArchive(req: Request, res: Response) {
 		const { title, readme, versions, tags, files } = req.body as Partial<POST.Archive>;
 
     if (typeof title  != "string" ||
@@ -74,6 +75,11 @@ export module ArchiveController {
 			typeof versions != "string" ||
 			typeof tags     != "string" ||
       typeof files    != "object") return res.status(400).redirect("/submit");
+
+    const cacheKey = `archive:cd:${req.user!.id}`;
+
+    if (await redis.exists(cacheKey))
+      return res.status(429).end();
 
 		const { id } = await Archive.create({
 			title,
@@ -98,6 +104,8 @@ export module ArchiveController {
     writeFilesFromHierarchy(path, files);
 
 		fs.writeFileSync(`../../store/${id}/README.md`, readme, { encoding: "utf-8" });
+
+		await redis.set(cacheKey, "gay sex", "EX", 30 /* seconds */);
 
 		res.status(401).end();
 	}

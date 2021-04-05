@@ -7,7 +7,7 @@ import authed = AuthController.authed;
 
 export default Router({ strict: true })
 	.get("/", ArchiveController.index)
-	.post("/", ArchiveController.createArchive)
+	.post("/", authed, ArchiveController.createArchive)
 	.get("/:id", ArchiveController.getArchive)
 	.patch("/:id", ArchiveController.updateArchive)
 	.delete("/:id", ArchiveController.deleteArchive)

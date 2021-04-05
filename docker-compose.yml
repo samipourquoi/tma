@@ -10,3 +10,8 @@ services:
       POSTGRES_PASSWORD: supersecret
     ports:
       - "3002:5432"
+
+  cache:
+    image: redis
+    ports:
+      - "3003:6379"

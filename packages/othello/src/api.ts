@@ -7,8 +7,6 @@ export const fetcher = (uri: string, options?: RequestInit) => fetch(ip + uri, o
 
 export module API {
   export function postArchive(archive: POST.Archive) {
-    console.log(archive);
-
     return fetch("/api/archive", {
       method: "POST",
       headers: {
