@@ -33,7 +33,10 @@ export const Editor: React.FC = () => {
 
       <div className="w-full p-4">
         {mode == "edit" ? (
-          <textarea className="resize w-full max-w-full h-[40vh] rounded-xl p-1" onChange={ev => setContent(ev.target.value)}
+          <textarea className="
+            resize w-full max-w-full h-[40vh] rounded-xl p-1
+            text-gray-700
+          " onChange={ev => setContent(ev.target.value)}
             value={content}/>
         ) : (
           <Preview content={content}/>

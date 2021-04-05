@@ -15,19 +15,19 @@ export default function SubmitPage({}: SubmitPageProps) {
       <h1 className="text-6xl">Submit</h1>
 
       <div className="block xl:flex mt-8">
-        <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8">
+        <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8 text-gray-700">
           <div className="mb-4">
-            <h2 className="text-xl mb-3">Tags</h2>
+            <h2 className="text-xl mb-3 text-gray-600 font-normal">Tags</h2>
             <TagsSelector availableTags={tags}/>
           </div>
 
           <div>
-            <h2 className="text-xl mb-3">Version</h2>
+            <h2 className="text-xl mb-3 text-gray-600 font-normal">Version</h2>
             <TagsSelector availableTags={versions}/>
           </div>
 
           <div>
-            <h2 className="text-xl mb-3">Readme</h2>
+            <h2 className="text-xl mb-3 text-gray-600 font-normal">Readme</h2>
             <Editor/>
           </div>
         </section>

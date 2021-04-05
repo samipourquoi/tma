@@ -55,6 +55,7 @@ export const FileUploader: React.FC<{
         <div className="
           w-full border-t border-gray-300 pl-3 overflow-auto
           flex justify-center items-center w-full pt-4 mt-4
+          text-gray-700
         ">
           {content}
         </div>
@@ -102,7 +103,7 @@ const FileHierarchy: React.FC<{
     }} onDragOver={ev => {
       // Necessary because of https://stackoverflow.com/questions/50230048/react-ondrop-is-not-firing.
       ev.preventDefault();
-    }} className={`p-1 rounded-xl ${isDraggedOver ? "bg-gray-100" : ""}`}>
+    }} className={`p-1 rounded-xl ${isDraggedOver ? "bg-gray-100" : ""} children:mt-2`}>
       {Object.entries(files).map(([name, content]) =>
         isHierarchy(content) ?
           <Directory key={name} name={name} files={content} setFiles={newFiles => {
