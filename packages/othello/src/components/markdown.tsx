@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import marked from "marked";
+import { SubmitCtx } from "../contexts";
 
 export const Preview: React.FC<{
   content: string
@@ -19,6 +20,11 @@ export const Editor: React.FC = () => {
     "## Version compatibility\n\n" +
     "## Credits");
 
+  const { setReadme } = useContext(SubmitCtx);
+  useEffect(() => {
+    setReadme(content);
+  }, [content]);
+
   return (
     <div className="border border-dashed rounded-xl">
 
@@ -34,7 +40,7 @@ export const Editor: React.FC = () => {
       <div className="w-full p-4">
         {mode == "edit" ? (
           <textarea className="
-            resize w-full max-w-full h-[40vh] rounded-xl p-1
+            resize w-full max-w-full h-[35vh] rounded-xl p-1
             text-gray-700
           " onChange={ev => setContent(ev.target.value)}
             value={content}/>

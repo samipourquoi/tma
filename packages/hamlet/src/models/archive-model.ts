@@ -7,7 +7,7 @@ export interface ArchiveAttributes {
 	id: number,
 	title: string,
 	tags: TagType[],
-	version: string,
+	versions: string[],
 	authorID: number
 }
 
@@ -25,8 +25,8 @@ export class Archive
 	@Column(ARRAY(STRING))
 	tags!: TagType[];
 
-	@Column
-	version!: string;
+	@Column(ARRAY(STRING))
+	versions!: string[];
 
 	@BelongsTo(() => User)
 	author!: User;

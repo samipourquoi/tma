@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Archive, ArchiveAttributes } from "../models/archive-model";
 import { User } from "../models/user-model";
-import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult, POST } from "../../api";
+import { GET_ArchiveFilesResult, GET_ArchivesQuery, GET_ArchivesResult, Hierarchy, POST } from "../../api";
 import * as fs from "fs";
 import * as express from "express";
 import { Multer } from "multer";
@@ -16,7 +16,9 @@ export module ArchiveController {
 		try {
 		  const where: WhereOptions<ArchiveAttributes> = {
         ...(version != "any" ? {
-          version: String(version)
+          versions: {
+            [ Op.contains ]: String(version)
+          }
         } : {}),
         ...(tags ? { tags: {
             [ Op.contains ]: tags.split(",")
@@ -65,32 +67,39 @@ export module ArchiveController {
 	}
 
 	export async function createArchive(req: Request, res: Response, next: NextFunction) {
-		const { title, readme, version, tags = "" } = req.body as Partial<POST.Archive>;
-		console.log(req.body);
-		if (typeof title   != "string" ||
-			typeof readme  != "string" ||
-			typeof version != "string" ||
-			typeof tags    != "string") return res.status(400).redirect("/submit");
+		const { title, readme, versions, tags, files } = req.body as Partial<POST.Archive>;
+
+    if (typeof title  != "string" ||
+			typeof readme   != "string" ||
+			typeof versions != "string" ||
+			typeof tags     != "string" ||
+      typeof files    != "object") return res.status(400).redirect("/submit");
 
 		const { id } = await Archive.create({
 			title,
-			tags: tags.split(","),
-			version,
+			tags:     tags == ""     ? [] : tags.split(","),
+			versions: versions == "" ? [] : versions.split(","),
 			authorID: req.user?.id || 4
 		});
 
-		const files = req.files as Express.Multer.File[];
+		const path = `../../store/${id}`;
+		fs.mkdirSync(path);
 
-		fs.mkdirSync(`../../store/${id}`)
-		files.forEach(file => {
-			fs.renameSync(
-				file.path,
-				`../../store/${id}/${file.originalname}`
-			);
-		});
+		const writeFilesFromHierarchy = (path: string, files: Hierarchy<string>) => {
+		  for (const [name, data] of Object.entries(files)) {
+		    const filePath = `${path}/${name}`;
+
+		    if (typeof data == "string")
+          fs.writeFileSync(filePath, Buffer.from(data, "base64"));
+		    else
+		      writeFilesFromHierarchy(filePath, data);
+      }
+    }
+    writeFilesFromHierarchy(path, files);
+
 		fs.writeFileSync(`../../store/${id}/README.md`, readme, { encoding: "utf-8" });
 
-		res.redirect("/");
+		res.status(401).end();
 	}
 
 	export function updateArchive(req: Request, res: Response) {

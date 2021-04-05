@@ -24,8 +24,9 @@ export module POST {
 	export interface Archive {
 		title: string,
 		readme: string,
-		files?: unknown[],
-		version: string,
+		files?: Hierarchy<string>,
+    // List of strings separated by commas.
+		versions: string,
 		// List of `TagType` separated by commas.
 		tags: string
 	}
@@ -49,3 +50,7 @@ export type TagType =
 	| "computational"
 	| "other"
 	| string;
+
+export type Content = string | ArrayBuffer;
+
+export type Hierarchy<T = Content> = { [k: string]: Hierarchy<T> | T };

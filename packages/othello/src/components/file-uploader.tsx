@@ -2,10 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { dirSVG, fileSVG } from "./file-browser";
 import { Preview } from "./markdown";
 import { types } from "util";
-
-type Content = string | ArrayBuffer;
-
-type Hierarchy = { [k: string]: Hierarchy | Content };
+import { SubmitCtx } from "../contexts";
+import { Content, Hierarchy } from "hamlet/api";
 
 const isHierarchy = (x => typeof x != "string" && !(x instanceof ArrayBuffer)) as
   (x: Hierarchy | Content) => x is Hierarchy;
@@ -16,8 +14,7 @@ const ctx = createContext<{
   setEditorContent(content: React.ReactNode): void
 }>(null as any);
 
-export const FileUploader: React.FC<{
-}> = () => {
+export const FileUploader: React.FC = () => {
   const [files, setFiles] = useState<Hierarchy>({
     "README.md": "Drag and drop new files!\n\n" +
       "You can also login via FTP for easier file management.\n\n" +
@@ -43,6 +40,12 @@ export const FileUploader: React.FC<{
   useEffect(() => {
     setEditorContent(files["README.md"]);
   }, []);
+
+  const { setFiles: setFilesSubmit } = useContext(SubmitCtx);
+
+  useEffect(() => {
+    setFilesSubmit(files);
+  }, [files])
 
   return (
     <ctx.Provider value={{
