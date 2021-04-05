@@ -20,7 +20,8 @@ export const FileUploader: React.FC<{
 }> = () => {
   const [files, setFiles] = useState<Hierarchy>({
     "README.md": "Drag and drop new files!\n\n" +
-      "You can also login via FTP for easier file management."
+      "You can also login via FTP for easier file management.\n\n" +
+      "The markdown content you are writing will replace this \`README.md\` file."
   });
 
   const [content, setContent] = useState<React.ReactNode>("");
@@ -81,10 +82,10 @@ const FileHierarchy: React.FC<{
     }} className={`p-1 rounded-xl ${isDraggedOver ? "bg-gray-100" : ""}`}>
       {Object.entries(files).map(([name, content]) =>
         isHierarchy(content) ?
-          <Directory name={name} files={content} setFiles={newFiles => {
+          <Directory key={name} name={name} files={content} setFiles={newFiles => {
             setFiles({ ...files, [name]: newFiles });
           }}/> :
-          <File name={name} content={content}/>
+          <File key={name} name={name} content={content}/>
       )}
     </div>
   );
