@@ -12,12 +12,12 @@ export default function SubmitPage({}: SubmitPageProps) {
     <Page>
       <h1 className="text-6xl">Submit</h1>
 
-      <div className="block lg:flex mt-8 h-full">
-        <section className="w-full lg:w-1/2 mr-5">
+      <div className="block xl:flex mt-8">
+        <section className="w-full xl:w-2/3 xl:mr-5">
           <Editor/>
         </section>
 
-        <section className="w-full lg:w-3/5 lg:w-1/2">
+        <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
           <FileUploader/>
         </section>
       </div>

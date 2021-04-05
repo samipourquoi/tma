@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { dirSVG, fileSVG } from "./file-browser";
 import { Preview } from "./markdown";
 import { types } from "util";
@@ -25,14 +25,37 @@ export const FileUploader: React.FC<{
   });
 
   const [content, setContent] = useState<React.ReactNode>("");
+  const setEditorContent = (content: React.ReactNode) => {
+    if (typeof content == "string") {
+      const newContent = content.split("\n")
+        .reduce((text, line) => (
+          <>
+            {text}
+            {line}<br/>
+          </>
+        ), <></>);
+      setContent(newContent);
+    } else {
+      setContent(content);
+    }
+  };
+
+  useEffect(() => {
+    setEditorContent(files["README.md"]);
+  }, []);
 
   return (
-    <ctx.Provider value={{ files, setFiles, setEditorContent: setContent }}>
-      <div className="border border-dashed p-4 rounded-xl flex">
-        <ul className="w-1/2 select-none text-gray-600 overflow-x-auto">
+    <ctx.Provider value={{
+      files, setFiles, setEditorContent
+    }}>
+      <div className="border border-dashed p-4 rounded-xl flex flex-col">
+        <ul className="w-full select-none text-gray-600 break-words">
           <FileHierarchy files={files} setFiles={setFiles}/>
         </ul>
-        <div className="w-1/2 border-l border-gray-300 pl-3 overflow-auto">
+        <div className="
+          w-1/2 border-t border-gray-300 pl-3 overflow-auto
+          flex justify-center items-center w-full pt-4 mt-4
+        ">
           {content}
         </div>
       </div>
@@ -133,26 +156,24 @@ const File: React.FC<{
       <span className="ml-2 hover:underline cursor-pointer" onClick={() => {
         const show = (() => {
           const extension = name.split(".").pop();
+
+          // https://stackoverflow.com/questions/49123222/converting-array-buffer-to-string-maximum-call-stack-size-exceeded
+          const getBase64 = () => btoa(new Uint8Array(content as ArrayBuffer)
+            .reduce((data, byte) => data + String.fromCharCode(byte), ""));
+
           switch (extension) {
             case "png":
             case "jpg":
             case "jpeg":
-              // We get into call stack errors with another implementation.
-              // https://stackoverflow.com/questions/49123222/converting-array-buffer-to-string-maximum-call-stack-size-exceeded
-              const base64 = btoa(new Uint8Array(content as ArrayBuffer)
-                .reduce((data, byte) => data + String.fromCharCode(byte), ""));
-              return <img src={`data:image/${extension};base64, ${base64}`} alt="Image preview"/>;
+              return <img src={`data:image/${extension};base64, ${getBase64()}`} alt="Image preview"/>;
+            case "mp4":
+            case "mov":
+              return <video src={`data:video/${extension};base64, ${getBase64()}`}/>;
+
             default:
-              return (content instanceof ArrayBuffer ?
+              return content instanceof ArrayBuffer ?
                 new TextDecoder("utf-8").decode(content) :
-                content)
-                .split("\n")
-                .reduce((text, line) => (
-                  <>
-                    {text}
-                    {line}<br/>
-                  </>
-                ), <></>)
+                content;
           }
         })();
 
