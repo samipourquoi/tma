@@ -2,6 +2,7 @@ import React from "react";
 import { GET_ArchiveResult } from "hamlet/api";
 import { Tag } from "./tag";
 import Link from "next/link";
+import { getTitleUriFromArchive } from "../pages/archive/[id]";
 
 export const Table: React.FC<{
   rows: GET_ArchiveResult[]
@@ -36,7 +37,7 @@ const Row: React.FC<{
       {row?.author.name || ""}
     </td>
     <td>
-      <Link href={`/archive/${row?.id || ""}`}>
+      <Link href={row ? `/archive/${getTitleUriFromArchive(row)}` : "/archive"}>
         <a className="hover:underline">
           {row?.title}
         </a>

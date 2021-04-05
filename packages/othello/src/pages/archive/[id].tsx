@@ -55,8 +55,24 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
 
 export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async context => {
   try {
-    const { id } = context.query;
+    let { id } = context.query;
+
+    // Let an archive with ID #1 and title 'Birch farm'.
+    // I want the uri to access it to be /archive/1-birch-farm,
+    // and not something like /archive/1 (you can't tell what the archive
+    // is from the url if you don't include the title in it).
+    //
+    // However, you fetch an archive from the API with its ID.
+    // So this checks if the URI is corresponding to the wanted format.
+    id = typeof id == "string" ?
+      id.split("-")[0] :
+      id;
     const archive = await fetcher(`/api/archive/${id}`);
+    if (context.query.id != getTitleUriFromArchive(archive))
+      return {
+        notFound: true
+      };
+
     const files: GET_ArchiveFilesResult = await fetcher(`/api/archive/store/${id}`);
     const readme: string = await fetch(`${ip}/api/archive/store/${id}/README.md`).then(res => res.text());
 
@@ -74,3 +90,8 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
   }
 }
 
+export function getTitleUriFromArchive(archive: GET_ArchiveResult) {
+  return `${archive.id}-${encodeURI(archive.title
+    .toLowerCase()
+    .replace(" ", "-"))}`;
+}
