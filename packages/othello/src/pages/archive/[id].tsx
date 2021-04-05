@@ -40,7 +40,9 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
 
       <div className="block xl:flex">
         <section className="w-full xl:w-4/5 xl:pr-10">
-          <Preview content={readme}/>
+          <div className="max-w-prose">
+            <Preview content={readme}/>
+          </div>
         </section>
 
         <section className="w-full xl:w-2/5 2xl:w-1/5">

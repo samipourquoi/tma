@@ -1,26 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { TagType } from "hamlet/api";
 import { Tag } from "../tag";
 
-export default function TagsSelector() {
+export const TagsSelector: React.FC<{
+  availableTags: string[]
+}> = ({ availableTags }) => {
   const [tags, setTags] = useState<TagType[]>([]);
   const [popupVisible, setPopupVisible] = useState(false);
 
   return (
-    <div className="tags-selector">
+    <div className="widget">
       <input value={tags} name="tags" style={{
         display: "none"
       }}/>
 
-      {tags.map((tag, i) => (
-        <Tag type={tag} key={i} onDelete={() => {
-          const newTags = [...tags];
-          newTags.splice(i, 1);
-          setTags(newTags);
-        }}/>
-      ))}
+      <ul className="flex flex-wrap">
+        {tags.map((tag, i) => (
+          <li key={i} className="p-0.5 h-full">
+            <Tag type={tag} onDelete={() => {
+              const newTags = [...tags];
+              newTags.splice(i, 1);
+              setTags(newTags);
+            }}/>
+          </li>
+        ))}
+      </ul>
 
-      <span className="material-icons add-button"
+      <span className="material-icons cursor-pointer ml-auto"
             onClick={() => setPopupVisible(!popupVisible)}>
         {popupVisible ? "remove" : "add"}
       </span>
@@ -28,42 +34,35 @@ export default function TagsSelector() {
       <div style={{
         display: popupVisible ? void 0 : "none"
       }}>
-        <SearchPopup tags={tags} setTags={setTags}/>
+        <SearchPopup tags={tags} setTags={setTags} availableTags={availableTags}/>
       </div>
     </div>
   );
 }
 
-interface SearchPopupProps {
+const SearchPopup: React.FC<{
   tags: TagType[],
-  setTags(tags: TagType[]): void
-}
-
-function SearchPopup({ tags, setTags }: SearchPopupProps) {
-  const availableTags: TagType[] = [
-    "redstone",
-    "slimestone",
-    "storage",
-    "farms",
-    "mob-farms",
-    "bedrock",
-    "computational",
-    "other"
-  ].filter(tag => !tags.includes(tag));
+  setTags(tags: TagType[]): void,
+  availableTags: string[]
+}> = ({ tags, setTags, availableTags }) => {
+  const showableTags: TagType[] = availableTags.filter(tag => !tags.includes(tag));
 
   return (
-    <div className="search-popup">
-      {availableTags.length > 0 ?
+    <div className="
+      absolute bg-gray-50 shadow-lg rounded-xl px-4 py-2 transform translate-x-[-120%]
+      cursor-pointer
+    ">
+      {showableTags.length > 0 ?
 
-        availableTags.map((tag, i) => (
-          <div className="search-entry" key={i} onClick={() => {
+        showableTags.map((tag, i) => (
+          <div className="my-1.5" key={i} onClick={() => {
             setTags([...tags, tag]);
           }}>
             <Tag type={tag}/>
           </div>
         )) :
 
-        <em>void</em>}
+        <em className="text-gray-500">void</em>}
     </div>
   );
 }

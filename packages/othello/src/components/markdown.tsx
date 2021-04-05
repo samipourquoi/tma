@@ -10,8 +10,7 @@ export const Preview: React.FC<{
   }}/>
 );
 
-export const Editor: React.FC<{
-}> = ({}) => {
+export const Editor: React.FC = () => {
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [content, setContent] = useState(
     "# My cool Minecraft contraption 😎\n\n" +

@@ -17,7 +17,7 @@ function typeToColor(type: TagType): string {
     "computational": "bg-tags-computational",
     "other": "bg-tags-other"
   } as { [k: string]: string })[type]
-    || "bg-gray-300";
+    || "border border-gray-300 children:text-gray-500";
 }
 
 export const Tag: React.FC<TagProps> = ({ type, onDelete }) => (
@@ -30,7 +30,7 @@ export const Tag: React.FC<TagProps> = ({ type, onDelete }) => (
     </span>
 
     {onDelete ?
-      <span className="material-icons" onClick={onDelete}>
+      <span className="material-icons cursor-pointer text-base ml-1" onClick={onDelete}>
         clear
       </span> :
       null}

@@ -53,7 +53,7 @@ export const FileUploader: React.FC<{
           <FileHierarchy files={files} setFiles={setFiles}/>
         </ul>
         <div className="
-          w-1/2 border-t border-gray-300 pl-3 overflow-auto
+          w-full border-t border-gray-300 pl-3 overflow-auto
           flex justify-center items-center w-full pt-4 mt-4
         ">
           {content}

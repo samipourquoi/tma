@@ -7,11 +7,12 @@
 
   /* Set h1, h2, h3... */
   @for $i from 1 through 6 {
-    $step: 0.35;
+    $step: 0.275;
 
     h#{$i} {
       $size: 1 + $step * (7 - $i);
       font-size: #{$size}em;
+      line-height: 1.2em;
 
       @apply mb-2;
     }
