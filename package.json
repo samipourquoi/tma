@@ -8,6 +8,7 @@
 	"scripts": {
 		"hamlet": "yarn workspace hamlet",
 		"othello": "yarn workspace othello",
+    "macbeth": "yarn workspace macbeth",
 		"build": "yarn workspaces run build"
 	},
 	"workspaces": [ "packages/*" ]

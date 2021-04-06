@@ -13,6 +13,7 @@ node_modules
 # editors
 .idea
 .vscode
+*.iml
 
 # logs
 *.log

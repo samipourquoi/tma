@@ -1,10 +1,10 @@
 {
-	"name": "romeo",
+	"name": "macbeth",
 	"description": "Version-independent litematics.",
 	"version": "1.0.0",
 	"scripts": {
-		"build": "test",
-		"start": "test"
+		"build": "echo",
+		"start": "ruby macbeth.rb"
 	},
 	"dependencies": {
 	}
