@@ -4,7 +4,12 @@ import { FtpController } from "../controllers/ftp-controller";
 
 export const ftp = new FtpSrv({
 	url: "ftp://127.0.0.1:6900",
-	greeting: "welcome to blocky game archive"
+	greeting: "welcome to blocky game archive",
+  // There is no way to disable logging easily, so we
+  // make each logging function do nothing.
+  log: new Proxy({}, {
+    get: () => () => void 0
+  })
 });
 
 const writeCommands = ["ALLO", "APPE", "DELE", "MKD", "RMD", "RNRF", "RNTO", "STOR", "STRU"];
