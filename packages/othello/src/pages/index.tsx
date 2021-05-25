@@ -7,6 +7,7 @@ import { fetcher } from "../api";
 import useSWR from "swr";
 import { PageSelector } from "../components/widgets/page-selector";
 import { VersionSelector } from "../components/widgets/version-selector";
+import Head from "next/head";
 
 interface ArchivePageProps {
   initialData: GET_ArchivesResult
@@ -22,6 +23,10 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
 
   return (
     <div className="flex">
+      <Head>
+        <title>TMA - Home</title>
+      </Head>
+
       <NewHeader/>
 
       <main className="w-full h-screen overflow-y-scroll">

@@ -9,6 +9,7 @@ import { API } from "../api";
 import Router from "next/router";
 import { Content, Hierarchy } from "hamlet/api";
 import fs from "fs";
+import Head from "next/head";
 
 interface SubmitPageProps {
 
@@ -23,6 +24,10 @@ export default function SubmitPage({}: SubmitPageProps) {
 
   return (
     <Page>
+      <Head>
+        <title>TMA - Submit</title>
+      </Head>
+
       <SubmitCtx.Provider value={{
         setTags, setVersions, setReadme, setFiles
       }}>

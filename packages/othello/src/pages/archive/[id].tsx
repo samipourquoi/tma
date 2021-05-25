@@ -8,6 +8,7 @@ import { fetcher, ip } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
+import Head from "next/head";
 
 interface ArchiveViewProps {
   archive: GET_ArchiveResult;
@@ -18,6 +19,10 @@ interface ArchiveViewProps {
 export default function ArchiveView({ archive, files, readme }: ArchiveViewProps) {
   return (
     <Page>
+      <Head>
+        <title>TMA - {archive.title}</title>
+      </Head>
+
       <h1 className="flex items-center uppercase">
         <Link href="/">
           <a>
