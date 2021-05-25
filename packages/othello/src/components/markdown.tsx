@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import marked from "marked";
 import { SubmitCtx } from "../contexts";
+import Monaco from "@monaco-editor/react";
 
 export const Preview: React.FC<{
   content: string
@@ -10,6 +11,50 @@ export const Preview: React.FC<{
     __html: marked(content, { sanitize: true })
   }}/>
 );
+
+export const Editor2: React.FC = () => {
+  interface File { name: string, language: "markdown" | "json" | string, content: string }
+
+  const [files, setFiles] = useState<File[]>([
+    {
+      name: "readme.md",
+      language: "markdown",
+      content: "## Hello world\n"
+    },
+    {
+      name: "meta.json",
+      language: "json",
+      content: "{\n\t\n}"
+    }
+  ]);
+  const [editableFile, setEditableFile] = useState(files[0]);
+
+  return (
+    <div className="h-screen">
+      <div className="flex w-full">
+        {files.map(file => (
+          <button
+            key={file.name}
+            className={`font-mono mx-2 my-1 
+              ${file.name == editableFile.name ? "text-gray-600": "text-gray-400 hover:text-gray-500"}`}
+            onClick={() => {
+              setEditableFile(file)
+            }}>
+            {file.name}</button>
+        ))}
+      </div>
+
+      <Monaco
+        language={editableFile.language}
+        value={editableFile.content}
+        theme="light"
+        onChange={content => editableFile.content = content || editableFile.content}
+        options={{
+          mouseStyle: "text"
+        }}/>
+    </div>
+  );
+}
 
 export const Editor: React.FC = () => {
   const [mode, setMode] = useState<"edit" | "preview">("edit");

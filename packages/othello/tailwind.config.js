@@ -19,11 +19,11 @@ module.exports = {
           "computational": "#fcac55",
           "other":         "#d5d9d5"
         }
+      },
+      fontFamily: {
+        "logo": ["Arlon", "sans-serif"],
+        "sans": ["Rubik", "sans-serif"]
       }
-    },
-    fontFamily: {
-      "logo": ["Arlon", "sans-serif"],
-      "sans": ["Rubik", "sans-serif"]
     }
 	},
   variants: {

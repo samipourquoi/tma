@@ -9,9 +9,11 @@
 		"start": "next start"
 	},
 	"dependencies": {
+		"@monaco-editor/react": "^4.1.3",
 		"@uiw/react-markdown-preview": "git+https://github.com/samipourquoi/react-markdown-preview",
 		"@uiw/react-md-editor": "git+https://github.com/samipourquoi/react-md-editor",
 		"marked": "^2.0.1",
+		"monaco-editor": "^0.24.0",
 		"next": "^10.0.9",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",

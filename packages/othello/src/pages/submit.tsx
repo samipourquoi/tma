@@ -1,7 +1,7 @@
 import { Page } from "../layout/page";
 import { FileUploader } from "../components/file-uploader";
 import React, { useState } from "react";
-import { Editor } from "../components/markdown";
+import { Editor, Editor2 } from "../components/markdown";
 import { TagsSelector } from "../components/widgets/tags-selector";
 import { tags as TAGS, versions as VERSIONS } from "../constants";
 import { SubmitCtx } from "../contexts";
@@ -48,7 +48,7 @@ export default function SubmitPage({}: SubmitPageProps) {
 
             <div>
               <h2 className="text-xl mb-3 text-gray-600 font-normal">Readme</h2>
-              <Editor/>
+              <Editor2/>
             </div>
           </section>
 
