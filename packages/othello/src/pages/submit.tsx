@@ -11,6 +11,8 @@ import { Content, Hierarchy } from "hamlet/api";
 import fs from "fs";
 import Head from "next/head";
 import { FileUploader2 } from "../components/file-uploader2";
+import useSWR from "swr";
+import { useUser } from "../hooks/use-user";
 
 interface SubmitPageProps {
 
@@ -22,6 +24,12 @@ export default function SubmitPage({}: SubmitPageProps) {
   const [versions, setVersions] = useState<string[]>([]);
   const [readme,   setReadme]   = useState("");
   const [files,    setFiles]    = useState<Hierarchy>({});
+
+  const user = useUser();
+  if (user == null) {
+    Router.push("/api/auth/discord");
+    return null;
+  }
 
   return (
     <Page>
