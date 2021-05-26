@@ -93,14 +93,17 @@ export const Editor2: React.FC = () => {
     <div>
       <div className="flex w-full">
         {files.map(file => (
-          <button
-            key={file.name}
-            className={`font-mono mx-2 my-1 
+          <div key={file.name}>
+            <input type="text" name={file.name} value={file.content} hidden/>
+            <button
+              type="button"
+              className={`font-mono mx-2 my-1 
               ${file.name == editableFile.name ? "text-gray-600": "text-gray-400 hover:text-gray-500"}`}
-            onClick={() => {
-              setEditableFile(file)
-            }}>
-            {file.name}</button>
+              onClick={() => {
+                setEditableFile(file)
+              }}>
+              {file.name}</button>
+          </div>
         ))}
       </div>
 
@@ -112,7 +115,8 @@ export const Editor2: React.FC = () => {
         onChange={content => editableFile.content = content || editableFile.content}
         options={{
           mouseStyle: "text",
-          minimap: { enabled: false }
+          minimap: { enabled: false },
+          wordWrap: "on"
         }}/>
     </div>
   );

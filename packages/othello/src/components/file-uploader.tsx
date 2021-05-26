@@ -16,9 +16,11 @@ const ctx = createContext<{
 
 export const FileUploader: React.FC = () => {
   const [files, setFiles] = useState<Hierarchy>({
-    "README.md": "Drag and drop new files!\n\n" +
-      "You can also login via FTP for easier file management.\n\n" +
-      "The markdown content you are writing will replace this \`README.md\` file."
+    "readme.md":
+      "Drag and drop new files!\n\n" +
+      "You can also, once submitted, connect via FTP for easier file management.\n\n" +
+      "The markdown content you are writing will replace this file.",
+    "meta.yml": ""
   });
 
   const [content, setContent] = useState<React.ReactNode>("");
@@ -38,7 +40,7 @@ export const FileUploader: React.FC = () => {
   };
 
   useEffect(() => {
-    setEditorContent(files["README.md"]);
+    setEditorContent(files["readme.md"]);
   }, []);
 
   const { setFiles: setFilesSubmit } = useContext(SubmitCtx);
@@ -51,7 +53,7 @@ export const FileUploader: React.FC = () => {
     <ctx.Provider value={{
       files, setFiles, setEditorContent
     }}>
-      <div className="border border-dashed p-4 rounded-xl flex flex-col">
+      <div className="border border-dashed p-4 rounded-xl flex flex-col font-mono">
         <ul className="w-full select-none text-gray-600 break-words">
           <FileHierarchy files={files} setFiles={setFiles}/>
         </ul>
