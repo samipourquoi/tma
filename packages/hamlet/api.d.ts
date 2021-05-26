@@ -1,6 +1,10 @@
 import { ArchiveAttributes } from "./src/models/archive-model";
 import { UserAttributes } from "./src/models/user-model";
 
+declare global {
+  declare type base64 = string;
+}
+
 export interface GET_ArchivesQuery {
 	page?: number,
 	version?: string | number,
@@ -19,6 +23,13 @@ export type GET_ArchiveResult = ArchiveAttributes & {
 };
 
 export type GET_ArchiveFilesResult = string[];
+
+export module GET {
+  export module Auth {
+    export interface UserReq {}
+    export type UserRes = User | null
+  }
+}
 
 export module POST {
 	export interface Archive {

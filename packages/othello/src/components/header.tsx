@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import useSWR from "swr";
+import { GET } from "hamlet/api";
+import { fetcher } from "../api";
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -33,17 +36,32 @@ export const NewHeader: React.FC = () => {
   );
 }
 
-const Profile: React.FC = () => (
-  <div className="flex items-center">
-    <div className="md:hidden lg:block">
-      <Image className="rounded-xl" src="/images/default-user.png" width={65} height={65}/>
+const Profile: React.FC = () => {
+  const { data } = useSWR<GET.Auth.UserRes>("/api/auth/user", fetcher);
+
+  return data ? (
+    <div className="flex items-center">
+      <div className="md:hidden lg:block">
+        <Image className="rounded-xl" src="/images/default-user.png" width={ 65 } height={ 65 }/>
+      </div>
+      <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
+        <div className="w-full font-logo text-2xl flex align-middle">
+          <span>
+            TMA
+          </span>
+          <a className="material-icons text-xl hover:text-gray-500 cursor-pointer mt-0.5 ml-1" href="/api/auth/disconnect">
+            logout
+          </a>
+        </div>
+        <div className="w-full font-light">{data.name}</div>
+      </div>
     </div>
-    <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
-      <div className="w-full font-logo text-2xl">TMA</div>
-      <div className="w-full font-light">samipourquoi</div>
+  ) : (
+    <div className="bg-purple-400 active:bg-purple-500 rounded-xl p-2 text-white shadow">
+      <a className="flex justify-center align-middle" href="/api/auth/discord">Log in</a>
     </div>
-  </div>
-);
+  );
+};
 
 const Navigation: React.FC = () => (
   <nav className="mt-5">

@@ -15,7 +15,8 @@ import { FtpUser } from "./ftp-user";
 export interface UserAttributes {
 	discordID: string,
 	name: string,
-	email: string
+	email: string,
+  avatar: base64
 }
 
 @Table
@@ -32,6 +33,9 @@ export class User
 
 	@Column
 	name!: string;
+
+	@Column
+  avatar!: base64;
 
 	@HasMany(() => Archive)
 	archives!: Archive[];
