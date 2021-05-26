@@ -9,7 +9,7 @@ export const FileUploader2: React.FC = () => {
 
   return (
     <label className="block border border-dashed p-4 cursor-pointer rounded-xl">
-      <input ref={input} className="hidden" type="file" multiple={true} onChange={updateFileList}/>
+      <input ref={input} className="hidden" type="file" name="files" multiple={true} onChange={updateFileList}/>
       <ul className="font-mono text-gray-600 text-base">
         {files.map(file => (
           <li className="flex align-middle group">

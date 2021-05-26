@@ -25,4 +25,16 @@
   code {
     @apply text-red-400 bg-gray-50 p-4 block rounded-xl;
   }
+
+  a {
+    @apply hover:underline text-blue-700;
+  }
+
+  ul {
+    @apply list-inside list-disc;
+  }
+
+  ol {
+    @apply list-decimal list-disc;
+  }
 }

@@ -4,11 +4,17 @@ import * as express from "express";
 import * as serveIndex from "serve-index";
 import { AuthController } from "../controllers/auth-controller";
 import authed = AuthController.authed;
+import * as multer from "multer";
+
+const upload = multer({ dest: "../../tmp" })
 
 export default Router({ strict: true })
 	.get("/", ArchiveController.index)
-	.post("/", authed, ArchiveController.createArchive)
+	.post("/", //authed,
+    upload.array("files", 20),
+    ArchiveController.createArchive2)
 	.get("/:id", ArchiveController.getArchive)
 	.patch("/:id", ArchiveController.updateArchive)
 	.delete("/:id", ArchiveController.deleteArchive)
-	.get("/store/*", ArchiveController.getFile, ArchiveController.getFiles)
+  .get("/:id/store", ArchiveController.getFiles)
+	.get("/:id/store/:path", ArchiveController.getFile)

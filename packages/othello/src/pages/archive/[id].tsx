@@ -78,8 +78,8 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
         notFound: true
       };
 
-    const files: GET_ArchiveFilesResult = await fetcher(`/api/archive/store/${id}`);
-    const readme: string = await fetch(`${ip}/api/archive/store/${id}/README.md`).then(res => res.text());
+    const files: GET_ArchiveFilesResult = await fetcher(`/api/archive/${id}/store/`);
+    const readme: string = await fetch(`${ip}/api/archive/${id}/store/readme.md`).then(res => res.text());
 
     return {
       props: {
@@ -89,6 +89,7 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
       }
     }
   } catch (e) {
+    console.log(e);
     return {
       notFound: true
     }
@@ -98,5 +99,5 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
 export function getTitleUriFromArchive(archive: GET_ArchiveResult) {
   return `${archive.id}-${encodeURI(archive.title
     .toLowerCase()
-    .replace(" ", "-"))}`;
+    .replace(/( )|(%20)/g, "-"))}`;
 }

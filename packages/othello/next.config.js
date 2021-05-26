@@ -6,7 +6,10 @@ module.exports = {
 				destination: process.env.DOCKER ?
 					"http://api/:path*" :
 					"http://localhost:3001/:path*"
-			}
+			},
+      {
+        source: "/archive/:id/"
+      }
 		]
 	}
 }

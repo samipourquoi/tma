@@ -15,34 +15,26 @@ export const Preview: React.FC<{
 
 // language=Markdown
 const defaultReadme = `\
-<!--
-Welcome to TMA! 
-
+# Welcome to TMA!
 In this file, write a description of your contraption.
 You should mention:
  * how to use it;
  * performances;
+ * drops;
  * versions with which it works;
  * credits;
  * (changelog, if needed).
+ 
 Put as much detail as possible.
 Try keeping history of your changes. Don't delete files from previous versions.
 If you make a lot of changes to one of your contraption, you should probably submit
 another post.
 Avoid sharing world downloads, opt for litematics when possible.
 
-To include an image you've uploaded named, for instance, \`hello_world.png\`,
-use \`![alt](./hello_world.png)\`.
+Don't forget to delete this part before publishing.
 
-If you don't already know it, you should learn about markdown syntax:
- > https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
--->
-
-# My cool contraption
-## How to use
-## Performances
-## Versions
-## Credits
+If you don't already know it, you should learn about 
+markdown syntax [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
 `;
 
 // language=yaml
@@ -52,7 +44,7 @@ const defaultMeta = `\
 ### Although you probably don't need it, you can read about YAML syntax here:
 ###  > https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
 
-name: My cool contraption
+title: My cool contraption
 
 # Uncomment the tags you need. These are commonly-used tags and it's best
 # if you use them, but you can add custom tags if needed.
@@ -73,7 +65,11 @@ ${versions
 `;
 
 export const Editor2: React.FC = () => {
-  interface File { name: string, language: "markdown" | "json" | string, content: string }
+  interface File {
+    name: string,
+    language: "markdown" | "json" | string,
+    content: string
+  }
 
   const [files, setFiles] = useState<File[]>([
     {
@@ -87,37 +83,40 @@ export const Editor2: React.FC = () => {
       content: defaultMeta
     }
   ]);
-  const [editableFile, setEditableFile] = useState(files[0]);
+  const [currentFileIndex, setCurrentFileIndex] = useState<number>(0);
+  const editableFile = files[currentFileIndex];
 
   return (
     <div>
       <div className="flex w-full">
-        {files.map(file => (
-          <div key={file.name}>
-            <input type="text" name={file.name} value={file.content} hidden/>
+        { files.map((file, i) => (
+          <div key={i}>
+            <textarea name={ file.name } value={ file.content } hidden/>
             <button
               type="button"
-              className={`font-mono mx-2 my-1 
-              ${file.name == editableFile.name ? "text-gray-600": "text-gray-400 hover:text-gray-500"}`}
+              className={ `font-mono mx-2 my-1 
+              ${i == currentFileIndex ? "text-gray-600" : "text-gray-400 hover:text-gray-500" }`}
               onClick={() => {
-                setEditableFile(file)
+                setCurrentFileIndex(i);
               }}>
-              {file.name}</button>
+              { file.name }</button>
           </div>
-        ))}
+        )) }
       </div>
 
       <Monaco
-        language={editableFile.language}
-        value={editableFile.content}
+        language={ editableFile.language }
+        value={ editableFile.content }
         theme="light"
         height="60vh"
-        onChange={content => editableFile.content = content || editableFile.content}
+        onChange={content => {
+          setFiles(files.map(f => f == editableFile ? { ...editableFile, content: content || "" } : f));
+        }}
         options={{
           mouseStyle: "text",
           minimap: { enabled: false },
           wordWrap: "on"
-        }}/>
+        } }/>
     </div>
   );
 }
