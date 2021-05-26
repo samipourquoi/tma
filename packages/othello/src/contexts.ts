@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Hierarchy } from "hamlet/api";
+import { GET, Hierarchy } from "hamlet/api";
 
 export const SubmitCtx = createContext<{
   setVersions(versions: string[]): void,
@@ -12,3 +12,5 @@ export const SubmitCtx = createContext<{
   setTags    () {},
   setVersions() {}
 });
+
+export const UserCtx = createContext<GET.Auth.UserRes>(null);
