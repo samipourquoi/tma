@@ -12,6 +12,65 @@ export const Preview: React.FC<{
   }}/>
 );
 
+// language=Markdown
+const defaultReadme = `\
+<!--
+Welcome to TMA! 
+
+In this file, write a description of your contraption.
+You should mention:
+ * how to use it;
+ * performances;
+ * versions with which it works;
+ * credits;
+ * (changelog, if needed).
+Put as much detail as possible.
+Try keeping history of your changes. Don't delete files from previous versions.
+If you make a lot of changes to one of your contraption, you should probably submit
+another post.
+Avoid sharing world downloads, opt for litematics when possible.
+
+To include an image you've uploaded named, for instance, \`hello_world.png\`, use \`![alt](./hello_world.png)\`.
+
+If you don't already know it, you should learn about markdown syntax:
+ > https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+-->
+
+# My cool contraption
+## How to use
+## Performances
+## Versions
+## Credits
+`;
+
+// language=yaml
+const defaultMeta = `\
+# In this file, write metadata about your contraption. 
+#
+# Although you probably don't need it, you can read about YAML syntax here:
+#  > https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+
+name: My cool contraption
+
+# Uncomment the tags you need. These are commonly-used tags and it's best
+# if you use them, but you can add custom tags if needed.
+tags:
+  - other
+#  - redstone
+#  - slimestone
+#  - storage
+#  - farms
+#  - mob farms
+#  - bedrock
+#  - computational
+    
+# Same here.
+versions:
+  - any
+#  - 1.12
+#  - 1.16
+`;
+
 export const Editor2: React.FC = () => {
   interface File { name: string, language: "markdown" | "json" | string, content: string }
 
@@ -19,12 +78,12 @@ export const Editor2: React.FC = () => {
     {
       name: "readme.md",
       language: "markdown",
-      content: "## Hello world\n"
+      content: defaultReadme
     },
     {
-      name: "meta.json",
-      language: "json",
-      content: "{\n\t\n}"
+      name: "meta.yml",
+      language: "yaml",
+      content: defaultMeta
     }
   ]);
   const [editableFile, setEditableFile] = useState(files[0]);
