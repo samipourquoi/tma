@@ -129,49 +129,6 @@ export module ArchiveController {
     res.redirect(uri);
   }
 
-	export async function createArchive(req: Request, res: Response) {
-		const { title, readme, versions, tags, files } = req.body as Partial<POST.Archive>;
-
-    if (typeof title  != "string" ||
-			typeof readme   != "string" ||
-			typeof versions != "string" ||
-			typeof tags     != "string" ||
-      typeof files    != "object") return res.status(400).redirect("/submit");
-
-    const cacheKey = `archive:cd:${req.user!.id}`;
-
-    if (await redis.exists(cacheKey))
-      return res.status(429).end();
-
-		const { id } = await Archive.create({
-			title,
-			tags:     tags == ""     ? [] : tags.split(","),
-			versions: versions == "" ? [] : versions.split(","),
-			authorID: req.user?.id || 4
-		});
-
-		const path = `../../store/${id}`;
-		fs.mkdirSync(path);
-
-		const writeFilesFromHierarchy = (path: string, files: Hierarchy<string>) => {
-		  for (const [name, data] of Object.entries(files)) {
-		    const filePath = `${path}/${name}`;
-
-		    if (typeof data == "string")
-          fs.writeFileSync(filePath, Buffer.from(data, "base64"));
-		    else
-		      writeFilesFromHierarchy(filePath, data);
-      }
-    }
-    writeFilesFromHierarchy(path, files);
-
-		fs.writeFileSync(`../../store/${id}/README.md`, readme, { encoding: "utf-8" });
-
-		await redis.set(cacheKey, "gay sex", "EX", 30 /* seconds */);
-
-		res.status(401).end();
-	}
-
 	export function updateArchive(req: Request, res: Response) {
 		res.end();
 	}
