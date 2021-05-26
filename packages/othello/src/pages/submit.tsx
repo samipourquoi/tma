@@ -35,26 +35,7 @@ export default function SubmitPage({}: SubmitPageProps) {
 
         <div className="block xl:flex mt-8">
           <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8 text-gray-700">
-            <div className="mb-4">
-              <input placeholder="Title..." value={title} onChange={ev => {
-                setTitle(ev.target.value);
-              }} className="p-3 rounded-xl bg-gray-100 shadow text-2xl w-full placeholder-gray-400 text-gray-600"/>
-            </div>
-
-            <div className="mb-4">
-              <h2 className="text-xl mb-3 text-gray-600 font-normal">Tags</h2>
-              <TagsSelector availableTags={TAGS} name="tags"/>
-            </div>
-
-            <div>
-              <h2 className="text-xl mb-3 text-gray-600 font-normal">Version</h2>
-              <TagsSelector availableTags={VERSIONS} name="versions"/>
-            </div>
-
-            <div>
-              <h2 className="text-xl mb-3 text-gray-600 font-normal">Readme</h2>
-              <Editor2/>
-            </div>
+            <Editor2/>
           </section>
 
           <section className="w-full xl:w-1/3 mt-5 xl:mt-0">

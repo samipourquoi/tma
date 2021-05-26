@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import marked from "marked";
 import { SubmitCtx } from "../contexts";
 import Monaco from "@monaco-editor/react";
+import { tags, versions } from "../constants";
 
 export const Preview: React.FC<{
   content: string
@@ -30,7 +31,8 @@ If you make a lot of changes to one of your contraption, you should probably sub
 another post.
 Avoid sharing world downloads, opt for litematics when possible.
 
-To include an image you've uploaded named, for instance, \`hello_world.png\`, use \`![alt](./hello_world.png)\`.
+To include an image you've uploaded named, for instance, \`hello_world.png\`,
+use \`![alt](./hello_world.png)\`.
 
 If you don't already know it, you should learn about markdown syntax:
  > https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
@@ -45,10 +47,10 @@ If you don't already know it, you should learn about markdown syntax:
 
 // language=yaml
 const defaultMeta = `\
-# In this file, write metadata about your contraption. 
-#
-# Although you probably don't need it, you can read about YAML syntax here:
-#  > https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+### In this file, write metadata about your contraption. 
+###
+### Although you probably don't need it, you can read about YAML syntax here:
+###  > https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
 
 name: My cool contraption
 
@@ -56,19 +58,18 @@ name: My cool contraption
 # if you use them, but you can add custom tags if needed.
 tags:
   - other
-#  - redstone
-#  - slimestone
-#  - storage
-#  - farms
-#  - mob farms
-#  - bedrock
-#  - computational
+${tags
+  .filter(tag => tag != "other")
+  .map(tag => `#  - ${tag}`)
+  .join("\n")}
     
 # Same here.
 versions:
   - any
-#  - 1.12
-#  - 1.16
+${versions
+  .filter(tag => tag != "any")
+  .map(tag => `#  - ${tag}`)
+  .join("\n")}
 `;
 
 export const Editor2: React.FC = () => {
@@ -89,7 +90,7 @@ export const Editor2: React.FC = () => {
   const [editableFile, setEditableFile] = useState(files[0]);
 
   return (
-    <div className="h-screen">
+    <div>
       <div className="flex w-full">
         {files.map(file => (
           <button
@@ -107,9 +108,11 @@ export const Editor2: React.FC = () => {
         language={editableFile.language}
         value={editableFile.content}
         theme="light"
+        height="60vh"
         onChange={content => editableFile.content = content || editableFile.content}
         options={{
-          mouseStyle: "text"
+          mouseStyle: "text",
+          minimap: { enabled: false }
         }}/>
     </div>
   );
