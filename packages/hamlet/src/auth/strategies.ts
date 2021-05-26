@@ -16,7 +16,8 @@ passport.use(new DiscordStrategy({
 			where: {
 				discordID: profile.id,
 				name: profile.username,
-				email: profile.email
+				email: profile.email,
+        avatar: profile.avatar
 			}
 		});
 

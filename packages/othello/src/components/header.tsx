@@ -4,6 +4,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import { GET } from "hamlet/api";
 import { fetcher } from "../api";
+import { useUser } from "../hooks/use-user";
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -37,12 +38,12 @@ export const NewHeader: React.FC = () => {
 }
 
 const Profile: React.FC = () => {
-  const { data } = useSWR<GET.Auth.UserRes>("/api/auth/user", fetcher);
+  const user = useUser();
 
-  return data ? (
+  return user ? (
     <div className="flex items-center">
       <div className="md:hidden lg:block">
-        <Image className="rounded-xl" src="/images/default-user.png" width={ 65 } height={ 65 }/>
+        <Image className="rounded-xl" src={`https://cdn.discordapp.com/avatars/${user.discordID}/${user.avatar}.png?size=64`} width={ 64 } height={ 64 }/>
       </div>
       <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
         <div className="w-full font-logo text-2xl flex align-middle">
@@ -53,7 +54,7 @@ const Profile: React.FC = () => {
             logout
           </a>
         </div>
-        <div className="w-full font-light">{data.name}</div>
+        <div className="w-full font-light">{user.name}</div>
       </div>
     </div>
   ) : (

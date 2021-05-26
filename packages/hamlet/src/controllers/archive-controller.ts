@@ -76,7 +76,7 @@ export module ArchiveController {
 		}
 	}
 
-	export async function createArchive2(req: Request, res: Response) {
+	export async function createArchive(req: Request, res: Response) {
 	  interface Meta {
 	    title: string,
       tags: TagType[],
@@ -112,7 +112,7 @@ export module ArchiveController {
       title,
       tags,
       versions,
-      authorID: req.user?.id || /* for debug */4
+      authorID: req.user?.id
     });
 
     const path = `../../store/${archive.id}`;

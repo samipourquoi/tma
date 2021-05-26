@@ -10,9 +10,9 @@ const upload = multer({ dest: "../../tmp" })
 
 export default Router({ strict: true })
 	.get("/", ArchiveController.index)
-	.post("/", //authed,
+	.post("/", authed,
     upload.array("files", 20),
-    ArchiveController.createArchive2)
+    ArchiveController.createArchive)
 	.get("/:id", ArchiveController.getArchive)
 	.patch("/:id", ArchiveController.updateArchive)
 	.delete("/:id", ArchiveController.deleteArchive)

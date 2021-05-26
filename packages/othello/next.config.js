@@ -8,5 +8,10 @@ module.exports = {
 					"http://localhost:3001/:path*"
       }
 		]
-	}
+	},
+  images: {
+	  domains: [
+	    "cdn.discordapp.com"
+    ]
+  }
 }
