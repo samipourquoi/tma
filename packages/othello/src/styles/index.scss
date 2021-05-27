@@ -11,6 +11,10 @@
 @import url("http://fonts.cdnfonts.com/css/arlon");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
+* {
+  transition: color, background-color .2s ease;
+}
+
 .material-icons {
   user-select: none;
 }
