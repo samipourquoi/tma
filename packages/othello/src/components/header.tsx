@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
@@ -10,10 +10,13 @@ export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
 
   return (
-    <div className="flex h-screen min-w-max absolute md:relative">
+    <div className="
+      flex h-screen min-w-max absolute md:relative i
+      text-gray-400 dark:text-gray-500
+    ">
       <header className={`
-        ${isForcedVisible ? "flex" : "hidden"} bg-gray-50 h-screen text-gray-400 text-lg
-        flex flex-col relative border shadow-xl
+        ${isForcedVisible ? "flex" : "hidden"}  h-screen text-lg
+        flex flex-col relative shadow-xl bg-gray-50 dark:bg-gray-800
         md:shadow-none
         md:flex md:rounded-r-none
       `}>
@@ -27,9 +30,9 @@ export const NewHeader: React.FC = () => {
       </header>
 
       <div className={`
-        material-icons text-gray-400 shadow ${isForcedVisible ? "" : "absolute"}
-        top-0 bg-gray-50 w-12 h-12 rounded-xl m-3 flex justify-center items-center cursor-pointer
-        md:hidden
+        material-icons shadow ${isForcedVisible ? "" : "absolute"}
+        top-0 w-12 h-12 rounded-xl m-3 flex justify-center items-center cursor-pointer
+        md:hidden bg-gray-50 dark:bg-gray-800
       `} onClick={() => setForcedVisible(!isForcedVisible)}>
         {isForcedVisible ? "navigate_before" : "navigate_next"}
       </div>
@@ -74,7 +77,7 @@ const Navigation: React.FC = () => (
       <Link href={href} key={name}>
         <a className="
           flex items-center my-3 font-light
-          hover:text-gray-500
+          hover:text-gray-500 dark:hover:text-gray-400
         ">
           <span className="material-icons mr-2">{emote}</span>
           {name}
@@ -99,11 +102,11 @@ const SearchBar: React.FC = () => {
   const placeholder = `${placeholders[new Date().getMinutes() % placeholders.length]}...`;
 
   return (
-    <div className="py-9 my-9 border-t border-b border-gray-300">
+    <div className="py-9 my-9 border-t border-b border-gray-300 dark:border-gray-600">
       <h2 className="mb-4 text-2xl">Search</h2>
       <input type="text" placeholder={placeholder} className="
         w-full outline-none border-none p-3.5 rounded-xl text-base font-light
-        text-gray-600 shadow
+        text-gray-500 dark:text-gray-400 shadow bg-white dark:bg-gray-700
       "/>
     </div>
   );
@@ -133,7 +136,7 @@ const TagList: React.FC = () => {
             <Link href="">
               <a className="flex items-center">
                 <div className={`${tag.color} w-5 h-5 rounded-full`}/>
-                <span className="ml-4 font-light text-gray-400 hover:text-gray-500">
+                <span className="ml-4 font-light hover:text-gray-500 dark:hover:text-gray-400">
                   {tag.name}</span>
               </a>
             </Link>
@@ -144,8 +147,20 @@ const TagList: React.FC = () => {
   );
 }
 
+declare global {
+  interface Storage {
+    setItem(key: "theme", value: "light" | "dark"): void;
+    getItem(key: "theme"): string | null;
+  }
+}
+
 const OptionsBar: React.FC = () => {
-  const [darken, setDarken] = useState(false);
+  const [darken, setDarken] = useState(localStorage.getItem("theme") == "dark");
+
+  useEffect(() => {
+    localStorage.setItem("theme", darken ? "dark" : "light");
+      document.body.classList[darken ? "add" : "remove"]("dark");
+  }, [darken]);
 
   return (
     <div className="min-h-10 p-7 py-5 flex justify-start items-center">

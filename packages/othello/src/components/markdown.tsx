@@ -60,7 +60,7 @@ versions:
   - any
 ${versions
   .filter(tag => tag != "any")
-  .map(tag => `#  - ${tag}`)
+  .map(tag => `#  - "${tag}"`)
   .join("\n")}
 `;
 
