@@ -33,14 +33,14 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
       <div className="w-full">
         <Scrollbar>
           <main className="w-full h-screen">
-            <section className="px-14 sm:px-20 lg:px-28 py-12">
+            <section className="px-10 sm:px-20 lg:px-28 py-12">
               <h1 className="text-6xl">Archive</h1>
               <div className="flex md:items-center flex-col md:flex-row">
                 <p className="mt-8 font-light text-contrast-700">
                   TMA is a place to archive Minecraft contraptions for Technical gameplay.
                 </p>
 
-                <div className="flex mt-4 md:mt-0 md:ml-auto children:mx-2">
+                <div className="flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2">
                   <PageSelector pageAmount={data?.amount || 1} page={page} setPage={setPage}/>
                   <VersionSelector version={version} setVersion={setVersion}/>
                 </div>

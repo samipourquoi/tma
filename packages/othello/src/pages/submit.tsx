@@ -51,15 +51,13 @@ export default function SubmitPage({}: SubmitPageProps) {
             </section>
 
             <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
-              {/*<FileUploader/>*/}
               <FileUploader2/>
             </section>
           </div>
 
           <button type="submit" className="
-            bg-tags-mob-farms px-4 py-2 rounded-xl text-gray-100 opacity-70
+            click-button px-4 py-2 rounded-xl
             transition-all duration-200 mt-8 xl:mt-0
-            hover:opacity-100
           ">
             Archive
           </button>

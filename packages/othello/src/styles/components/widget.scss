@@ -2,3 +2,7 @@
   @apply p-3 inline-flex justify-center items-center rounded-2xl
     bg-contrast-400 shadow flex-nowrap whitespace-nowrap;
 }
+
+.click-button {
+  @apply bg-purple-400 hover:bg-purple-500 active:bg-purple-600 text-contrast-400;
+}

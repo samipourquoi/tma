@@ -13,8 +13,8 @@ export const NewHeader: React.FC = () => {
 
   return (
     <div className="
-      flex h-screen min-w-max absolute md:relative i
-      text-gray-400
+      flex h-screen min-w-max absolute md:relative
+      text-gray-400 z-10
     ">
       <header className={`
         ${isForcedVisible ? "flex" : "hidden"}  h-screen text-lg
@@ -36,7 +36,7 @@ export const NewHeader: React.FC = () => {
       <div className={`
         material-icons shadow ${isForcedVisible ? "" : "absolute"}
         top-0 w-12 h-12 rounded-xl m-3 flex justify-center items-center cursor-pointer
-        md:hidden bg-contrast-400 
+        md:hidden bg-contrast-400
       `} onClick={() => setForcedVisible(!isForcedVisible)}>
         {isForcedVisible ? "navigate_before" : "navigate_next"}
       </div>
@@ -57,15 +57,12 @@ const Profile: React.FC = () => {
           <span>
             TMA
           </span>
-          <a className="material-icons text-xl hover:text-gray-500 cursor-pointer mt-0.5 ml-1" href="/api/auth/disconnect">
-            logout
-          </a>
         </div>
         <div className="w-full font-light">{user.name}</div>
       </div>
     </div>
   ) : (
-    <div className="bg-purple-400 active:bg-purple-500 rounded-xl p-2 text-white shadow">
+    <div className="click-button rounded-xl p-2 text-white shadow">
       <a className="flex justify-center align-middle" href="/api/auth/discord">Log in</a>
     </div>
   );
@@ -155,14 +152,18 @@ const OptionsBar: React.FC = () => {
   const [dark, setDark] = useDarkMode();
 
   return (
-    <div className="min-h-10 p-7 py-5 flex justify-start items-center">
+    <div className="min-h-10 p-7 py-5 flex justify-start items-center children:cursor-pointer">
       <div className="material-icons mr-5">settings</div>
 
-      <div className="material-icons cursor-pointer text-gray-400 hover:text-gray-500" onClick={() => {
+      <div className="material-icons text-gray-400 hover:text-yellow-500 mr-5" onClick={() => {
         setDark(!dark);
       }}>
         {dark ? "dark_mode" : "light_mode"}
       </div>
+
+      <a className="material-icons hover:text-red-500 mt-0.5 ml-1" href="/api/auth/disconnect">
+        logout
+      </a>
     </div>
   );
 }

@@ -38,7 +38,7 @@ const Row: React.FC<{
     </td>
     <td>
       <Link href={row ? `/archive/${getTitleUriFromArchive(row)}` : "/archive"}>
-        <a className="hover:underline">
+        <a className="hover:underline break-all">
           {row?.title}
         </a>
       </Link>

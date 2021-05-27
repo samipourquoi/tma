@@ -30,7 +30,7 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
           </a>
         </Link>
 
-        <span className="mb-1.5">
+        <span className="mb-1.5 break-all">
           {archive.title}
         </span>
 
