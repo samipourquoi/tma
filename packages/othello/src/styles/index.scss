@@ -13,3 +13,48 @@
 .material-icons {
   user-select: none;
 }
+
+//$colors: (
+//  0:   white,
+//  50:  #fafafa,
+//  100: #f5f5f5,
+//  200: #e5e5e5,
+//  300: #d4d4d4,
+//  400: #a3a3a3,
+//  500: #737373,
+//  600: #525252,
+//  700: #404040,
+//  800: #262626,
+//  900: #171717,
+//  950: #101010
+//);
+
+@mixin generate-contrast($colors) {
+  @each $key, $value in $colors {
+    --cl-contrast-#{$key}: #{$value};
+  }
+}
+
+/* LIGHT MODE */
+html:root {
+  @include generate-contrast((
+    300: white,
+    400: #f1f1f1,
+    500: #bcbcbc,
+    600: #969696,
+    700: #4c4c4c,
+    800: #1c1c1c
+  ));
+}
+
+/* DARK MODE */
+html.dark:root {
+  @include generate-contrast((
+    300: #2b2b2b,
+    400: #404040,
+    500: #535353,
+    600: #888585,
+    700: #a7a7a7,
+    800: #ededed,
+  ));
+}

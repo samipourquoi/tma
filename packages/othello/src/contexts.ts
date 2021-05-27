@@ -13,4 +13,10 @@ export const SubmitCtx = createContext<{
   setVersions() {}
 });
 
-export const UserCtx = createContext<GET.Auth.UserRes>(null);
+export const DarkModeCtx = createContext<{
+  readonly dark: boolean,
+  setDark(dark: boolean): void
+}>({
+  dark: false,
+  setDark() {}
+});

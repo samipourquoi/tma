@@ -9,6 +9,10 @@ module.exports = {
     extend: {
       colors: {
         gray: colors.trueGray,
+        contrast: Object.fromEntries(
+          [ 300, 400, 500, 600, 700, 800
+          ].map(n => [n, `var(--cl-contrast-${n})`])
+        ),
         tags: {
           "redstone":      "#f29ea0",
           "slimestone":    "#b0d9af",

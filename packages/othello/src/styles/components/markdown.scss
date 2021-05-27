@@ -1,5 +1,6 @@
 .markdown {
   @apply break-words;
+  @apply text-contrast-700;
 
   > * {
     @apply my-4;
@@ -14,12 +15,8 @@
       font-size: #{$size}em;
       line-height: 1.2em;
 
-      @apply mb-2 text-black;
+      @apply mb-2 text-contrast-800;
     }
-  }
-
-  p {
-    @apply text-gray-700;
   }
 
   code {

@@ -22,7 +22,7 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
     { initialData: page == 1 ? initialData : void 0 });
 
   return (
-    <div className="flex">
+    <div className="flex bg-contrast-300 text-contrast-800">
       <Head>
         <title>TMA - Home</title>
       </Head>
@@ -33,7 +33,7 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
         <section className="px-14 sm:px-20 lg:px-28 py-12">
           <h1 className="text-6xl">Archive</h1>
           <div className="flex md:items-center flex-col md:flex-row">
-            <p className="mt-8 font-light text-gray-600">
+            <p className="mt-8 font-light text-contrast-700">
               TMA is a place to archive Minecraft contraptions for Technical gameplay.
             </p>
 

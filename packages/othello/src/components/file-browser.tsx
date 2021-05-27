@@ -47,7 +47,7 @@ const Entries: React.FC<{
 }> = ({ initialData }) => {
   const { path, archive } = useContext(FileBrowserContext);
   const { data = [] } = useSWR<GET_ArchiveFilesResult>(
-    `/api/archive/store/${archive.id}${path}`,
+    `/api/archive/${archive.id}/store/${path}`,
     fetcher,
     { initialData });
   const entries = path == "" ? data : ["../", ...data];
@@ -56,7 +56,7 @@ const Entries: React.FC<{
   const files = entries.filter(file => !isDir(file));
 
   return (
-    <div className="border border-dashed p-4 rounded-xl text-gray-500 font-light">
+    <div className="border border-dashed border-contrast-500 p-4 rounded-xl text-contrast-600 font-light">
       <h3>{path == "" ? "/" : path}</h3>
       <div className="entries">
         {dirs.map(dir => (

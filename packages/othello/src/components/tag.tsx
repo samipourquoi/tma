@@ -17,15 +17,15 @@ function typeToColor(type: TagType): string {
     "computational": "bg-tags-computational",
     "other": "bg-tags-other"
   } as { [k: string]: string })[type]
-    || "border border-gray-300 children:text-gray-500";
+    || "border border-gray-300";
 }
 
 export const Tag: React.FC<TagProps> = ({ type, onDelete }) => (
   <div className={`
     ${typeToColor(type)} rounded-full px-2 py-0.5 text-white font-light 
-    inline-flex justify-center items-center text-sm
+    inline-flex justify-center items-center text-sm text-contrast-300
   `}>
-    <span className="lowercase bg-t">
+    <span className="lowercase">
       {type.replace(/-/g, " ")}
     </span>
 

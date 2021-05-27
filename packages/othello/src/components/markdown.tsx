@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import marked from "marked";
 import { SubmitCtx } from "../contexts";
-import Monaco from "@monaco-editor/react";
+import Monaco, { useMonaco } from "@monaco-editor/react";
 import { tags, versions } from "../constants";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 export const Preview: React.FC<{
   content: string
@@ -13,7 +14,6 @@ export const Preview: React.FC<{
   }}/>
 );
 
-// language=Markdown
 const defaultReadme = `\
 # Welcome to TMA!
 In this file, write a description of your contraption.
@@ -37,7 +37,6 @@ If you don't already know it, you should learn about
 markdown syntax [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
 `;
 
-// language=yaml
 const defaultMeta = `\
 ### In this file, write metadata about your contraption. 
 ###
@@ -85,6 +84,19 @@ export const Editor2: React.FC = () => {
   ]);
   const [currentFileIndex, setCurrentFileIndex] = useState<number>(0);
   const editableFile = files[currentFileIndex];
+  const [dark] = useDarkMode();
+  const monaco = useMonaco();
+
+  useEffect(() => {
+    monaco?.editor.defineTheme("dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": "#2b2b2b"
+      }
+    });
+  }, [monaco]);
 
   return (
     <div>
@@ -107,7 +119,7 @@ export const Editor2: React.FC = () => {
       <Monaco
         language={ editableFile.language }
         value={ editableFile.content }
-        theme="light"
+        theme={dark ? "dark" : "light"}
         height="60vh"
         onChange={content => {
           setFiles(files.map(f => f == editableFile ? { ...editableFile, content: content || "" } : f));

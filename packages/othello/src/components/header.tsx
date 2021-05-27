@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { GET } from "hamlet/api";
 import { fetcher } from "../api";
 import { useUser } from "../hooks/use-user";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -12,11 +13,11 @@ export const NewHeader: React.FC = () => {
   return (
     <div className="
       flex h-screen min-w-max absolute md:relative i
-      text-gray-400 dark:text-gray-500
+      text-gray-400
     ">
       <header className={`
         ${isForcedVisible ? "flex" : "hidden"}  h-screen text-lg
-        flex flex-col relative shadow-xl bg-gray-50 dark:bg-gray-800
+        flex flex-col relative shadow-xl bg-contrast-400
         md:shadow-none
         md:flex md:rounded-r-none
       `}>
@@ -32,7 +33,7 @@ export const NewHeader: React.FC = () => {
       <div className={`
         material-icons shadow ${isForcedVisible ? "" : "absolute"}
         top-0 w-12 h-12 rounded-xl m-3 flex justify-center items-center cursor-pointer
-        md:hidden bg-gray-50 dark:bg-gray-800
+        md:hidden bg-contrast-400 
       `} onClick={() => setForcedVisible(!isForcedVisible)}>
         {isForcedVisible ? "navigate_before" : "navigate_next"}
       </div>
@@ -77,7 +78,7 @@ const Navigation: React.FC = () => (
       <Link href={href} key={name}>
         <a className="
           flex items-center my-3 font-light
-          hover:text-gray-500 dark:hover:text-gray-400
+          hover:text-gray-500
         ">
           <span className="material-icons mr-2">{emote}</span>
           {name}
@@ -102,11 +103,11 @@ const SearchBar: React.FC = () => {
   const placeholder = `${placeholders[new Date().getMinutes() % placeholders.length]}...`;
 
   return (
-    <div className="py-9 my-9 border-t border-b border-gray-300 dark:border-gray-600">
+    <div className="py-9 my-9 border-t border-b border-contrast-600">
       <h2 className="mb-4 text-2xl">Search</h2>
       <input type="text" placeholder={placeholder} className="
         w-full outline-none border-none p-3.5 rounded-xl text-base font-light
-        text-gray-500 dark:text-gray-400 shadow bg-white dark:bg-gray-700
+        text-contrast-700 dark:text-gray-300 shadow bg-contrast-300 dark:bg-contrast-500
       "/>
     </div>
   );
@@ -136,7 +137,7 @@ const TagList: React.FC = () => {
             <Link href="">
               <a className="flex items-center">
                 <div className={`${tag.color} w-5 h-5 rounded-full`}/>
-                <span className="ml-4 font-light hover:text-gray-500 dark:hover:text-gray-400">
+                <span className="ml-4 font-light hover:text-gray-500 ">
                   {tag.name}</span>
               </a>
             </Link>
@@ -147,29 +148,17 @@ const TagList: React.FC = () => {
   );
 }
 
-declare global {
-  interface Storage {
-    setItem(key: "theme", value: "light" | "dark"): void;
-    getItem(key: "theme"): string | null;
-  }
-}
-
 const OptionsBar: React.FC = () => {
-  const [darken, setDarken] = useState(localStorage.getItem("theme") == "dark");
-
-  useEffect(() => {
-    localStorage.setItem("theme", darken ? "dark" : "light");
-      document.body.classList[darken ? "add" : "remove"]("dark");
-  }, [darken]);
+  const [dark, setDark] = useDarkMode();
 
   return (
     <div className="min-h-10 p-7 py-5 flex justify-start items-center">
       <div className="material-icons mr-5">settings</div>
 
       <div className="material-icons cursor-pointer text-gray-400 hover:text-gray-500" onClick={() => {
-        setDarken(!darken);
+        setDark(!dark);
       }}>
-        {darken ? "dark_mode" : "light_mode"}
+        {dark ? "dark_mode" : "light_mode"}
       </div>
     </div>
   );

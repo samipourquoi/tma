@@ -1,6 +1,6 @@
 import { Page } from "../layout/page";
 import { FileUploader } from "../components/file-uploader";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor, Editor2 } from "../components/markdown";
 import { TagsSelector } from "../components/widgets/tags-selector";
 import { tags as TAGS, versions as VERSIONS } from "../constants";
@@ -13,6 +13,7 @@ import Head from "next/head";
 import { FileUploader2 } from "../components/file-uploader2";
 import useSWR from "swr";
 import { useUser } from "../hooks/use-user";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 interface SubmitPageProps {
 
@@ -24,12 +25,13 @@ export default function SubmitPage({}: SubmitPageProps) {
   const [versions, setVersions] = useState<string[]>([]);
   const [readme,   setReadme]   = useState("");
   const [files,    setFiles]    = useState<Hierarchy>({});
-
   const user = useUser();
-  if (user == null) {
-    Router.push("/api/auth/discord");
-    return null;
-  }
+
+  useEffect(() => {
+    if (user == null) {
+      Router.push("/api/auth/discord");
+    }
+  }, [user]);
 
   return (
     <Page>

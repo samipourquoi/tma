@@ -22,13 +22,12 @@ export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, se
 
   return (
     <label className="widget">
-      Page <input type="text" className="mx-1 rounded-lg bg-white text-center"
+      Page <input type="text" className="mx-1 rounded-lg bg-contrast-300 text-center dark:bg-contrast-500"
                   style={{ width: `${value.length+1}ch` }}
                   value={value}
                   name="page"
                   onBlurCapture={(ev) => {
                     ev.preventDefault();
-                    console.log("test");
                     const value = +ev.target.value;
                     if (value && 0 < value && value <= pageAmount) {
                       setPage(value);
@@ -38,13 +37,13 @@ export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, se
                   onChange={(ev) => setValue(ev.target.value)}/>
         on {pageAmount}
 
-      <span className={`material-icons ${isAtStart ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+      <span className={`material-icons ${isAtStart ? "cursor-not-allowed text-contrast-600" : "cursor-pointer"}`}
             onClick={ev => {
               ev.preventDefault();
               updatePage(-1)();
             }}>
         arrow_back</span>
-      <span className={`material-icons ${isAtEnd ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+      <span className={`material-icons ${isAtEnd ? "cursor-not-allowed text-contrast-600" : "cursor-pointer"}`}
             onClick={ev => {
               ev.preventDefault();
               updatePage(1)();

@@ -13,8 +13,8 @@ export const Table: React.FC<{
 
   return (
     <table className="w-full">
-      <thead className="text-gray-600">
-        <tr className="table-row border-t-2 border-b-2">
+      <thead className="text-contrast-600">
+        <tr className="table-row border-t-2 border-b-2 border-contrast-500 bg-contrast-300">
           <th className="w-2/6 md:w-1/6 font-medium">Author</th>
           <th className="max-w-full font-medium">Title</th>
           <th className="w-1/6 hidden md:table-cell font-medium">Date</th>
@@ -32,7 +32,7 @@ export const Table: React.FC<{
 const Row: React.FC<{
   row: GET_ArchiveResult | null
 }> = ({ row }) => (
-  <tr className="table-row odd:bg-gray-100">
+  <tr className="table-row odd:bg-contrast-400 dark:odd:bg-gray-800 even:bg-contrast-300">
     <td className="text-center">
       {row?.author.name || ""}
     </td>

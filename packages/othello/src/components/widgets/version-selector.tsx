@@ -9,7 +9,7 @@ export const VersionSelector: React.FC<{
     Version
 
     <select
-      className="mx-1 rounded-lg bg-white appearance-none text-center px-2 py-1"
+      className="mx-1 rounded-lg bg-contrast-300 dark:bg-contrast-500 appearance-none text-center px-2 py-1"
       name="version"
       value={version}
       onChange={ev => {
