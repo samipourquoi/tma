@@ -7,7 +7,7 @@ import { getTitleUriFromArchive } from "../pages/archive/[id]";
 export const Table: React.FC<{
   rows: GET_ArchiveResult[]
 }> = ({ rows }) => {
-  const shownRows = Array(22)
+  const shownRows = Array(30)
     .fill(null)
     .map((_, i) => rows[i] || null);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
@@ -6,6 +6,7 @@ import { GET } from "hamlet/api";
 import { fetcher } from "../api";
 import { useUser } from "../hooks/use-user";
 import { useDarkMode } from "../hooks/use-dark-mode";
+import Scrollbar from "react-smooth-scrollbar"
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -21,12 +22,14 @@ export const NewHeader: React.FC = () => {
         md:shadow-none
         md:flex md:rounded-r-none
       `}>
-        <div className="overflow-y-auto p-7">
-          <Profile/>
-          <Navigation/>
-          <SearchBar/>
-          <TagList/>
-        </div>
+        <Scrollbar>
+          <div className="p-7">
+            <Profile/>
+            <Navigation/>
+            <SearchBar/>
+            <TagList/>
+          </div>
+        </Scrollbar>
         <OptionsBar/>
       </header>
 

@@ -35,8 +35,8 @@ export module ArchiveController {
           }} : {})
       };
 			const archives = await Archive.findAll({
-				limit: 22,
-				offset: page * 22,
+				limit: 30,
+				offset: page * 30,
 				include: {
 					model: User,
 					attributes: ["name"]
