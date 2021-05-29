@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 import { Archive } from "./archive-model";
 import { STRING } from "sequelize";
-import { FtpUser } from "./ftp-user";
+import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
 
 export interface UserAttributes {

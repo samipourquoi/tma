@@ -1,5 +1,5 @@
 import { User } from "../models/user-model";
-import { FtpUser } from "../models/ftp-user";
+import { FtpUser } from "../models/ftp-user-model";
 import { Request, Response } from "express";
 import { PUT } from "../../api";
 import * as bcrypt from "bcrypt";

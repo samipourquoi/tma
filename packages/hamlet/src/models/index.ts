@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { Archive } from "./archive-model";
 import { User } from "./user-model";
-import { FtpUser } from "./ftp-user";
+import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
 
 export const sequelize = new Sequelize({

@@ -2,7 +2,7 @@ import * as passport from "passport";
 import { Strategy as DiscordStrategy } from "passport-discord";
 import { config } from "../index";
 import { User } from "../models/user-model";
-import { FtpUser } from "../models/ftp-user";
+import { FtpUser } from "../models/ftp-user-model";
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj as Express.User));
