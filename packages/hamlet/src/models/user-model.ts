@@ -12,6 +12,7 @@ import { Archive } from "./archive-model";
 import { STRING } from "sequelize";
 import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
+import { Comment } from "./comment-model";
 
 export interface UserAttributes {
 	discordID: string,
@@ -46,4 +47,7 @@ export class User
 
 	@HasMany(() => Like)
   likes!: Like[];
+
+	@HasMany(() => Comment)
+  comments!: Comment[];
 }

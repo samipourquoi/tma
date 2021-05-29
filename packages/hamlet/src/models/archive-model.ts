@@ -13,6 +13,7 @@ import { User } from "./user-model";
 import { TagType } from "../../api";
 import { ARRAY, INTEGER, Optional, STRING } from "sequelize";
 import { Like } from "./like-model";
+import { Comment } from "./comment-model";
 
 export interface ArchiveAttributes {
 	id: number,
@@ -48,4 +49,7 @@ export class Archive
 
   @HasMany(() => Like)
   likes!: Like[];
+
+  @HasMany(() => Comment)
+  comments!: Comment;
 }

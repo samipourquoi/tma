@@ -191,4 +191,8 @@ export module ArchiveController {
 
     res.send(await Archive.findOne({ where: { id }, include: [Like]}));
   }
+
+  export async function comment(req: Request, res: Response) {
+    res.end();
+  }
 }
