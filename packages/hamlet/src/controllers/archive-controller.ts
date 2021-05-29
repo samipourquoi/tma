@@ -18,6 +18,7 @@ import { isString } from "util";
 import { Op, WhereOptions } from "sequelize";
 import { redis } from "../index";
 import * as YAML from "yaml";
+import { Like } from "../models/like-model";
 
 export module ArchiveController {
   export async function index(req: Request, res: Response) {
@@ -39,10 +40,13 @@ export module ArchiveController {
       const archives = await Archive.findAll({
         limit: 30,
         offset: page * 30,
-        include: {
-          model: User,
-          attributes: [ "name" ]
-        },
+        include: [
+          {
+            model: User,
+            attributes: [ "name" ]
+          },
+          Like
+        ],
         where
       });
 
@@ -62,10 +66,13 @@ export module ArchiveController {
         where: {
           id: req.params.id
         },
-        include: {
-          model: User,
-          attributes: [ "name" ]
-        }
+        include: [
+          {
+            model: User,
+            attributes: [ "name" ]
+          },
+          Like
+        ]
       });
       if (!archive) {
         res.status(404).end();
@@ -163,24 +170,25 @@ export module ArchiveController {
 
   export async function like(req: Request, res: Response) {
     const { id } = req.params;
+    const user = req.user!;
     if (!id)
       return res.status(400).end();
 
-    const archive = await Archive.findOne({
-      where: { id }
+    const [, created] = await Like.findOrCreate({
+      where: {
+        archiveID: id,
+        userID: user.id
+      }
     });
+    if (!created) {
+      await Like.destroy({
+        where: {
+          archiveID: id,
+          userID: user.id
+        }
+      });
+    }
 
-    if (!archive || !req.user)
-      return res.status(400).end();
-
-    await Archive.update({
-      likes: archive.likes.includes(req.user.id) ?
-        archive.likes.filter(id => id != req.user!.id) :
-        [...archive.likes, req.user.id],
-    }, {
-      where: { id }
-    });
-
-    res.send(await Archive.findOne({ where: { id }}));
+    res.send(await Archive.findOne({ where: { id }, include: [Like]}));
   }
 }

@@ -3,7 +3,7 @@ import {
   BelongsTo,
   Column,
   Default,
-  ForeignKey,
+  ForeignKey, HasMany,
   HasOne,
   Model,
   PrimaryKey,
@@ -12,14 +12,14 @@ import {
 import { User } from "./user-model";
 import { TagType } from "../../api";
 import { ARRAY, INTEGER, Optional, STRING } from "sequelize";
+import { Like } from "./like-model";
 
 export interface ArchiveAttributes {
 	id: number,
 	title: string,
 	tags: TagType[],
 	versions: string[],
-	authorID: number,
-  likes: number[]     /* Array of user ids */
+	authorID: number
 }
 
 @Table
@@ -28,7 +28,7 @@ export class Archive
 		ArchiveAttributes,
 		Optional<
 			ArchiveAttributes,
-			"id" | "likes">>
+			"id">>
 {
 	@Column
 	title!: string;
@@ -46,7 +46,6 @@ export class Archive
 	@Column
 	authorID!: number;
 
-	@Default([])
-	@Column(ARRAY(INTEGER))
-  likes!: number[]
+  @HasMany(() => Like)
+  likes!: Like[];
 }

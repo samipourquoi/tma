@@ -1,5 +1,6 @@
 import { ArchiveAttributes } from "./src/models/archive-model";
 import { UserAttributes } from "./src/models/user-model";
+import { LikeAttributes } from "./src/models/like-model";
 
 declare global {
   declare type base64 = string;
@@ -19,7 +20,8 @@ export type GET_ArchivesResult = {
 
 export type GET_ArchiveResult = ArchiveAttributes & {
 	createdAt: string,
-	author: Pick<UserAttributes, "name">
+	author: Pick<UserAttributes, "name">,
+  likes: LikeAttributes[]
 };
 
 export type GET_ArchiveFilesResult = string[];
