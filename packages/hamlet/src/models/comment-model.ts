@@ -1,4 +1,4 @@
-import { BelongsTo, Column, ForeignKey, Model } from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Archive } from "./archive-model";
 import { User } from "./user-model";
 
@@ -9,6 +9,7 @@ export interface CommentAttributes {
   date: Date
 }
 
+@Table
 export class Comment
   extends Model<CommentAttributes>
   implements CommentAttributes

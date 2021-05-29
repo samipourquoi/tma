@@ -1,27 +1,32 @@
-import { NextFunction, Request, Response } from "express";
+// import { NextFunction, Request, Response } from "express";
 import { GET } from "../../api";
+import { Middleware, Response, route, Route } from "typera-express";
+import { User } from "../models/user-model";
 
 export module AuthController {
-	export function authed(req: Request, res: Response, next: NextFunction) {
-		if (req.isAuthenticated())
-			return next();
-		res.status(401).end();
-	}
+  export const authed: Middleware.Middleware<
+    { user: User },
+    Response.Unauthorized
+  > = async ({ req }) =>
+    req.isAuthenticated() ?
+      Middleware.next({ user: req.user }) :
+      Middleware.stop(Response.unauthorized());
 
-	export function onDiscordCallback(req: Request, res: Response) {
-		res.redirect("/");
-	}
+  export const getUser: Route<
+    Response.Ok<User> | Response.Unauthorized
+  > = route
+    .get("/user")
+    .use(authed)
+    .handler(async request =>
+      Response.ok(request.user));
 
-	export function getUser(req: Request, res: Response) {
-	  if (req.isAuthenticated()) {
-	    res.send(req.user! as GET.Auth.UserRes);
-	  } else {
-		res.send(null as GET.Auth.UserRes);
-	  }
-  	}
-
-  	export async function disconnect(req: Request, res: Response) {
-		req.logout();
-		res.redirect("/");
-	}
+  export const disconnect: Route<
+    Response.ResetContent | Response.Unauthorized
+  > = route
+    .get("/disconnect")
+    .use(authed)
+    .handler(async request => {
+      request.req.logout();
+      return Response.resetContent();
+    });
 }

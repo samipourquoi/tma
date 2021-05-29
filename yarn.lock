@@ -1856,7 +1856,7 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
-"@types/express-serve-static-core@^4.17.18":
+"@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.18":
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.20.tgz#44caee029f2c26c46711da5e845cdc12167ad72d"
   integrity sha512-8qqFN4W53IEWa9bdmuVrUcVkFemQWnt5DKPQ/oa8xKDYgtjCr2OO6NX5TIK49NLFr3mPYU2cLh92DQquC3oWWQ==
@@ -1872,7 +1872,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/express@*", "@types/express@^4.17.11":
+"@types/express@*", "@types/express@>=4.0.0", "@types/express@^4.17.11":
   version "4.17.12"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.12.tgz#4bc1bf3cd0cfe6d3f6f2853648b40db7d54de350"
   integrity sha512-pTYas6FrP15B1Oa0bkN5tQMNqOcVXa9j4FTFtO8DWI9kppKib+6NJtfTOOLcwxuuYvcX2+dVG6et1SxW/Kc17Q==
@@ -1880,6 +1880,15 @@
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "^4.17.18"
     "@types/qs" "*"
+    "@types/serve-static" "*"
+
+"@types/express@4.0.38":
+  version "4.0.38"
+  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.0.38.tgz#500e0524cb57ea8e3119efd5ca7ab8fca29ad9a5"
+  integrity sha512-1HfDZFzzmcusHNTl/hRhrLIoVGZt3yqJVIZtMaQm/K14naptdjU9fEeXl1gCDzE2E9BqnoL6B5oidi7da3etbQ==
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
 "@types/glob@^7.1.1":
@@ -5268,7 +5277,7 @@ express-session@^1.17.1:
     safe-buffer "5.2.1"
     uid-safe "~2.1.5"
 
-express@^4.17.1:
+express@>=4.0.0, express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
   integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==
@@ -5555,6 +5564,11 @@ forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
+
+fp-ts@>=2.0.0:
+  version "2.10.5"
+  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.10.5.tgz#7c77868fe8bd9b229743303c1bec505b959f631b"
+  integrity sha512-X2KfTIV0cxIk3d7/2Pvp/pxL/xr2MV1WooyEzKtTWYSc1+52VF4YzjBTXqeOlSiZsPCxIBpDGfT9Dyo7WEY0DQ==
 
 fraction.js@^4.1.1:
   version "4.1.1"
@@ -6356,6 +6370,16 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
+
+io-ts-types@>=0.5.1:
+  version "0.5.16"
+  resolved "https://registry.yarnpkg.com/io-ts-types/-/io-ts-types-0.5.16.tgz#e9eed75371e217c97050cc507915e8eedc250946"
+  integrity sha512-h9noYVfY9rlbmKI902SJdnV/06jgiT2chxG6lYDxaYNp88HscPi+SBCtmcU+m0E7WT5QSwt7sIMj93+qu0FEwQ==
+
+io-ts@>=2.0.0:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.16.tgz#597dffa03db1913fc318c9c6df6931cb4ed808b2"
+  integrity sha512-y5TTSa6VP6le0hhmIyN0dqEXkrZeJLeC5KApJq6VLci3UEKF80lZ+KuoUs02RhBxNWlrqSNxzfI7otLX1Euv8Q==
 
 ioredis@^4.25.0:
   version "4.27.3"
@@ -10490,6 +10514,19 @@ resolve@^2.0.0-next.3:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
+restyped-express-async@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/restyped-express-async/-/restyped-express-async-0.6.1.tgz#ba06a08d04c2fdc544e250d8d040e24a7f317b6d"
+  integrity sha512-jPmbMxTZgh0rO8Kl7RSGknnKMv2z1wM13oKjIAnpxqz32Q6OPe5/Wot4dRF5wAi09lJrixOerc9SdC5GuPbGSg==
+  dependencies:
+    "@types/express" "4.0.38"
+    restyped "1.1.0"
+
+restyped@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/restyped/-/restyped-1.1.0.tgz#3015287c8e7ae13a550d0a19a07c419ce18621b3"
+  integrity sha512-Q5rxwCnw0AR4/8I7YOxE0/ElyHcB86UtV4U0RnyxXY/s8EDwd1AZGTXxrKQUAdVbPljlNsz4VXXq6oT5HnnxPw==
+
 ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
@@ -11966,6 +12003,24 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typera-common@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/typera-common/-/typera-common-2.4.1.tgz#aa835e3cb457e0bdfe29b666bcc6619c6b7ebc2b"
+  integrity sha512-7V8CAGB5Jp5/G9GB/221Cefoo8rrLLXGuZ3ZEa0hEDVMSyiZykCPgScgKwzPW1FekYk8oZYuMJh4HZXP2ZGozw==
+  dependencies:
+    fp-ts ">=2.0.0"
+    io-ts ">=2.0.0"
+    io-ts-types ">=0.5.1"
+
+typera-express@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/typera-express/-/typera-express-2.4.1.tgz#6435887579f91e2d729453ca8d8b0f791ab4862f"
+  integrity sha512-wTklqeUYO+s6edTaHRWRcshnDx4RY22xzLcuGqPFUS6MjHvHOtZNCVoXdAT/bocYfY13iodFqvl8VFyMk6+EiQ==
+  dependencies:
+    "@types/express" ">=4.0.0"
+    express ">=4.0.0"
+    typera-common "^2.4.1"
 
 typescript@^4.2.3:
   version "4.3.2"

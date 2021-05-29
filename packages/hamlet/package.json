@@ -19,9 +19,11 @@
 		"passport-discord": "^0.1.4",
 		"pg": "^8.5.1",
 		"reflect-metadata": "^0.1.13",
+		"restyped-express-async": "^0.6.1",
 		"sequelize": "^6.6.2",
 		"sequelize-typescript": "^2.1.0",
 		"serve-index": "^1.9.1",
+		"typera-express": "^2.4.1",
 		"uuid": "^8.3.2",
 		"yaml": "^1.10.2"
 	},
