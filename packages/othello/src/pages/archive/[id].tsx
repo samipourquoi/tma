@@ -1,7 +1,7 @@
 import { NewHeader } from "../../components/header";
 import { Page } from "../../layout/page";
 import { Preview } from "../../components/markdown";
-import React from "react";
+import React, { useState } from "react";
 import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
 import { GetServerSideProps } from "next";
 import { fetcher, ip } from "../../api";
@@ -9,14 +9,17 @@ import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
+import { LikeButton } from "../../components/like-button";
 
 interface ArchiveViewProps {
-  archive: GET_ArchiveResult;
+  initialArchive: GET_ArchiveResult;
   files: GET_ArchiveFilesResult;
   readme: string;
 }
 
-export default function ArchiveView({ archive, files, readme }: ArchiveViewProps) {
+export default function ArchiveView({ initialArchive, files, readme }: ArchiveViewProps) {
+  const [archive, setArchive] = useState(initialArchive);
+
   return (
     <Page>
       <Head>
@@ -51,6 +54,16 @@ export default function ArchiveView({ archive, files, readme }: ArchiveViewProps
         </section>
 
         <section className="w-full xl:w-2/5 2xl:w-1/5">
+          <div className="mb-1">
+            <LikeButton archive={archive} onLike={() => {
+              fetcher(`/api/archive/${archive.id}/like`, { method: "PATCH" })
+                .then(a => {
+                  console.log(a);
+                  setArchive(a)
+                });
+            }}/>
+          </div>
+
           <FileBrowser initialData={files} archive={archive}/>
         </section>
       </div>
@@ -83,7 +96,7 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
 
     return {
       props: {
-        archive,
+        initialArchive: archive,
         files,
         readme
       }

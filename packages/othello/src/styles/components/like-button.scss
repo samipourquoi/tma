@@ -1,0 +1,28 @@
+/* taken from https://codepen.io/donovanh/pen/dYqxNb */
+
+.heart {
+  $size: 100px;
+  width: $size;
+  height: $size;
+  position: absolute;
+  transform: translate(-30%, -30%) scale(0.8);
+  background: url("https://cssanimation.rocks/images/posts/steps/heart.png") no-repeat 0 0;
+  cursor: pointer;
+}
+
+.heart.heart-active {
+  background-position: -2800px 0;
+  transition: background 1s steps(28);
+  animation: fave-heart 1s steps(28);
+
+}
+
+@keyframes fave-heart {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -2800px 0;
+  }
+}
+

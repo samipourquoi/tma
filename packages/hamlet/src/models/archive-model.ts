@@ -1,14 +1,25 @@
-import { AutoIncrement, BelongsTo, Column, ForeignKey, HasOne, Model, PrimaryKey, Table } from "sequelize-typescript";
+import {
+  AutoIncrement,
+  BelongsTo,
+  Column,
+  Default,
+  ForeignKey,
+  HasOne,
+  Model,
+  PrimaryKey,
+  Table
+} from "sequelize-typescript";
 import { User } from "./user-model";
 import { TagType } from "../../api";
-import { ARRAY, Optional, STRING } from "sequelize";
+import { ARRAY, INTEGER, Optional, STRING } from "sequelize";
 
 export interface ArchiveAttributes {
 	id: number,
 	title: string,
 	tags: TagType[],
 	versions: string[],
-	authorID: number
+	authorID: number,
+  likes: number[]     /* Array of user ids */
 }
 
 @Table
@@ -17,7 +28,7 @@ export class Archive
 		ArchiveAttributes,
 		Optional<
 			ArchiveAttributes,
-			"id">>
+			"id" | "likes">>
 {
 	@Column
 	title!: string;
@@ -34,4 +45,8 @@ export class Archive
 	@ForeignKey(() => User)
 	@Column
 	authorID!: number;
+
+	@Default([])
+	@Column(ARRAY(INTEGER))
+  likes!: number[]
 }

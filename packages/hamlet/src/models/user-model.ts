@@ -42,4 +42,5 @@ export class User
 
 	@HasOne(() => FtpUser)
 	ftp!: FtpUser;
+
 }

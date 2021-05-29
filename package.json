@@ -1,15 +1,28 @@
 {
-	"name": "tma",
-	"private": true,
-	"version": "1.0.0",
-	"repository": "https://github.com/samipourquoi/tma.git",
-	"author": "samipourquoi",
-	"license": "MIT",
-	"scripts": {
-		"hamlet": "yarn workspace hamlet",
-		"othello": "yarn workspace othello",
-    "macbeth": "yarn workspace macbeth",
-		"build": "yarn workspaces run build"
-	},
-	"workspaces": [ "packages/*" ]
+		"name": "tma",
+		"private": true,
+		"version": "1.0.0",
+		"repository": "https://github.com/samipourquoi/tma.git",
+		"author": "samipourquoi",
+		"license": "MIT",
+		"scripts": {
+				"hamlet": "yarn workspace hamlet",
+				"othello": "yarn workspace othello",
+				"macbeth": "yarn workspace macbeth",
+				"build": "yarn workspaces run build"
+		},
+		"workspaces": {
+				"packages": [
+						"packages/*"
+				],
+				"nohoist": [
+						"tailwindcss",
+						"**/@tailwindcss/**"
+				]
+		},
+		"dependencies": {
+				"autoprefixer": "^10.2.6",
+				"postcss": "^8.3.0",
+				"tailwindcss": "^2.1.2"
+		}
 }
