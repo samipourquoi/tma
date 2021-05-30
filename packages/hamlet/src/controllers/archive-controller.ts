@@ -1,198 +1,141 @@
-import { NextFunction, Request, Response } from "express";
-import { Archive, ArchiveAttributes } from "../models/archive-model";
+// import { NextFunction, Request, Response } from "express";
+import { Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
-import {
-  GET_ArchiveFilesResult,
-  GET_ArchiveResult,
-  GET_ArchivesQuery,
-  GET_ArchivesResult,
-  Hierarchy,
-  POST,
-  TagType
-} from "../../api";
 import * as fs from "fs";
-import * as express from "express";
-import { Multer, MulterError } from "multer";
 import * as multer from "multer";
-import { isString } from "util";
 import { Op, WhereOptions } from "sequelize";
-import { redis } from "../index";
-import * as YAML from "yaml";
 import { Like } from "../models/like-model";
+import { Middleware, Parser, Response, Route, route } from "typera-express";
+import * as t from "io-ts"
+import { ApiResponse } from "./controllers";
+import { ArchiveAttributes } from "@tma/api/attributes";
+import { authed } from "../middlewares";
 
 export module ArchiveController {
-  export async function index(req: Request, res: Response) {
-    const { page = 0, version = "any", tags } = req.query as GET_ArchivesQuery;
-
-    try {
-      const where: WhereOptions<ArchiveAttributes> = {
-        ...(version != "any" ? {
-          versions: {
-            [Op.contains]: String(version)
-          }
-        } : {}),
-        ...(tags ? {
-          tags: {
-            [Op.contains]: tags.split(",")
-          }
-        } : {})
-      };
+  export const getArchives: Route<ApiResponse<"/archive">> = route
+    .get("/")
+    .use(Parser.query(t.partial({
+      page: t.string,
+      version: t.string,
+      tags: t.string
+    })))
+    .handler(async request => {
+      const { page = "0", version = "any", tags = "" } = request.query;
+      const where: WhereOptions<ArchiveAttributes> = {};
+      if (version != "any")
+        where.versions = { [Op.contains]: String(version) }
+      if (tags)
+        where.tags = { [Op.contains]: tags.split(",") }
       const archives = await Archive.findAll({
         limit: 30,
-        offset: page * 30,
+        offset: +(page || 0) * 30,
         include: [
-          {
-            model: User,
-            attributes: [ "name" ]
-          },
+          { model: User, attributes: [ "name" ] },
           Like
         ],
         where
       });
 
-      res.send({
+      return Response.ok({
         archives,
-        amount: Math.ceil(await Archive.count({ where }) / 22)
-      } as GET_ArchivesResult);
-    } catch (e) {
-      res.status(400)
-        .send(e.message);
-    }
-  }
-
-  export async function getArchive(req: Request, res: Response) {
-    try {
+        total: Math.ceil(await Archive.count({ where }) / 22)
+      });
+    });
+  
+  export const getArchive: Route<ApiResponse<"/archive/:id">> = route
+    .get("/:id(int)")
+    .handler(async request => {
+      const { id } = request.routeParams;
       const archive = await Archive.findOne({
-        where: {
-          id: req.params.id
-        },
+        where: { id },
         include: [
-          {
-            model: User,
-            attributes: [ "name" ]
-          },
+          { model: User, attributes: [ "name" ] },
           Like
         ]
       });
-      if (!archive) {
-        res.status(404).end();
-        return;
-      }
 
-      res.send(archive.toJSON());
-    } catch {
-      res.status(500).end();
-    }
-  }
-
-  export async function createArchive(req: Request, res: Response) {
-    interface Meta {
-      title: string,
-      tags: TagType[],
-      versions: string[]
-    }
-
-    function isMeta(meta: any): meta is Meta {
-      return typeof meta?.title == "string"
-        && Array.isArray(meta?.tags)
-        && Array.isArray(meta?.versions)
-        && typeof (meta?.tags[0] ?? "") == "string"
-        && typeof (meta?.versions[0] ?? "") == "string";
-    }
-
-    const { "readme.md": readme, "meta.yml": meta } = req.body;
-
-    if (typeof readme != "string" || typeof meta != "string")
-      return res.status(400).end();
-
-    let parsedMeta: Meta;
-    try {
-      const parsed = YAML.parse(meta);
-      if (isMeta(parsed)) {
-        parsedMeta = parsed;
-      } else {
-        throw void 0;
-      }
-    } catch (e) {
-      return res.status(400).end();
-    }
-    const { title, tags, versions } = parsedMeta;
-
-    const archive = await Archive.create({
-      title,
-      tags,
-      versions,
-      authorID: req.user?.id
+      return archive ?
+        Response.ok(archive) :
+        Response.notFound();
     });
+  
+  export const createArchive: Route<ApiResponse<"/archive/:id", "POST">> = route
+    .post("/:id(int)")
+    .use(authed)
+    .use(Middleware.wrapNative<{ files: Express.Multer.File[] }>(
+      multer({ dest: "../../tmp" }).array("fields", 20)))
+    .use(Parser.body(t.type({
+      "readme.md": t.string,
+      "meta.yml": t.type({
+        title: t.string,
+        tags: t.array(t.string),
+        versions: t.array(t.string)
+      })
+    })))
+    .handler(async request => {
+      const { title, tags, versions } = request.body["meta.yml"];
+      const archive = await Archive.create({
+        title,
+        tags,
+        versions,
+        authorID: request.user.id
+      });
 
-    const path = `../../store/${ archive.id }`;
-    fs.mkdirSync(path);
-    fs.writeFileSync(`${ path }/readme.md`, readme);
+      const path = `../../store/${ archive.id }`;
+      fs.mkdirSync(path);
+      fs.writeFileSync(`${ path }/readme.md`, request.body["readme.md"]);
 
-    const uri = `/archive/${ archive.id }-${ encodeURI(archive.title
-      .toLowerCase()
-      .replace(/( )|(%20)/g, "-")) }`;
+      (request.files as Express.Multer.File[])
+        .forEach(file => fs.copyFileSync(file.path, `${ path }/${ file.originalname }`));
 
-    (req.files as Express.Multer.File[])
-      .forEach(file => fs.copyFileSync(file.path, `${ path }/${ file.originalname }`));
-
-    res.redirect(uri);
-  }
-
-  export function updateArchive(req: Request, res: Response) {
-    res.end();
-  }
-
-  export function deleteArchive(req: Request, res: Response) {
-    res.end();
-  }
-
-  export function getFiles(req: Request, res: Response) {
-    const path = `../../store/${ req.params.id }`;
-
-    fs.readdir(path, (err, files) => {
-      if (err)
-        return res.status(404).end();
-
+      return Response.created(archive);
+    });
+  
+  export const getFiles: Route<ApiResponse<"/archive/:id/store">> = route
+    .get("/:id(int)/store")
+    .handler(async request => {
+      const path = `../../store/${ request.routeParams.id }`;
+      const files = fs.readdirSync(path);
       const isDir = (file: string) => fs.lstatSync(`${ path }/${ file }`).isDirectory();
-      res.send(files.map(file => `${ file }${ isDir(file) ? "/" : "" }`) as GET_ArchiveFilesResult);
+      return Response.ok(files.map(file => `${ file }${ isDir(file) ? "/" : "" }`))
     });
-  }
 
-  export function getFile(req: Request, res: Response, next: NextFunction) {
-    fs.readFile(`../../store/${ req.params.id }/${ req.params.path }`, (err, content) => {
-      if (err)
-        return res.status(404).end();
-
-      res.send(content);
-    });
-  }
-
-  export async function like(req: Request, res: Response) {
-    const { id } = req.params;
-    const user = req.user!;
-    if (!id)
-      return res.status(400).end();
-
-    const [, created] = await Like.findOrCreate({
-      where: {
-        archiveID: id,
-        userID: user.id
+  export const getFile: Route<ApiResponse<"/archive/:id/store/:path">> = route
+    .get("/:id(int)/store/:path")
+    .handler(async request => {
+      try {
+        const { id, path } = request.routeParams;
+        const content = fs.readFileSync(`../../store/${id}/${path}`);
+        return Response.ok(String(content));
+      } catch (e) {
+        return Response.notFound();
       }
     });
-    if (!created) {
-      await Like.destroy({
+  
+  export const like: Route<ApiResponse<"/archive/:id/like", "POST">> = route
+    .post("/:id(int)/like")
+    .use(authed)
+    .handler(async request => {
+      const { id } = request.routeParams;
+
+      const [, created] = await Like.findOrCreate({
         where: {
           archiveID: id,
-          userID: user.id
+          userID: request.user.id
         }
       });
-    }
+      if (!created) {
+        await Like.destroy({
+          where: {
+            archiveID: id,
+            userID: request.user.id
+          }
+        });
+      }
 
-    res.send(await Archive.findOne({ where: { id }, include: [Like]}));
-  }
-
-  export async function comment(req: Request, res: Response) {
-    res.end();
-  }
+      return Response.ok(await Archive.findOne({
+        where: { id },
+        include: [{ model: User, attributes: ["name"] }, Like]
+      }).then(arch => arch!));
+    });
 }

@@ -1,11 +1,7 @@
 import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { User } from "./user-model";
 import { Archive } from "./archive-model";
-
-export interface LikeAttributes {
-  userID: number,
-  archiveID: number
-}
+import { LikeAttributes } from "@tma/api/attributes";
 
 @Table
 export class Like

@@ -1,11 +1,6 @@
-import { Router } from "express";
 import { authenticate } from "passport";
 import { AuthController } from "../controllers/auth-controller";
-import RestypedRouter from "restyped-express-async";
-import authed = AuthController.authed;
-import { API } from "@tma/api";
-import { Route, Response, route, router } from "typera-express";
-import { User } from "../models/user-model";
+import { router } from "typera-express";
 
 export default router(AuthController.getUser, AuthController.disconnect)
   .handler()

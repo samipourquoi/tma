@@ -1,30 +1,16 @@
-import {
-	AutoIncrement,
-	BelongsTo,
-	BelongsToMany,
-	Column,
-	ForeignKey, HasMany, HasOne,
-	Model,
-	PrimaryKey,
-	Table, Unique
-} from "sequelize-typescript";
+import { Column, HasMany, HasOne, Model, Table, Unique } from "sequelize-typescript";
 import { Archive } from "./archive-model";
-import { STRING } from "sequelize";
 import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
-
-export interface UserAttributes {
-	discordID: string,
-	name: string,
-	email: string,
-  avatar: base64
-}
+import { UserAttributes } from "@tma/api/attributes";
 
 @Table
 export class User
 	extends Model<UserAttributes>
 {
+  id!: number;
+
 	@Unique
 	@Column
 	discordID!: string;

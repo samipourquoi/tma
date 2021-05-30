@@ -1,36 +1,18 @@
-import {
-  AutoIncrement,
-  BelongsTo,
-  Column,
-  Default,
-  ForeignKey, HasMany,
-  HasOne,
-  Model,
-  PrimaryKey,
-  Table
-} from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { User } from "./user-model";
 import { TagType } from "../../api";
-import { ARRAY, INTEGER, Optional, STRING } from "sequelize";
+import { ARRAY, Optional, STRING } from "sequelize";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
-
-export interface ArchiveAttributes {
-	id: number,
-	title: string,
-	tags: TagType[],
-	versions: string[],
-	authorID: number
-}
+import { ArchiveAttributes } from "@tma/api/attributes";
 
 @Table
 export class Archive
-	extends Model<
-		ArchiveAttributes,
-		Optional<
-			ArchiveAttributes,
-			"id">>
+	extends Model<ArchiveAttributes, Optional<ArchiveAttributes, "id">>
+  implements ArchiveAttributes
 {
+  id!: number;
+
 	@Column
 	title!: string;
 

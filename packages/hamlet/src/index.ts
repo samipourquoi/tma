@@ -1,18 +1,17 @@
 import { loadConfig } from "./config";
-export const config = loadConfig();
-
 import "./models";
 
 import * as express from "express";
 import "./auth/strategies";
 import { routes } from "./routes";
 import { sync } from "./models";
-import { Archive } from "./models/archive-model";
 import "./ftp";
 import * as session from "express-session";
 import { v4 as uuid } from 'uuid';
 import * as passport from "passport";
 import * as IORedis from "ioredis";
+
+export const config = loadConfig();
 
 export const redis = new IORedis({
   port: 3003,
