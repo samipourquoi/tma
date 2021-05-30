@@ -3,6 +3,8 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { DarkModeCtx } from "../contexts";
 import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 declare global {
   interface Storage {
@@ -10,6 +12,8 @@ declare global {
     getItem(key: "theme"): string | null;
   }
 }
+
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   const [dark, setDark] = useState(false);
@@ -25,15 +29,18 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [dark]);
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Head>
         <link rel="icon" href="/favicon.ico"/>
         <link rel="manifest" href="/manifest.json"/>
         <title>TMA</title>
       </Head>
+
+      <ReactQueryDevtools initialIsOpen={false}/>
+
       <DarkModeCtx.Provider value={{ dark, setDark }}>
         <Component { ...pageProps }/>
       </DarkModeCtx.Provider>
-    </>
+    </QueryClientProvider>
   );
 }

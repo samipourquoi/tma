@@ -1,4 +1,5 @@
-import { API, ApiResponse } from "@tma/api";
+import { API, ApiQuery, ApiResponse } from "@tma/api";
+import { useQuery } from "react-query";
 
 export const ip = process.env.NODE_ENV ?
 	"http://localhost:3000" :
@@ -18,15 +19,57 @@ export const fetcher =
       data: API[URI][Method]["body"]
     } : {
       data?: never
+    }) & ("params" extends keyof API[URI][Method] ? {
+      params: API[URI][Method]["params"]
+    } : {
+      params?: never
+    }) & ("query" extends keyof API[URI][Method] ? {
+      query: API[URI][Method]["query"]
+    } : {
+      query?: never
     })
   ): Promise<ApiResponse<URI, Method>> =>
 {
   const data = options?.data;
-  const res = await fetch(`${ip}/api/${uri}`, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
+  const params = (options?.params || {}) as Record<string, any>;
+  const query = options?.query;
+  let url = `${ip}/api/${uri.startsWith("/") ? uri.slice(1) : uri}`;
+  Object.entries(params).forEach(([key, value]) => url = url.replace(`:${key}`, value));
+
+  if (query) {
+    url += "?" + Object.entries(query)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join("&");
+  }
+
+  const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
 
   return {
     status: res.status,
     body: await res.json(),
     headers: res.headers
   } as unknown as ApiResponse<URI, Method>;
+}
+
+const defaultError = new Error("an unexpected error has occured");
+const notFoundError = new Error("not found");
+
+export const getArchive = async (id: number) => {
+  const res = await fetcher("/archive/:id", { params: { id } });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    default:
+      throw defaultError;
+  }
+};
+
+export const getArchives = (query: ApiQuery<"/archive">) => async () => {
+  const res = await fetcher(`/archive`, { query });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 400:
+      throw notFoundError;
+  }
 }

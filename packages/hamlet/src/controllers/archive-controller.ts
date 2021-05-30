@@ -19,7 +19,7 @@ export module ArchiveController {
       tags: t.string
     })))
     .handler(async request => {
-      const { page = "0", version = "any", tags = "" } = request.query;
+      const { page = "1", version = "any", tags = "" } = request.query;
       const where: WhereOptions<ArchiveAttributes> = {};
       if (version != "any")
         where.versions = { [Op.contains]: String(version) }
@@ -27,7 +27,7 @@ export module ArchiveController {
         where.tags = { [Op.contains]: tags.split(",") }
       const archives = await Archive.findAll({
         limit: 30,
-        offset: +(page || 0) * 30,
+        offset: (+page-1) * 30,
         include: [
           { model: User, attributes: [ "name" ] },
           Like

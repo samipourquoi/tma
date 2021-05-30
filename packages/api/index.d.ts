@@ -13,6 +13,9 @@ export type TagType
   | "other"
   | string;
 
+export type ApiQuery<URI extends keyof API, Method extends keyof API[URI] | "GET" = "GET">
+  = API[URI][Method]["query"];
+
 export type ApiResponse<URI extends keyof API, Method extends keyof API[URI] | "GET" = "GET">
   = API[URI][Method]["response"] extends TResponse ? API[URI][Method]["response"] : never;
 
@@ -30,9 +33,9 @@ export interface API {
   "/archive": {
     GET: {
       query: {
-        page?: `${number}`,
-        version?: string,
-        tags?: TagType[]
+        page: number,
+        version: string,
+        tags: TagType[]
       },
       response: TResponse.Ok<{
         archives: Includes<ArchiveAttributes, "author" | "likes">[];
@@ -42,6 +45,9 @@ export interface API {
   },
   "/archive/:id": {
     GET: {
+      params: {
+        id: number
+      }
       response: TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">> | TResponse.NotFound
     },
     POST: {
