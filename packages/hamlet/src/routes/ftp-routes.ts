@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { router } from "typera-express";
+import { FtpController } from "../controllers/ftp-controller";
 
-export default Router()
-	// .put("/password", authed, FtpController.newPassword)
+export default router(FtpController.updatePassword)
+  .handler();

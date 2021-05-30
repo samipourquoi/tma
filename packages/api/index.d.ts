@@ -13,10 +13,13 @@ export type TagType
   | "other"
   | string;
 
+export type ApiResponse<Path extends keyof API, Method extends keyof API[Path] = "GET">
+  = API[Path][Method]["response"];
+
 export interface API {
   "/auth/user": {
     GET: {
-      response: Response.Ok | Response.Unauthorized
+      response: Response.Ok<UserAttributes> | Response.Unauthorized
     }
   },
   "/auth/disconnect": {
@@ -27,9 +30,9 @@ export interface API {
   "/archive": {
     GET: {
       query: {
-        page: number,
-        version: string,
-        tags: string[]
+        page?: `${number}`,
+        version?: string,
+        tags?: TagType[]
       },
       response: Response.Ok<{
         archives: Includes<ArchiveAttributes, "author" | "likes">[];
@@ -59,6 +62,14 @@ export interface API {
   "/archive/:id/like": {
     POST: {
       response: Response.Ok<Includes<ArchiveAttributes, "author" | "likes">> | Response.Unauthorized
+    }
+  },
+  "/ftp/password": {
+    PUT: {
+      body: {
+        password: string
+      },
+      response: Response.Ok | Response.Unauthorized | Response.BadRequest<string>
     }
   }
 }

@@ -1,4 +1,3 @@
-// import { NextFunction, Request, Response } from "express";
 import { Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
 import * as fs from "fs";
@@ -7,9 +6,9 @@ import { Op, WhereOptions } from "sequelize";
 import { Like } from "../models/like-model";
 import { Middleware, Parser, Response, Route, route } from "typera-express";
 import * as t from "io-ts"
-import { ApiResponse } from "./controllers";
 import { ArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
+import { ApiResponse } from "@tma/api";
 
 export module ArchiveController {
   export const getArchives: Route<ApiResponse<"/archive">> = route
