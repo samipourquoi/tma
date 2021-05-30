@@ -1,10 +1,8 @@
 {
   "name": "@tma/api",
+  "license": "MIT",
   "version": "1.0.0",
   "dependencies": {
-    "typera-common": "^2.4.1"
-  },
-  "devDependencies": {
     "typera-common": "^2.4.1"
   }
 }

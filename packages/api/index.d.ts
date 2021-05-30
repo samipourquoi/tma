@@ -1,6 +1,6 @@
-import { Response } from "typera-common";
+import { Response as TResponse } from "typera-common";
 import { ArchiveAttributes, Includes, UserAttributes } from "./attributes";
-import { Like } from "hamlet/dist/models/like-model";
+export { TResponse };
 
 export type TagType
   = "redstone"
@@ -13,18 +13,18 @@ export type TagType
   | "other"
   | string;
 
-export type ApiResponse<Path extends keyof API, Method extends keyof API[Path] = "GET">
-  = API[Path][Method]["response"];
+export type ApiResponse<URI extends keyof API, Method extends keyof API[URI] | "GET" = "GET">
+  = API[URI][Method]["response"] extends TResponse ? API[URI][Method]["response"] : never;
 
 export interface API {
   "/auth/user": {
     GET: {
-      response: Response.Ok<UserAttributes> | Response.Unauthorized
+      response: TResponse.Ok<UserAttributes> | TResponse.Unauthorized
     }
   },
   "/auth/disconnect": {
     GET: {
-      response: Response.ResetContent | Response.Unauthorized
+      response: TResponse.ResetContent | TResponse.Unauthorized
     }
   },
   "/archive": {
@@ -34,34 +34,34 @@ export interface API {
         version?: string,
         tags?: TagType[]
       },
-      response: Response.Ok<{
+      response: TResponse.Ok<{
         archives: Includes<ArchiveAttributes, "author" | "likes">[];
         total: number
-      }> | Response.BadRequest<string>
+      }> | TResponse.BadRequest<string>
     }
   },
   "/archive/:id": {
     GET: {
-      response: Response.Ok<Includes<ArchiveAttributes, "author" | "likes">> | Response.NotFound
+      response: TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">> | TResponse.NotFound
     },
     POST: {
       request: any, // its using the multipart/form-data format
-      response: Response.Created<ArchiveAttributes> | Response.Unauthorized | Response.BadRequest<string>
+      response: TResponse.Created<ArchiveAttributes> | TResponse.Unauthorized | TResponse.BadRequest<string>
     }
   },
   "/archive/:id/store": {
     GET: {
-      response: Response.Ok<string[]>
+      response: TResponse.Ok<string[]>
     }
   },
   "/archive/:id/store/:path": {
     GET: {
-      response: Response.Ok<string> | Response.NotFound
+      response: TResponse.Ok<string> | TResponse.NotFound
     }
   },
   "/archive/:id/like": {
     POST: {
-      response: Response.Ok<Includes<ArchiveAttributes, "author" | "likes">> | Response.Unauthorized
+      response: TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">> | TResponse.Unauthorized
     }
   },
   "/ftp/password": {
@@ -69,7 +69,7 @@ export interface API {
       body: {
         password: string
       },
-      response: Response.Ok | Response.Unauthorized | Response.BadRequest<string>
+      response: TResponse.Ok | TResponse.Unauthorized | TResponse.BadRequest<string>
     }
   }
 }
