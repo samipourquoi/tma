@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TagType } from "hamlet/api";
 import { Tag } from "../tag";
-import { SubmitCtx } from "../../contexts";
 
 export const TagsSelector: React.FC<{
   availableTags: string[],
@@ -10,18 +9,11 @@ export const TagsSelector: React.FC<{
   const [tags, setTags] = useState<TagType[]>([]);
   const [popupVisible, setPopupVisible] = useState(false);
 
-  const {
-    setTags: setTagsSubmit,
-    setVersions: setVersionsSubmit
-  } = useContext(SubmitCtx);
-
   useEffect(() => {
     switch (name) {
       case "tags":
-        setTagsSubmit(tags);
         break;
       case "versions":
-        setVersionsSubmit(tags);
         break;
     }
   }, [tags])

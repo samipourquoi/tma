@@ -10,6 +10,8 @@ import { ArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
 import { ApiResponse } from "@tma/api";
 import { ApiRoute } from "./controllers";
+import * as express from "express";
+
 
 export module ArchiveController {
   export const getArchives: ApiRoute<"/archive"> = route
@@ -100,18 +102,6 @@ export module ArchiveController {
       return Response.ok(files.map(file => `${ file }${ isDir(file) ? "/" : "" }`))
     });
 
-  export const getFile: ApiRoute<"/archive/:id/store/:path"> = route
-    .get("/:id(int)/store/:path")
-    .handler(async request => {
-      try {
-        const { id, path } = request.routeParams;
-        const content = fs.readFileSync(`../../store/${id}/${path}`);
-        return Response.ok(String(content));
-      } catch (e) {
-        return Response.notFound();
-      }
-    });
-  
   export const like: ApiRoute<"/archive/:id/like", "POST"> = route
     .post("/:id(int)/like")
     .use(authed)

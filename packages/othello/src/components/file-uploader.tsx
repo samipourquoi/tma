@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { dirSVG, fileSVG } from "./file-browser";
 import { Preview } from "./markdown";
 import { types } from "util";
-import { SubmitCtx } from "../contexts";
 import { Content, Hierarchy } from "hamlet/api";
 
 const isHierarchy = (x => typeof x != "string" && !(x instanceof ArrayBuffer)) as
@@ -42,12 +41,6 @@ export const FileUploader: React.FC = () => {
   useEffect(() => {
     setEditorContent(files["readme.md"]);
   }, []);
-
-  const { setFiles: setFilesSubmit } = useContext(SubmitCtx);
-
-  useEffect(() => {
-    setFilesSubmit(files);
-  }, [files])
 
   return (
     <ctx.Provider value={{

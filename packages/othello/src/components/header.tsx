@@ -3,10 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
 import { GET } from "hamlet/api";
-import { fetcher } from "../api";
-import { useUser } from "../hooks/use-user";
+import { disconnect, fetcher, getUser } from "../api";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import Scrollbar from "react-smooth-scrollbar"
+import { useQuery, useQueryClient } from "react-query";
+import { useUser } from "../hooks/use-user";
+import Router from "next/router";
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -45,12 +47,12 @@ export const NewHeader: React.FC = () => {
 }
 
 const Profile: React.FC = () => {
-  const user = useUser();
+  const user = useQuery("user", getUser);
 
-  return user ? (
+  return user.data ? (
     <div className="flex items-center">
       <div className="md:hidden lg:block">
-        <Image className="rounded-xl" src={`https://cdn.discordapp.com/avatars/${user.discordID}/${user.avatar}.png?size=64`} width={ 64 } height={ 64 }/>
+        <Image className="rounded-xl" src={`https://cdn.discordapp.com/avatars/${user.data.discordID}/${user.data.avatar}.png?size=64`} width={ 64 } height={ 64 }/>
       </div>
       <div className="w-full ml-4 md:ml-0 lg:ml-4 flex items-center flex-wrap">
         <div className="w-full font-logo text-2xl flex align-middle">
@@ -58,7 +60,7 @@ const Profile: React.FC = () => {
             TMA
           </span>
         </div>
-        <div className="w-full font-light">{user.name}</div>
+        <div className="w-full font-light">{user.data.name}</div>
       </div>
     </div>
   ) : (
@@ -150,6 +152,8 @@ const TagList: React.FC = () => {
 
 const OptionsBar: React.FC = () => {
   const [dark, setDark] = useDarkMode();
+  const user = useUser();
+  const queryClient = useQueryClient();
 
   return (
     <div className="min-h-10 p-7 py-5 flex justify-start items-center children:cursor-pointer">
@@ -161,9 +165,13 @@ const OptionsBar: React.FC = () => {
         {dark ? "dark_mode" : "light_mode"}
       </div>
 
-      <a className="material-icons hover:text-red-500 mt-0.5 ml-1" href="/api/auth/disconnect">
-        logout
-      </a>
+      {user.data ? (
+        <span className="material-icons hover:text-red-500 mt-0.5 ml-1" onClick={() => {
+          disconnect().then(() => queryClient.setQueryData("user", null));
+        }}>
+          logout
+        </span>
+      ) : null}
     </div>
   );
 }

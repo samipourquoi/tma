@@ -6,6 +6,12 @@ export default router(
   ArchiveController.getArchive,
   ArchiveController.createArchive,
   ArchiveController.getFiles,
-  ArchiveController.getFile,
   ArchiveController.like)
-  .handler();
+  .handler()
+  .get("/:id/store/*", (req, res, next) => {
+    const id = +req.params.id;
+    const path = req.url.split("/")
+      .slice(3)
+      .join();
+    res.download(`${__dirname}/../../../../store/${id}/${path}`);
+  });

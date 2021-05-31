@@ -11,7 +11,8 @@ export interface UserAttributes {
   discordID: string,
   name: string,
   email: string,
-  avatar: base64
+  avatar: base64,
+  id: number
 }
 
 export interface ArchiveAttributes {

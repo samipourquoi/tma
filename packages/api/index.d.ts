@@ -64,7 +64,8 @@ export interface API {
   },
   "/archive/:id/store/:path": {
     GET: {
-      response: [TResponse.Ok<string>, TResponse.NotFound]
+      params: { id: number, path: string },
+      response: [TResponse.Ok<string, { "Content-Type": string }>, TResponse.NotFound]
     }
   },
   "/archive/:id/like": {

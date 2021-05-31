@@ -1,7 +1,4 @@
-import useSWR from "swr";
-import { GET } from "hamlet/api";
-import { fetcher } from "../api";
+import { QueryClient, useQuery } from "react-query";
+import { getUser } from "../api";
 
-export function useUser(): GET.Auth.UserRes | undefined {
-  return useSWR<GET.Auth.UserRes>("/api/auth/user", fetcher).data;
-}
+export const useUser = () => useQuery("user", () => getUser());

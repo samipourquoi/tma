@@ -2,9 +2,10 @@ import '../styles/index.scss'
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { DarkModeCtx } from "../contexts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { DehydratedState, Hydrate } from "react-query/hydration";
 
 declare global {
   interface Storage {
@@ -13,9 +14,13 @@ declare global {
   }
 }
 
-const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
+  const queryClientRef = useRef<QueryClient>();
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient();
+  }
+
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [dark]);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClientRef.current}>
       <Head>
         <link rel="icon" href="/favicon.ico"/>
         <link rel="manifest" href="/manifest.json"/>
@@ -38,9 +43,15 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <ReactQueryDevtools initialIsOpen={false}/>
 
-      <DarkModeCtx.Provider value={{ dark, setDark }}>
-        <Component { ...pageProps }/>
-      </DarkModeCtx.Provider>
+      <Hydrate state={pageProps.dehydratedState}>
+        <DarkModeCtx.Provider value={{ dark, setDark }}>
+          <Component { ...pageProps }/>
+        </DarkModeCtx.Provider>
+      </Hydrate>
     </QueryClientProvider>
   );
+}
+
+export interface PageProps {
+  dehydratedState: DehydratedState
 }

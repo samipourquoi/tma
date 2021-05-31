@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 import useSWR from "swr";
 import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
 import { fetcher } from "../api";
+import { ApiResult } from "@tma/api";
 
 
 // These are just copy pasted from Github... (they look cool though)
@@ -26,12 +27,12 @@ export const fileSVG = (
 const FileBrowserContext = createContext<{
   path: string;
   setPath(path: string): void;
-  archive: GET_ArchiveResult;
+  archive: ApiResult<"/archive/:id">
 }>(null as any);
 
 export const FileBrowser: React.FC<{
   initialData: string[];
-  archive: GET_ArchiveResult;
+  archive: ApiResult<"/archive/:id">
 }> = ({ initialData, archive}) => {
   const [path, setPath] = useState("");
 
@@ -95,7 +96,7 @@ const Entry: React.FC<{
       }}>
         {type == "directory" ?
           name.slice(0, -1) :
-          <a href={`/api/archive/store/${ctx.archive.id}${ctx.path || "/"}${name}`}
+          <a href={`/api/archive/${ctx.archive.id}/store${ctx.path || "/"}${name}`}
              download
           >
             {name}

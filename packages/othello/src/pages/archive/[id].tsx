@@ -4,37 +4,37 @@ import { Preview } from "../../components/markdown";
 import React, { useState } from "react";
 import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
 import { GetServerSideProps } from "next";
-import { fetcher, getArchive, ip, likeArchive } from "../../api";
+import { fetcher, getArchive, getFile, getFiles, getUser, ip, likeArchive } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
 import { LikeButton } from "../../components/like-button";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResponse, ApiResult } from "@tma/api";
+import { PageProps } from "../_app";
+import { dehydrate } from "react-query/hydration";
 
-interface ArchiveViewProps {
-  id: number,
-  initialArchive: ApiResult<"/archive/:id">,
-  files: ApiResult<"/archive/:id/store">,
-  readme: string
+interface ArchiveViewProps extends PageProps {
+  id: number
 }
 
-export default function ArchiveView({ id, initialArchive, files, readme }: ArchiveViewProps) {
+export default function ArchiveView({ id }: ArchiveViewProps) {
   const queryClient = useQueryClient();
-  const result = useQuery(["archive", id], () => getArchive(id), { initialData: initialArchive });
+  const archive = useQuery(["archive", id], () => getArchive(id));
+  const files = useQuery(["files", id], () => getFiles(id));
+  const readme = useQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
   const mutation = useMutation(likeArchive, {
     onSuccess: archive =>
       void queryClient.setQueryData(["archive", id], archive)
   });
-  if (!result.isSuccess)
+  if (!(archive.isSuccess && files.isSuccess && readme.isSuccess))
     return null;
-  const { data: archive } = result;
 
   return (
     <Page>
       <Head>
-        <title>TMA - {archive.title}</title>
+        <title>TMA - {archive.data.title}</title>
       </Head>
 
       <h1 className="flex items-center uppercase">
@@ -45,11 +45,11 @@ export default function ArchiveView({ id, initialArchive, files, readme }: Archi
         </Link>
 
         <span className="mb-1.5 break-all">
-          {archive.title}
+          {archive.data.title}
         </span>
 
         <ul className="mb-2 block ml-2.5">
-          {archive.tags.map(tag =>
+          {archive.data.tags.map(tag =>
             <span className="mr-1.5">
               <Tag type={tag} key={tag}/>
             </span>
@@ -60,18 +60,18 @@ export default function ArchiveView({ id, initialArchive, files, readme }: Archi
       <div className="block xl:flex">
         <section className="w-full xl:w-4/5 xl:pr-10">
           <div className="max-w-prose">
-            <Preview content={readme}/>
+            <Preview content={readme.data}/>
           </div>
         </section>
 
         <section className="w-full xl:w-2/5 2xl:w-1/5">
           <div className="mb-1">
-            <LikeButton archive={archive} onLike={() => {
+            <LikeButton likes={archive.data.likes} onLike={() => {
               mutation.mutate(id);
             }}/>
           </div>
 
-          <FileBrowser initialData={files} archive={archive}/>
+          <FileBrowser initialData={files.data} archive={archive.data}/>
         </section>
       </div>
     </Page>
@@ -94,20 +94,24 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
     const id = +(typeof queryId == "string" ?
       queryId.split("-")[0] :
       queryId);
-    const initialArchive = await getArchive(id);
-    if (context.query.id != getTitleUriFromArchive(initialArchive))
+    const archive = await getArchive(id);
+    if (context.query.id != getTitleUriFromArchive(archive))
       return {
         notFound: true
       };
 
-    const files = await fetcher("/archive/:id/store", { params: { id } }).then(f => f.body);
-    const readme: string = await fetch(`${ip}/api/archive/${id}/store/readme.md`).then(res => res.text());
+    // const files = await fetcher("/archive/:id/store", { params: { id } }).then(f => f.body);
+    // const readme: string = await fetch(`${ip}/api/archive/${id}/store/readme.md`).then(res => res.text());
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery(["archive", id], () => archive);
+    await queryClient.prefetchQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
+    await queryClient.prefetchQuery(["files", id], () => getFiles(id));
+    await queryClient.prefetchQuery("user", () => getUser({ cookie: context.req.headers.cookie! }));
 
     return {
-      props: { initialArchive, files, readme, id }
+      props: { id, dehydratedState: dehydrate(queryClient) }
     }
   } catch (e) {
-    console.log(e);
     return {
       notFound: true
     }

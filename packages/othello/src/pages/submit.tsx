@@ -1,34 +1,32 @@
 import { Page } from "../layout/page";
 import { FileUploader } from "../components/file-uploader";
 import React, { useEffect, useState } from "react";
-import { Editor, Editor2 } from "../components/markdown";
+import { Editor2 } from "../components/markdown";
 import { TagsSelector } from "../components/widgets/tags-selector";
 import { tags as TAGS, versions as VERSIONS } from "../constants";
-import { SubmitCtx } from "../contexts";
-import { API } from "../api";
 import Router from "next/router";
 import { Content, Hierarchy } from "hamlet/api";
 import fs from "fs";
 import Head from "next/head";
 import { FileUploader2 } from "../components/file-uploader2";
 import useSWR from "swr";
-import { useUser } from "../hooks/use-user";
 import { useDarkMode } from "../hooks/use-dark-mode";
+import { GetServerSideProps } from "next";
+import { QueryClient, useQuery } from "react-query";
+import { PageProps } from "./_app";
+import { getUser } from "../api";
+import { dehydrate } from "react-query/hydration";
+import { useUser } from "../hooks/use-user";
 
-interface SubmitPageProps {
+interface SubmitPageProps extends PageProps {
 
 }
 
 export default function SubmitPage({}: SubmitPageProps) {
-  const [title,    setTitle]    = useState("");
-  const [tags,     setTags]     = useState<string[]>([]);
-  const [versions, setVersions] = useState<string[]>([]);
-  const [readme,   setReadme]   = useState("");
-  const [files,    setFiles]    = useState<Hierarchy>({});
   const user = useUser();
 
   useEffect(() => {
-    if (user == null) {
+    if (user.data == null) {
       Router.push("/api/auth/discord");
     }
   }, [user]);
@@ -39,30 +37,38 @@ export default function SubmitPage({}: SubmitPageProps) {
         <title>TMA - Submit</title>
       </Head>
 
-      <SubmitCtx.Provider value={{
-        setTags, setVersions, setReadme, setFiles
-      }}>
-        <h1 className="text-6xl">Submit</h1>
+      <h1 className="text-6xl">Submit</h1>
 
-        <form encType="multipart/form-data" action="/api/archive" method="POST">
-          <div className="block xl:flex mt-8">
-            <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8 text-gray-700">
-              <Editor2/>
-            </section>
+      <form encType="multipart/form-data" action="/api/archive" method="POST">
+        <div className="block xl:flex mt-8">
+          <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8 text-gray-700">
+            <Editor2/>
+          </section>
 
-            <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
-              <FileUploader2/>
-            </section>
-          </div>
+          <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
+            <FileUploader2/>
+          </section>
+        </div>
 
-          <button type="submit" className="
-            click-button px-4 py-2 rounded-xl
-            transition-all duration-200 mt-8 xl:mt-0
-          ">
-            Archive
-          </button>
-        </form>
-      </SubmitCtx.Provider>
+        <button type="submit" className="
+          click-button px-4 py-2 rounded-xl
+          transition-all duration-200 mt-8 xl:mt-0
+        ">
+          Archive
+        </button>
+      </form>
     </Page>
   );
+}
+
+export const getServerSideProps: GetServerSideProps<SubmitPageProps> = async ctx => {
+  const queryClient = new QueryClient();
+  const { cookie } = ctx.req.headers;
+  await queryClient.prefetchQuery("user", () => getUser(cookie ? { cookie } : {}));
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient)
+    }
+  };
 }

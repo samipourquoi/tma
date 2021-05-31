@@ -3,24 +3,27 @@ import { NewHeader } from "../components/header";
 import { Table } from "../components/table";
 import { GetServerSideProps } from "next";
 import { GET_ArchivesResult } from "hamlet/api";
-import { fetcher, getArchives } from "../api";
+import { fetcher, getArchives, getUser } from "../api";
 import useSWR from "swr";
 import { PageSelector } from "../components/widgets/page-selector";
 import { VersionSelector } from "../components/widgets/version-selector";
 import Head from "next/head";
 import Scrollbar from "react-smooth-scrollbar";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
+import { dehydrate, DehydratedState } from "react-query/hydration";
+import { PageProps } from "./_app";
 
-interface ArchivePageProps {
-  initialData: any
+interface ArchivePageProps extends PageProps {
+  initialPage: number,
+  initialVersion: string
 }
 
-export default function ArchivePage({ initialData }: ArchivePageProps) {
-  const [page, setPage] = useState(1);
-  const [version, setVersion] = useState("any");
+export default function ArchivePage({ initialPage, initialVersion }: ArchivePageProps) {
+  const [page, setPage] = useState(initialPage);
+  const [version, setVersion] = useState(initialVersion);
   const { data } = useQuery(["archives", page],
     () => getArchives({ page, version, tags: [] }),
-    { initialData, keepPreviousData: true });
+    { keepPreviousData: true });
 
   return (
     <div className="flex bg-contrast-300 text-contrast-800">
@@ -55,16 +58,20 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
       </div>
     </div>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async context => {
-  const { page = 1, version = "any", tags = ""} = context.query;
-  const archives = await getArchives({ page, version, tags } as any);
-  console.log(archives);
+  const queryClient = new QueryClient();
+  const { page = "1", version = "any", tags = "" } = context.query as NodeJS.Dict<string>;
+
+  await queryClient.prefetchQuery(["archives", +page], () => getArchives({ page: +page, version, tags: tags.split(",") }));
+  await queryClient.prefetchQuery("user", () => getUser({ cookie: context.req.headers.cookie! }));
 
   return {
     props: {
-      initialData: archives
+      dehydratedState: dehydrate(queryClient),
+      initialPage: +page,
+      initialVersion: version
     }
   };
 }

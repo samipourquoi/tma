@@ -1,5 +1,7 @@
 import { API, ApiQuery, ApiResponse, ApiResult } from "@tma/api";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import { IncomingHttpHeaders } from "http";
+import axios from "axios";
 
 export const ip = process.env.NODE_ENV ?
 	"http://localhost:3000" :
@@ -27,6 +29,8 @@ export const fetcher =
       query: API[URI][Method]["query"]
     } : {
       query?: never
+    }) & ({
+      text?: boolean
     })
   ): Promise<ApiResponse<URI, Method>[number]> =>
 {
@@ -42,11 +46,17 @@ export const fetcher =
       .join("&");
   }
 
-  const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
+  // const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
+  const res = await axios.request({
+    method: options?.method || "GET" as any,
+    url: url,
+    data,
+    headers: options?.headers,
+  });
 
   return {
     status: res.status,
-    body: await res.json(),
+    body: res.data,
     headers: res.headers
   } as unknown as ApiResponse<URI, Method>;
 }
@@ -71,7 +81,7 @@ export const getArchives = async (query: ApiQuery<"/archive">): Promise<ApiResul
     case 200:
       return res.body;
     case 400:
-      throw notFoundError;
+      throw defaultError;
   }
 };
 
@@ -84,3 +94,39 @@ export const likeArchive = async (id: number): Promise<ApiResult<"/archive/:id/l
       throw unauthorized;
   }
 };
+
+export const getFiles = async (id: number): Promise<ApiResult<"/archive/:id/store">> => {
+  const res = await fetcher("/archive/:id/store", { params: { id } });
+  return res.body;
+};
+
+export const getFile = async (id: number, path: string): Promise<ApiResult<"/archive/:id/store/:path">> => {
+  const res = await fetcher("/archive/:id/store/:path", { params: { id, path }, text: true });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 404:
+      throw notFoundError;
+  }
+};
+
+export const getUser = async (headers: Record<string, string> = {}): Promise<ApiResult<"/auth/user"> | null> => {
+  const res = await fetcher("/auth/user", { headers });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 401:
+      return null;
+  }
+};
+
+export const disconnect = async (): Promise<void> => {
+  const res = await fetcher("/auth/disconnect", { text: true });
+  axios
+  switch (res.status) {
+    case 205:
+      break;
+    case 401:
+      throw unauthorized;
+  }
+}
