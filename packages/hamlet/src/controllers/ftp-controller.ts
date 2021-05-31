@@ -6,6 +6,7 @@ import { Parser, Response, route, Route } from "typera-express";
 import * as t from "io-ts";
 import { authed } from "../middlewares";
 import { ApiResponse } from "@tma/api";
+import { ApiRoute } from "./controllers";
 
 export module FtpController {
 	export async function getFtpUser(email: string, password: string):
@@ -23,7 +24,7 @@ export module FtpController {
 			null;
 	}
 
-	export const updatePassword: Route<ApiResponse<"/ftp/password", "PUT">> = route
+	export const updatePassword: ApiRoute<"/ftp/password", "PUT"> = route
     .put("/password")
     .use(authed)
     .use(Parser.body(t.type({

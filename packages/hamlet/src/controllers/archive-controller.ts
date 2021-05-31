@@ -9,9 +9,10 @@ import * as t from "io-ts"
 import { ArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
 import { ApiResponse } from "@tma/api";
+import { ApiRoute } from "./controllers";
 
 export module ArchiveController {
-  export const getArchives: Route<ApiResponse<"/archive">> = route
+  export const getArchives: ApiRoute<"/archive"> = route
     .get("/")
     .use(Parser.query(t.partial({
       page: t.string,
@@ -41,7 +42,7 @@ export module ArchiveController {
       });
     });
   
-  export const getArchive: Route<ApiResponse<"/archive/:id">> = route
+  export const getArchive: ApiRoute<"/archive/:id"> = route
     .get("/:id(int)")
     .handler(async request => {
       const { id } = request.routeParams;
@@ -58,7 +59,7 @@ export module ArchiveController {
         Response.notFound();
     });
   
-  export const createArchive: Route<ApiResponse<"/archive/:id", "POST">> = route
+  export const createArchive: ApiRoute<"/archive/:id", "POST"> = route
     .post("/:id(int)")
     .use(authed)
     .use(Middleware.wrapNative<{ files: Express.Multer.File[] }>(
@@ -90,7 +91,7 @@ export module ArchiveController {
       return Response.created(archive);
     });
   
-  export const getFiles: Route<ApiResponse<"/archive/:id/store">> = route
+  export const getFiles: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
     .handler(async request => {
       const path = `../../store/${ request.routeParams.id }`;
@@ -99,7 +100,7 @@ export module ArchiveController {
       return Response.ok(files.map(file => `${ file }${ isDir(file) ? "/" : "" }`))
     });
 
-  export const getFile: Route<ApiResponse<"/archive/:id/store/:path">> = route
+  export const getFile: ApiRoute<"/archive/:id/store/:path"> = route
     .get("/:id(int)/store/:path")
     .handler(async request => {
       try {
@@ -111,7 +112,7 @@ export module ArchiveController {
       }
     });
   
-  export const like: Route<ApiResponse<"/archive/:id/like", "POST">> = route
+  export const like: ApiRoute<"/archive/:id/like", "POST"> = route
     .post("/:id(int)/like")
     .use(authed)
     .handler(async request => {
