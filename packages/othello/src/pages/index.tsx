@@ -18,7 +18,9 @@ interface ArchivePageProps {
 export default function ArchivePage({ initialData }: ArchivePageProps) {
   const [page, setPage] = useState(1);
   const [version, setVersion] = useState("any");
-  const { data } = useQuery("archives", getArchives({ page, version, tags: [] }), { initialData });
+  const { data } = useQuery(["archives", page],
+    () => getArchives({ page, version, tags: [] }),
+    { initialData, keepPreviousData: true });
 
   return (
     <div className="flex bg-contrast-300 text-contrast-800">
@@ -57,7 +59,7 @@ export default function ArchivePage({ initialData }: ArchivePageProps) {
 
 export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async context => {
   const { page = 1, version = "any", tags = ""} = context.query;
-  const archives = await getArchives({ page, version, tags } as any)();
+  const archives = await getArchives({ page, version, tags } as any);
   console.log(archives);
 
   return {

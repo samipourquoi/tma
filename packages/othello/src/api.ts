@@ -1,4 +1,4 @@
-import { API, ApiQuery, ApiResponse } from "@tma/api";
+import { API, ApiQuery, ApiResponse, ApiResult } from "@tma/api";
 import { useQuery } from "react-query";
 
 export const ip = process.env.NODE_ENV ?
@@ -28,7 +28,7 @@ export const fetcher =
     } : {
       query?: never
     })
-  ): Promise<ApiResponse<URI, Method>> =>
+  ): Promise<ApiResponse<URI, Method>[number]> =>
 {
   const data = options?.data;
   const params = (options?.params || {}) as Record<string, any>;
@@ -53,8 +53,9 @@ export const fetcher =
 
 const defaultError = new Error("an unexpected error has occured");
 const notFoundError = new Error("not found");
+const unauthorized = new Error("login first");
 
-export const getArchive = async (id: number) => {
+export const getArchive = async (id: number): Promise<ApiResult<"/archive/:id">> => {
   const res = await fetcher("/archive/:id", { params: { id } });
   switch (res.status) {
     case 200:
@@ -64,7 +65,7 @@ export const getArchive = async (id: number) => {
   }
 };
 
-export const getArchives = (query: ApiQuery<"/archive">) => async () => {
+export const getArchives = async (query: ApiQuery<"/archive">): Promise<ApiResult<"/archive">> => {
   const res = await fetcher(`/archive`, { query });
   switch (res.status) {
     case 200:
@@ -72,4 +73,14 @@ export const getArchives = (query: ApiQuery<"/archive">) => async () => {
     case 400:
       throw notFoundError;
   }
-}
+};
+
+export const likeArchive = async (id: number): Promise<ApiResult<"/archive/:id/like", "POST">> => {
+  const res = await fetcher("/archive/:id/like", { method: "POST", params: { id } });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 401:
+      throw unauthorized;
+  }
+};

@@ -4,21 +4,32 @@ import { Preview } from "../../components/markdown";
 import React, { useState } from "react";
 import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
 import { GetServerSideProps } from "next";
-import { fetcher, ip } from "../../api";
+import { fetcher, getArchive, ip, likeArchive } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
 import { LikeButton } from "../../components/like-button";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { ApiResponse, ApiResult } from "@tma/api";
 
 interface ArchiveViewProps {
-  initialArchive: GET_ArchiveResult;
-  files: GET_ArchiveFilesResult;
-  readme: string;
+  id: number,
+  initialArchive: ApiResult<"/archive/:id">,
+  files: ApiResult<"/archive/:id/store">,
+  readme: string
 }
 
-export default function ArchiveView({ initialArchive, files, readme }: ArchiveViewProps) {
-  const [archive, setArchive] = useState(initialArchive);
+export default function ArchiveView({ id, initialArchive, files, readme }: ArchiveViewProps) {
+  const queryClient = useQueryClient();
+  const result = useQuery(["archive", id], () => getArchive(id), { initialData: initialArchive });
+  const mutation = useMutation(likeArchive, {
+    onSuccess: archive =>
+      void queryClient.setQueryData(["archive", id], archive)
+  });
+  if (!result.isSuccess)
+    return null;
+  const { data: archive } = result;
 
   return (
     <Page>
@@ -38,11 +49,11 @@ export default function ArchiveView({ initialArchive, files, readme }: ArchiveVi
         </span>
 
         <ul className="mb-2 block ml-2.5">
-          {archive.tags.map(tag => (
+          {archive.tags.map(tag =>
             <span className="mr-1.5">
               <Tag type={tag} key={tag}/>
             </span>
-          ))}
+          )}
         </ul>
       </h1>
 
@@ -56,11 +67,7 @@ export default function ArchiveView({ initialArchive, files, readme }: ArchiveVi
         <section className="w-full xl:w-2/5 2xl:w-1/5">
           <div className="mb-1">
             <LikeButton archive={archive} onLike={() => {
-              fetcher(`/api/archive/${archive.id}/like`, { method: "PATCH" })
-                .then(a => {
-                  console.log(a);
-                  setArchive(a)
-                });
+              mutation.mutate(id);
             }}/>
           </div>
 
@@ -73,7 +80,9 @@ export default function ArchiveView({ initialArchive, files, readme }: ArchiveVi
 
 export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async context => {
   try {
-    let { id } = context.query;
+    let { id: queryId } = context.query;
+    if (!queryId)
+      return { notFound: true };
 
     // Let an archive with ID #1 and title 'Birch farm'.
     // I want the uri to access it to be /archive/1-birch-farm,
@@ -82,24 +91,20 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
     //
     // However, you fetch an archive from the API with its ID.
     // So this checks if the URI is corresponding to the wanted format.
-    id = typeof id == "string" ?
-      id.split("-")[0] :
-      id;
-    const archive = await fetcher(`/api/archive/${id}`);
-    if (context.query.id != getTitleUriFromArchive(archive))
+    const id = +(typeof queryId == "string" ?
+      queryId.split("-")[0] :
+      queryId);
+    const initialArchive = await getArchive(id);
+    if (context.query.id != getTitleUriFromArchive(initialArchive))
       return {
         notFound: true
       };
 
-    const files: GET_ArchiveFilesResult = await fetcher(`/api/archive/${id}/store/`);
+    const files = await fetcher("/archive/:id/store", { params: { id } }).then(f => f.body);
     const readme: string = await fetch(`${ip}/api/archive/${id}/store/readme.md`).then(res => res.text());
 
     return {
-      props: {
-        initialArchive: archive,
-        files,
-        readme
-      }
+      props: { initialArchive, files, readme, id }
     }
   } catch (e) {
     console.log(e);
