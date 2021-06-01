@@ -21,7 +21,7 @@ interface ArchivePageProps extends PageProps {
 export default function ArchivePage({ initialPage, initialVersion }: ArchivePageProps) {
   const [page, setPage] = useState(initialPage);
   const [version, setVersion] = useState(initialVersion);
-  const { data } = useQuery(["archives", page],
+  const archives = useQuery(["archives", page],
     () => getArchives({ page, version, tags: [] }),
     { keepPreviousData: true });
 
@@ -44,14 +44,14 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
                 </p>
 
                 <div className="flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2">
-                  <PageSelector pageAmount={data?.total || 1} page={page} setPage={setPage}/>
+                  <PageSelector pageAmount={archives.data?.total || 1} page={page} setPage={setPage}/>
                   <VersionSelector version={version} setVersion={setVersion}/>
                 </div>
               </div>
             </section>
 
             <section>
-              <Table rows={data?.archives || []}/>
+              <Table rows={archives.data?.archives || []}/>
             </section>
           </main>
         </Scrollbar>

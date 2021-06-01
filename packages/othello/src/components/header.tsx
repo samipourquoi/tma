@@ -47,7 +47,7 @@ export const NewHeader: React.FC = () => {
 }
 
 const Profile: React.FC = () => {
-  const user = useQuery("user", getUser);
+  const user = useUser();
 
   return user.data ? (
     <div className="flex items-center">
@@ -64,8 +64,8 @@ const Profile: React.FC = () => {
       </div>
     </div>
   ) : (
-    <div className="click-button rounded-xl p-2 text-white shadow">
-      <a className="flex justify-center align-middle" href="/api/auth/discord">Log in</a>
+    <div className="click-button rounded-xl p-2 text-white shadow w-full">
+      <a className="flex justify-center align-middle w-full" href="/api/auth/discord">Log in</a>
     </div>
   );
 };

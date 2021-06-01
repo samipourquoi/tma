@@ -3,6 +3,7 @@ import marked from "marked";
 import Monaco, { useMonaco } from "@monaco-editor/react";
 import { tags, versions } from "../constants";
 import { useDarkMode } from "../hooks/use-dark-mode";
+import * as YAML from "yaml";
 
 export const Preview: React.FC<{
   content: string
@@ -97,22 +98,38 @@ export const Editor2: React.FC = () => {
     });
   }, [monaco]);
 
+  useEffect(() => {
+    setFiles(files); // to rerender the component
+  }, [dark])
+
   return (
     <div>
       <div className="flex w-full">
-        { files.map((file, i) => (
-          <div key={i}>
-            <textarea name={ file.name } value={ file.content } hidden/>
-            <button
-              type="button"
-              className={ `font-mono mx-2 my-1 
-              ${i == currentFileIndex ? "text-gray-600" : "text-gray-400 hover:text-gray-500" }`}
-              onClick={() => {
-                setCurrentFileIndex(i);
-              }}>
-              { file.name }</button>
-          </div>
-        )) }
+        { files.map((file, i) => {
+          let content = "";
+          if (file.language == "yaml") {
+            try {
+              content = JSON.stringify(YAML.parse(file.content));
+            } catch (e) {
+              content = ""
+            }
+          } else {
+            content = file.content;
+          }
+          return (
+            <div key={ i }>
+              <textarea name={ file.name } value={content} hidden/>
+              <button
+                type="button"
+                className={ `font-mono mx-2 my-1 
+            ${ i == currentFileIndex ? "text-gray-600" : "text-gray-400 hover:text-gray-500" }` }
+                onClick={ () => {
+                  setCurrentFileIndex(i);
+                } }>
+                { file.name }</button>
+            </div>
+          );
+        }) }
       </div>
 
       <Monaco

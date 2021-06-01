@@ -61,11 +61,19 @@ export module ArchiveController {
         Response.notFound();
     });
   
-  export const createArchive: ApiRoute<"/archive/:id", "POST"> = route
-    .post("/:id(int)")
+  export const createArchive: ApiRoute<"/archive", "POST"> = route
+    .post("/")
     .use(authed)
-    .use(Middleware.wrapNative<{ files: Express.Multer.File[] }>(
+    .use(Middleware.wrapNative<{ files?: Express.Multer.File[] }>(
       multer({ dest: "../../tmp" }).array("fields", 20)))
+    .use(async request => {
+      if (request.req.body["meta.yml"]) {
+        request.req.body["meta.yml"] = JSON.parse(request.req.body["meta.yml"]);
+        return Middleware.next({});
+      } else {
+        return Middleware.stop(Response.badRequest("invalid meta"));
+      }
+    })
     .use(Parser.body(t.type({
       "readme.md": t.string,
       "meta.yml": t.type({
@@ -87,10 +95,10 @@ export module ArchiveController {
       fs.mkdirSync(path);
       fs.writeFileSync(`${ path }/readme.md`, request.body["readme.md"]);
 
-      (request.files as Express.Multer.File[])
-        .forEach(file => fs.copyFileSync(file.path, `${ path }/${ file.originalname }`));
+      request.files?.forEach(file => fs.copyFileSync(file.path, `${ path }/${ file.originalname }`));
 
-      return Response.created(archive);
+      // return Response.created(archive);
+      return Response.redirect(301, "/");
     });
   
   export const getFiles: ApiRoute<"/archive/:id/store"> = route

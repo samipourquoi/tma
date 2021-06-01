@@ -34,21 +34,21 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [dark]);
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
-      <Head>
-        <link rel="icon" href="/favicon.ico"/>
-        <link rel="manifest" href="/manifest.json"/>
-        <title>TMA</title>
-      </Head>
+    <DarkModeCtx.Provider value={{ dark, setDark }}>
+      <QueryClientProvider client={queryClientRef.current}>
+        <Head>
+          <link rel="icon" href="/favicon.ico"/>
+          <link rel="manifest" href="/manifest.json"/>
+          <title>TMA</title>
+        </Head>
 
-      <ReactQueryDevtools initialIsOpen={false}/>
+        <ReactQueryDevtools initialIsOpen={false}/>
 
-      <Hydrate state={pageProps.dehydratedState}>
-        <DarkModeCtx.Provider value={{ dark, setDark }}>
+        <Hydrate state={pageProps.dehydratedState}>
           <Component { ...pageProps }/>
-        </DarkModeCtx.Provider>
-      </Hydrate>
-    </QueryClientProvider>
+        </Hydrate>
+      </QueryClientProvider>
+    </DarkModeCtx.Provider>
   );
 }
 

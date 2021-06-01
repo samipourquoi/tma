@@ -44,16 +44,16 @@ export interface API {
         archives: Includes<ArchiveAttributes, "author" | "likes">[];
         total: number
       }>, TResponse.BadRequest<string>]
+    },
+    POST: {
+      request: any, // its using the multipart/form-data format
+      response: [TResponse.Redirect<301, string, { location: string }>, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id": {
     GET: {
       params: { id: number },
       response: [TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">>, TResponse.NotFound]
-    },
-    POST: {
-      request: any, // its using the multipart/form-data format
-      response: [TResponse.Created<ArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id/store": {
