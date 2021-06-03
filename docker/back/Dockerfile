@@ -12,7 +12,7 @@ COPY ./tsconfig.base.json ./
 COPY ./packages/api ./packages/api
 COPY ./packages/hamlet ./packages/hamlet
 
-RUN yarn hamlet build
+RUN yarn hamlet build && yarn cache clean
 
 ENV DOCKER=1
 EXPOSE 3001

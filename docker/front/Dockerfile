@@ -12,7 +12,7 @@ COPY ./tsconfig.base.json ./
 COPY ./packages/api ./packages/api
 COPY ./packages/othello ./packages/othello
 
-RUN yarn othello build
+RUN yarn othello build && yarn cache clean
 
 ENV DOCKER=1
 EXPOSE 3000
