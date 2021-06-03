@@ -21,15 +21,18 @@ export const NewHeader: React.FC = () => {
         md:shadow-none
         md:flex md:rounded-r-none
       `}>
-        <Scrollbar>
-          <div className="p-7">
-            <Profile/>
-            <Navigation/>
-            <SearchBar/>
-            <TagList/>
-          </div>
-        </Scrollbar>
-        <OptionsBar/>
+        <div className="flex flex-col justify-between h-screen">
+          <Scrollbar>
+            <div className="p-7">
+              <Profile/>
+              <Navigation/>
+              <SearchBar/>
+              <TagList/>
+            </div>
+          </Scrollbar>
+
+          <OptionsBar/>
+        </div>
       </header>
 
       <div className={`
@@ -69,25 +72,31 @@ const Profile: React.FC = () => {
   );
 };
 
-const Navigation: React.FC = () => (
-  <nav className="mt-5">
-    {[
-      ["/", "home", "Home"],
-      ["/submit", "add_to_photos", "Submit"],
-      ["/saved", "bookmark", "Saved"],
-    ].map(([href, emote, name]) => (
-      <Link href={href} key={name}>
-        <a className="
+const Navigation: React.FC = () => {
+  const user = useUser();
+
+  return (
+    <nav className="mt-5">
+      {[
+        ["/", "home", "Home"],
+        ...(user.data ? [
+          ["/submit", "add_to_photos", "Submit"],
+          ["/saved", "bookmark", "Saved"]
+        ] : []),
+      ].map(([href, emote, name]) => (
+        <Link href={href} key={name}>
+          <a className="
           flex items-center my-3 font-light
           hover:text-gray-500
         ">
-          <span className="material-icons mr-2">{emote}</span>
-          {name}
-        </a>
-      </Link>
-    ))}
-  </nav>
-);
+            <span className="material-icons mr-2">{emote}</span>
+            {name}
+          </a>
+        </Link>
+      ))}
+    </nav>
+  );
+}
 
 const SearchBar: React.FC = () => {
   const placeholders = [

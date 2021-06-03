@@ -69,7 +69,7 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
             }}/>
           </div>
 
-          <FileBrowser initialData={files.data} archive={archive.data}/>
+          {/*<FileBrowser initialData={files.data} archive={archive.data}/>*/}
         </section>
       </div>
     </DefaultLayout>

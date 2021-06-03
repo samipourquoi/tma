@@ -48,7 +48,7 @@ export const fetcher =
     }
 
     // const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
-    const res = await axios({
+    const res = await axios.request({
       method: options?.method || "GET" as any,
       url: url,
       data,
@@ -124,10 +124,24 @@ export const getUser = async (headers: Record<string, string> = {}): Promise<Api
 
 export const disconnect = async (): Promise<void> => {
   const res = await fetcher("/auth/disconnect", { text: true });
-  axios
   switch (res.status) {
     case 205:
       break;
+    case 401:
+      throw unauthorized;
+  }
+}
+
+export const getSaved = async (page: number, headers?: Record<string, string>): Promise<ApiResult<"/saved"> | null> => {
+  const res = await fetcher("/saved", {
+    headers,
+    query: { page }
+  });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 400:
+      throw defaultError;
     case 401:
       throw unauthorized;
   }

@@ -38,7 +38,7 @@ export module ArchiveController {
 
       return Response.ok({
         archives,
-        total: Math.ceil(await Archive.count({ where }) / 22)
+        total: Math.ceil(await Archive.count({ where }) / 30)
       });
     });
 

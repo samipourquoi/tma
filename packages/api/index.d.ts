@@ -81,5 +81,16 @@ export interface API {
       },
       response: [TResponse.Ok, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
+  },
+  "/saved": {
+    GET: {
+      query: {
+        page: number
+      },
+      response: [TResponse.Ok<{
+        archives: Includes<ArchiveAttributes, "author" | "likes">[],
+        total: number
+      }>, TResponse.BadRequest<string> | TResponse.Unauthorized]
+    }
   }
 }
