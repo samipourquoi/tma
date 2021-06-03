@@ -1,4 +1,4 @@
-import { Page } from "../../layout/page";
+import { DefaultLayout } from "../../layout/default-layout";
 import { Preview } from "../../components/markdown";
 import React from "react";
 import { GetServerSideProps } from "next";
@@ -30,7 +30,7 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
     return null;
 
   return (
-    <Page>
+    <DefaultLayout>
       <Head>
         <title>TMA - {archive.data.title}</title>
       </Head>
@@ -72,7 +72,7 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
           <FileBrowser initialData={files.data} archive={archive.data}/>
         </section>
       </div>
-    </Page>
+    </DefaultLayout>
   );
 }
 

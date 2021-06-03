@@ -10,7 +10,7 @@ import Scrollbar from "react-smooth-scrollbar";
 import { QueryClient, useQuery } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
-import { TablePage } from "../layout/table-page";
+import { TableLayout } from "../layout/table-layout";
 
 interface ArchivePageProps extends PageProps {
   initialPage: number,
@@ -25,7 +25,7 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
     { keepPreviousData: true });
 
   return (
-    <TablePage rows={archives.data?.archives || []}>
+    <TableLayout rows={archives.data?.archives || []}>
       <Head>
         <title>TMA - Home</title>
       </Head>
@@ -44,7 +44,7 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
           <VersionSelector version={version} setVersion={setVersion}/>
         </div>
       </div>
-    </TablePage>
+    </TableLayout>
   );
 };
 

@@ -7,7 +7,7 @@ import { Table } from "../components/table";
 import React from "react";
 import { ApiResult } from "@tma/api";
 
-export const TablePage: React.FC<{
+export const TableLayout: React.FC<{
   rows: ApiResult<"/archive/:id">[]
 }> = ({ rows, children }) => (
   <div className="flex bg-contrast-300 text-contrast-800">

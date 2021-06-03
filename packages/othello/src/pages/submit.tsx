@@ -1,4 +1,4 @@
-import { Page } from "../layout/page";
+import { DefaultLayout } from "../layout/default-layout";
 import { FileUploader } from "../components/file-uploader";
 import React, { useEffect } from "react";
 import { Editor2 } from "../components/markdown";
@@ -25,7 +25,7 @@ export default function SubmitPage({}: SubmitPageProps) {
   }, [user]);
 
   return (
-    <Page>
+    <DefaultLayout>
       <Head>
         <title>TMA - Submit</title>
       </Head>
@@ -50,7 +50,7 @@ export default function SubmitPage({}: SubmitPageProps) {
           Archive
         </button>
       </form>
-    </Page>
+    </DefaultLayout>
   );
 }
 
