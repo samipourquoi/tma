@@ -4,7 +4,7 @@ import axios from "axios";
 export const ip = (() => {
   if (process.env.DOCKER)
     return "http://host.docker.internal:2999"
-  if (process.env.NODE_ENV)
+  if (!process.browser)
     return "http://localhost:3000";
   return "";
 })();

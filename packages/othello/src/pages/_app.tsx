@@ -43,7 +43,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <title>TMA</title>
         </Head>
 
-        <ReactQueryDevtools initialIsOpen={false}/>
+        {process.env.NODE_ENV == "development" ?
+          <ReactQueryDevtools initialIsOpen={false} position="top-right"/> :
+          null}
 
         <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps}/>

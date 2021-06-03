@@ -10,6 +10,7 @@ import Scrollbar from "react-smooth-scrollbar";
 import { QueryClient, useQuery } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
+import { TablePage } from "../layout/table-page";
 
 interface ArchivePageProps extends PageProps {
   initialPage: number,
@@ -24,38 +25,26 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
     { keepPreviousData: true });
 
   return (
-    <div className="flex bg-contrast-300 text-contrast-800">
+    <TablePage rows={archives.data?.archives || []}>
       <Head>
         <title>TMA - Home</title>
       </Head>
 
-      <NewHeader/>
+      <h1 className="text-6xl">Archive</h1>
+      <div className="flex md:items-center flex-col md:flex-row">
+        <p className="mt-8 font-light text-contrast-700">
+          TMA is a place to archive Minecraft contraptions for Technical gameplay.
+        </p>
 
-      <div className="w-full">
-        <Scrollbar>
-          <main className="w-full h-screen">
-            <section className="px-10 sm:px-20 lg:px-28 py-12">
-              <h1 className="text-6xl">Archive</h1>
-              <div className="flex md:items-center flex-col md:flex-row">
-                <p className="mt-8 font-light text-contrast-700">
-                  TMA is a place to archive Minecraft contraptions for Technical gameplay.
-                </p>
-
-                <div
-                  className="flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2">
-                  <PageSelector pageAmount={archives.data?.total || 1} page={page} setPage={setPage}/>
-                  <VersionSelector version={version} setVersion={setVersion}/>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <Table rows={archives.data?.archives || []}/>
-            </section>
-          </main>
-        </Scrollbar>
+        <div className="
+          flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start
+          md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2
+        ">
+          <PageSelector pageAmount={archives.data?.total || 1} page={page} setPage={setPage}/>
+          <VersionSelector version={version} setVersion={setVersion}/>
+        </div>
       </div>
-    </div>
+    </TablePage>
   );
 };
 
