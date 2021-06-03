@@ -4,9 +4,9 @@ module.exports = {
 		return [
 			{
 				source: "/api/:path*",
-				destination:// process.env.DOCKER ?
-					"http://host.docker.internal:3001/:path*"// :
-					//"http://localhost:3001/:path*"
+				destination: process.env.DOCKER ?
+					"http://host.docker.internal:3001/:path*" :
+					"http://localhost:3001/:path*"
       }
 		]
 	},

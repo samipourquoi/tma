@@ -23,7 +23,6 @@ services:
       - 3000:3000
 
   back:
-#    image: tma/back
     image: ghcr.io/samipourquoi/tma/back
     build:
       context: .

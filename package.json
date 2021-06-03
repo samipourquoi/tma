@@ -1,28 +1,30 @@
 {
-		"name": "tma",
-		"private": true,
-		"version": "1.0.0",
-		"repository": "https://github.com/samipourquoi/tma.git",
-		"author": "samipourquoi",
-		"license": "MIT",
-		"scripts": {
-				"hamlet": "yarn workspace hamlet",
-				"othello": "yarn workspace othello",
-				"macbeth": "yarn workspace macbeth",
-				"build": "yarn workspaces run build"
-		},
-		"workspaces": {
-				"packages": [
-						"packages/*"
-				],
-				"nohoist": [
-						"tailwindcss",
-						"**/@tailwindcss/**"
-				]
-		},
-		"dependencies": {
-				"autoprefixer": "^10.2.6",
-				"postcss": "^8.3.0",
-				"tailwindcss": "^2.1.2"
-		}
+  "name": "tma",
+  "private": true,
+  "version": "1.0.0",
+  "repository": "https://github.com/samipourquoi/tma.git",
+  "author": "samipourquoi",
+  "license": "MIT",
+  "scripts": {
+    "hamlet": "yarn workspace hamlet",
+    "othello": "yarn workspace othello",
+    "macbeth": "yarn workspace macbeth",
+    "build": "yarn workspaces run build",
+    "dev:db": "docker-compose up -d db",
+    "prestart": "mkdir -p store tmp"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "tailwindcss",
+      "**/@tailwindcss/**"
+    ]
+  },
+  "dependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.0",
+    "tailwindcss": "^2.1.2"
+  }
 }
