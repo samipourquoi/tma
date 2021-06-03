@@ -13,7 +13,7 @@ services:
       - back
 
   front:
-#    image: tma/front
+    image: ghcr.io/samipourquoi/tma/front
     build:
       context: .
       dockerfile: docker/front/Dockerfile
@@ -24,6 +24,7 @@ services:
 
   back:
 #    image: tma/back
+    image: ghcr.io/samipourquoi/tma/back
     build:
       context: .
       dockerfile: docker/back/Dockerfile
