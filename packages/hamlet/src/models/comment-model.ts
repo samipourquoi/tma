@@ -12,8 +12,7 @@ export interface CommentAttributes {
 @Table
 export class Comment
   extends Model<CommentAttributes>
-  implements CommentAttributes
-{
+  implements CommentAttributes {
   @ForeignKey(() => Archive)
   @Column
   archiveID!: number;

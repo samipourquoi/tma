@@ -1,0 +1,24 @@
+docker
+
+# db
+*.db
+store
+config
+tmp
+
+# build
+dist
+.cache
+.next
+node_modules
+
+# editors
+.idea
+.vscode
+*.iml
+
+# logs
+*.log
+
+# macOS
+.DS_Store

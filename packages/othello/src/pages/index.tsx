@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { NewHeader } from "../components/header";
 import { Table } from "../components/table";
 import { GetServerSideProps } from "next";
-import { GET_ArchivesResult } from "hamlet/api";
-import { fetcher, getArchives, getUser } from "../api";
-import useSWR from "swr";
+import { getArchives, getUser } from "../api";
 import { PageSelector } from "../components/widgets/page-selector";
 import { VersionSelector } from "../components/widgets/version-selector";
 import Head from "next/head";
 import Scrollbar from "react-smooth-scrollbar";
 import { QueryClient, useQuery } from "react-query";
-import { dehydrate, DehydratedState } from "react-query/hydration";
+import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
 
 interface ArchivePageProps extends PageProps {
@@ -43,7 +41,8 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
                   TMA is a place to archive Minecraft contraptions for Technical gameplay.
                 </p>
 
-                <div className="flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2">
+                <div
+                  className="flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2">
                   <PageSelector pageAmount={archives.data?.total || 1} page={page} setPage={setPage}/>
                   <VersionSelector version={version} setVersion={setVersion}/>
                 </div>
@@ -64,8 +63,13 @@ export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async co
   const queryClient = new QueryClient();
   const { page = "1", version = "any", tags = "" } = context.query as NodeJS.Dict<string>;
 
-  await queryClient.prefetchQuery(["archives", +page], () => getArchives({ page: +page, version, tags: tags.split(",") }));
-  await queryClient.prefetchQuery("user", () => getUser({ cookie: context.req.headers.cookie! }));
+  await queryClient.prefetchQuery(["archives", +page], () => getArchives({
+    page: +page,
+    version,
+    tags: tags.split(",")
+  }));
+  const { cookie } = context.req.headers;
+  await queryClient.prefetchQuery("user", () => getUser(cookie ? { cookie } : {}));
 
   return {
     props: {

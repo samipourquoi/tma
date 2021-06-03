@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useUser } from "../hooks/use-user";
-import { GET_ArchiveResult, POST } from "hamlet/api";
-import { fetcher } from "../api";
 import { LikeAttributes } from "@tma/api/attributes";
+
 const Heart = dynamic(() => import("react-animated-heart"), { ssr: false });
 
 export const LikeButton: React.FC<{

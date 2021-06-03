@@ -1,18 +1,11 @@
 import { Page } from "../layout/page";
 import { FileUploader } from "../components/file-uploader";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Editor2 } from "../components/markdown";
-import { TagsSelector } from "../components/widgets/tags-selector";
-import { tags as TAGS, versions as VERSIONS } from "../constants";
 import Router from "next/router";
-import { Content, Hierarchy } from "hamlet/api";
-import fs from "fs";
 import Head from "next/head";
-import { FileUploader2 } from "../components/file-uploader2";
-import useSWR from "swr";
-import { useDarkMode } from "../hooks/use-dark-mode";
 import { GetServerSideProps } from "next";
-import { QueryClient, useQuery } from "react-query";
+import { QueryClient } from "react-query";
 import { PageProps } from "./_app";
 import { getUser } from "../api";
 import { dehydrate } from "react-query/hydration";
@@ -46,7 +39,7 @@ export default function SubmitPage({}: SubmitPageProps) {
           </section>
 
           <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
-            <FileUploader2/>
+            <FileUploader/>
           </section>
         </div>
 

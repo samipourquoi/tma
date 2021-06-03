@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { TagType } from "hamlet/api";
+import React, { useEffect, useState } from "react";
 import { Tag } from "../tag";
+import { TagType } from "@tma/api";
 
 export const TagsSelector: React.FC<{
   availableTags: string[],

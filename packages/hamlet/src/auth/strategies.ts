@@ -7,21 +7,21 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj as Express.User));
 
 passport.use(new DiscordStrategy({
-	...config.auth,
-	scope: ["identify", "email"],
+  ...config.auth,
+  scope: ["identify", "email"],
 }, async (accessToken, refreshToken, profile, cb) => {
-	try {
-		const [user] = await User.findOrCreate({
-			where: {
-				discordID: profile.id,
-				name: profile.username,
-				email: profile.email,
+  try {
+    const [user] = await User.findOrCreate({
+      where: {
+        discordID: profile.id,
+        name: profile.username,
+        email: profile.email,
         avatar: profile.avatar
-			}
-		});
+      }
+    });
 
-		cb(null, user);
-	} catch(e) {
-		cb(e);
-	}
+    cb(null, user);
+  } catch (e) {
+    cb(e);
+  }
 }));

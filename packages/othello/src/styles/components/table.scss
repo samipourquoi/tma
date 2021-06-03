@@ -4,7 +4,7 @@
   th,
   td {
     @apply border-l-2 border-r-2 border-gray-200 overflow-ellipsis
-      py-2 px-4 overflow-hidden max-w-max border-contrast-500;
+    py-2 px-4 overflow-hidden max-w-max border-contrast-500;
 
     &:first-child {
       @apply border-l-0;

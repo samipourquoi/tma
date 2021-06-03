@@ -5,8 +5,7 @@ import { LikeAttributes } from "@tma/api/attributes";
 
 @Table
 export class Like
-  extends Model<LikeAttributes>
-{
+  extends Model<LikeAttributes> {
   @PrimaryKey
   @ForeignKey(() => User)
   @Column

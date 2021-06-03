@@ -1,11 +1,13 @@
 import { API, ApiQuery, ApiResponse, ApiResult } from "@tma/api";
-import { useQuery, useQueryClient } from "react-query";
-import { IncomingHttpHeaders } from "http";
 import axios from "axios";
 
-export const ip = process.env.NODE_ENV ?
-	"http://localhost:3000" :
-	"";
+export const ip = (() => {
+  if (process.env.DOCKER)
+    return "http://host.docker.internal:2999"
+  if (process.env.NODE_ENV)
+    return "http://localhost:3000";
+  return "";
+})();
 
 // This basically maps the API, enforcing the right URI, HTTP verb,
 // request body, and response code.
@@ -32,34 +34,34 @@ export const fetcher =
     }) & ({
       text?: boolean
     })
-  ): Promise<ApiResponse<URI, Method>[number]> =>
-{
-  const data = options?.data;
-  const params = (options?.params || {}) as Record<string, any>;
-  const query = options?.query;
-  let url = `${ip}/api/${uri.startsWith("/") ? uri.slice(1) : uri}`;
-  Object.entries(params).forEach(([key, value]) => url = url.replace(`:${key}`, value));
+  ): Promise<ApiResponse<URI, Method>[number]> => {
+    const data = options?.data;
+    const params = (options?.params || {}) as Record<string, any>;
+    const query = options?.query;
+    let url = `${ip}/api/${uri.startsWith("/") ? uri.slice(1) : uri}`;
+    Object.entries(params).forEach(([key, value]) => url = url.replace(`:${key}`, value));
 
-  if (query) {
-    url += "?" + Object.entries(query)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-      .join("&");
+    if (query) {
+      url += "?" + Object.entries(query)
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join("&");
+    }
+
+    // const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
+    const res = await axios({
+      method: options?.method || "GET" as any,
+      url: url,
+      data,
+      headers: options?.headers,
+      validateStatus: () => true
+    });
+
+    return {
+      status: res.status,
+      body: res.data,
+      headers: res.headers
+    } as unknown as ApiResponse<URI, Method>;
   }
-
-  // const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
-  const res = await axios.request({
-    method: options?.method || "GET" as any,
-    url: url,
-    data,
-    headers: options?.headers,
-  });
-
-  return {
-    status: res.status,
-    body: res.data,
-    headers: res.headers
-  } as unknown as ApiResponse<URI, Method>;
-}
 
 const defaultError = new Error("an unexpected error has occured");
 const notFoundError = new Error("not found");

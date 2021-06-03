@@ -1,7 +1,5 @@
-import { Response, route, Route } from "typera-express";
-import { User } from "../models/user-model";
+import { Response, route } from "typera-express";
 import { authed } from "../middlewares";
-import { ApiResponse } from "@tma/api";
 import { ApiRoute } from "./controllers";
 
 export module AuthController {

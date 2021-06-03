@@ -10,6 +10,7 @@ import { DehydratedState, Hydrate } from "react-query/hydration";
 declare global {
   interface Storage {
     setItem(key: "theme", value: "light" | "dark"): void;
+
     getItem(key: "theme"): string | null;
   }
 }
@@ -45,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <ReactQueryDevtools initialIsOpen={false}/>
 
         <Hydrate state={pageProps.dehydratedState}>
-          <Component { ...pageProps }/>
+          <Component {...pageProps}/>
         </Hydrate>
       </QueryClientProvider>
     </DarkModeCtx.Provider>

@@ -7,6 +7,11 @@ declare global {
   declare type base64 = string;
 }
 
+export interface Attributes {
+  createdAt: string,
+  updatedAt: string
+}
+
 export interface UserAttributes {
   discordID: string,
   name: string,

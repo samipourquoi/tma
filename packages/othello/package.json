@@ -30,7 +30,6 @@
 		"@types/react": "^17.0.3",
 		"@types/react-dom": "^17.0.3",
 		"@types/react-smooth-scrollbar": "^8.0.2",
-		"@types/yaml": "^1.9.7",
 		"autoprefixer": "^10.2.5",
 		"postcss": "^8.2.9",
 		"tailwindcss": "^2.1.2",

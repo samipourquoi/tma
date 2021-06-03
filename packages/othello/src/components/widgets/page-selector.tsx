@@ -10,7 +10,7 @@ export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, se
   const [value, setValue] = useState<string>(String(page));
 
   const isAtStart = page == 1;
-  const isAtEnd   = page == pageAmount;
+  const isAtEnd = page == pageAmount;
 
   const updatePage = (number: -1 | 1) => () => {
     if ((isAtStart && number == -1)
@@ -23,7 +23,7 @@ export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, se
   return (
     <label className="widget">
       Page <input type="text" className="mx-1 rounded-lg bg-contrast-300 text-center dark:bg-contrast-500"
-                  style={{ width: `${value.length+1}ch` }}
+                  style={{ width: `${value.length + 1}ch` }}
                   value={value}
                   name="page"
                   onBlurCapture={(ev) => {
@@ -35,7 +35,7 @@ export const PageSelector: React.FC<PageSelectorProps> = ({ pageAmount, page, se
                       setValue(String(page));
                   }}
                   onChange={(ev) => setValue(ev.target.value)}/>
-        on {pageAmount}
+      on {pageAmount}
 
       <span className={`material-icons ${isAtStart ? "cursor-not-allowed text-contrast-600" : "cursor-pointer"}`}
             onClick={ev => {

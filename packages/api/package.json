@@ -4,5 +4,8 @@
   "version": "1.0.0",
   "dependencies": {
     "typera-common": "^2.4.1"
+  },
+  "scripts": {
+    "build": "true"
   }
 }

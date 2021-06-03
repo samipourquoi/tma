@@ -1,4 +1,3 @@
-import { Router } from "express";
 import { router } from "typera-express";
 import { FtpController } from "../controllers/ftp-controller";
 

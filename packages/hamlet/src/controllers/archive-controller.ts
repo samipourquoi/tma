@@ -4,13 +4,11 @@ import * as fs from "fs";
 import * as multer from "multer";
 import { Op, WhereOptions } from "sequelize";
 import { Like } from "../models/like-model";
-import { Middleware, Parser, Response, Route, route } from "typera-express";
+import { Middleware, Parser, Response, route } from "typera-express";
 import * as t from "io-ts"
 import { ArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
-import { ApiResponse } from "@tma/api";
 import { ApiRoute } from "./controllers";
-import * as express from "express";
 
 
 export module ArchiveController {
@@ -30,9 +28,9 @@ export module ArchiveController {
         where.tags = { [Op.contains]: tags.split(",") }
       const archives = await Archive.findAll({
         limit: 30,
-        offset: (+page-1) * 30,
+        offset: (+page - 1) * 30,
         include: [
-          { model: User, attributes: [ "name" ] },
+          { model: User, attributes: ["name"] },
           Like
         ],
         where
@@ -43,7 +41,7 @@ export module ArchiveController {
         total: Math.ceil(await Archive.count({ where }) / 22)
       });
     });
-  
+
   export const getArchive: ApiRoute<"/archive/:id"> = route
     .get("/:id(int)")
     .handler(async request => {
@@ -51,7 +49,7 @@ export module ArchiveController {
       const archive = await Archive.findOne({
         where: { id },
         include: [
-          { model: User, attributes: [ "name" ] },
+          { model: User, attributes: ["name"] },
           Like
         ]
       });
@@ -60,7 +58,7 @@ export module ArchiveController {
         Response.ok(archive) :
         Response.notFound();
     });
-  
+
   export const createArchive: ApiRoute<"/archive", "POST"> = route
     .post("/")
     .use(authed)
@@ -91,23 +89,23 @@ export module ArchiveController {
         authorID: request.user.id
       });
 
-      const path = `../../store/${ archive.id }`;
+      const path = `../../store/${archive.id}`;
       fs.mkdirSync(path);
-      fs.writeFileSync(`${ path }/readme.md`, request.body["readme.md"]);
+      fs.writeFileSync(`${path}/readme.md`, request.body["readme.md"]);
 
-      request.files?.forEach(file => fs.copyFileSync(file.path, `${ path }/${ file.originalname }`));
+      request.files?.forEach(file => fs.copyFileSync(file.path, `${path}/${file.originalname}`));
 
       // return Response.created(archive);
       return Response.redirect(301, "/");
     });
-  
+
   export const getFiles: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
     .handler(async request => {
-      const path = `../../store/${ request.routeParams.id }`;
+      const path = `../../store/${request.routeParams.id}`;
       const files = fs.readdirSync(path);
-      const isDir = (file: string) => fs.lstatSync(`${ path }/${ file }`).isDirectory();
-      return Response.ok(files.map(file => `${ file }${ isDir(file) ? "/" : "" }`))
+      const isDir = (file: string) => fs.lstatSync(`${path}/${file}`).isDirectory();
+      return Response.ok(files.map(file => `${file}${isDir(file) ? "/" : ""}`))
     });
 
   export const like: ApiRoute<"/archive/:id/like", "POST"> = route

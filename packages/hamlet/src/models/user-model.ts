@@ -7,33 +7,32 @@ import { UserAttributes } from "@tma/api/attributes";
 
 @Table
 export class User
-	extends Model<UserAttributes>
-{
+  extends Model<UserAttributes> {
   id!: number;
 
-	@Unique
-	@Column
-	discordID!: string;
+  @Unique
+  @Column
+  discordID!: string;
 
-	@Unique
-	@Column
-	email!: string;
+  @Unique
+  @Column
+  email!: string;
 
-	@Column
-	name!: string;
+  @Column
+  name!: string;
 
-	@Column
+  @Column
   avatar!: base64;
 
-	@HasMany(() => Archive)
-	archives!: Archive[];
+  @HasMany(() => Archive)
+  archives!: Archive[];
 
-	@HasOne(() => FtpUser)
-	ftp!: FtpUser;
+  @HasOne(() => FtpUser)
+  ftp!: FtpUser;
 
-	@HasMany(() => Like)
+  @HasMany(() => Like)
   likes!: Like[];
 
-	@HasMany(() => Comment)
+  @HasMany(() => Comment)
   comments!: Comment[];
 }

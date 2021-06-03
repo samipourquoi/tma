@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
 import { fetcher } from "../api";
 import { ApiResult } from "@tma/api";
 
@@ -33,7 +32,7 @@ const FileBrowserContext = createContext<{
 export const FileBrowser: React.FC<{
   initialData: string[];
   archive: ApiResult<"/archive/:id">
-}> = ({ initialData, archive}) => {
+}> = ({ initialData, archive }) => {
   const [path, setPath] = useState("");
 
   return (
@@ -47,7 +46,7 @@ const Entries: React.FC<{
   initialData: string[];
 }> = ({ initialData }) => {
   const { path, archive } = useContext(FileBrowserContext);
-  const { data = [] } = useSWR<GET_ArchiveFilesResult>(
+  const { data = [] } = useSWR<ApiResult<"/archive/:id/store">>(
     `/api/archive/${archive.id}/store/${path}`,
     fetcher,
     { initialData });

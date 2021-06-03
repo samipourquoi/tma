@@ -1,17 +1,15 @@
-import { NewHeader } from "../../components/header";
 import { Page } from "../../layout/page";
 import { Preview } from "../../components/markdown";
-import React, { useState } from "react";
-import { GET_ArchiveFilesResult, GET_ArchiveResult } from "hamlet/api";
+import React from "react";
 import { GetServerSideProps } from "next";
-import { fetcher, getArchive, getFile, getFiles, getUser, ip, likeArchive } from "../../api";
+import { getArchive, getFile, getFiles, getUser, likeArchive } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
 import { LikeButton } from "../../components/like-button";
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
-import { ApiResponse, ApiResult } from "@tma/api";
+import { ApiResult } from "@tma/api";
 import { PageProps } from "../_app";
 import { dehydrate } from "react-query/hydration";
 
@@ -106,7 +104,8 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
     await queryClient.prefetchQuery(["archive", id], () => archive);
     await queryClient.prefetchQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
     await queryClient.prefetchQuery(["files", id], () => getFiles(id));
-    await queryClient.prefetchQuery("user", () => getUser({ cookie: context.req.headers.cookie! }));
+    const { cookie } = context.req.headers;
+    await queryClient.prefetchQuery("user", () => getUser(cookie ? { cookie } : {}));
 
     return {
       props: { id, dehydratedState: dehydrate(queryClient) }
@@ -118,7 +117,7 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
   }
 }
 
-export function getTitleUriFromArchive(archive: GET_ArchiveResult) {
+export function getTitleUriFromArchive(archive: ApiResult<"/archive/:id">) {
   return `${archive.id}-${encodeURI(archive.title
     .toLowerCase()
     .replace(/( )|(%20)/g, "-"))}`;

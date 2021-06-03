@@ -8,26 +8,25 @@ import { ArchiveAttributes } from "@tma/api/attributes";
 
 @Table
 export class Archive
-	extends Model<ArchiveAttributes, Optional<ArchiveAttributes, "id">>
-  implements ArchiveAttributes
-{
+  extends Model<ArchiveAttributes, Optional<ArchiveAttributes, "id">>
+  implements ArchiveAttributes {
   id!: number;
 
-	@Column
-	title!: string;
+  @Column
+  title!: string;
 
-	@Column(ARRAY(STRING))
-	tags!: TagType[];
+  @Column(ARRAY(STRING))
+  tags!: TagType[];
 
-	@Column(ARRAY(STRING))
-	versions!: string[];
+  @Column(ARRAY(STRING))
+  versions!: string[];
 
-	@BelongsTo(() => User)
-	author!: User;
+  @BelongsTo(() => User)
+  author!: User;
 
-	@ForeignKey(() => User)
-	@Column
-	authorID!: number;
+  @ForeignKey(() => User)
+  @Column
+  authorID!: number;
 
   @HasMany(() => Like)
   likes!: Like[];

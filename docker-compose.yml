@@ -1,6 +1,40 @@
 version: "3.8"
 
 services:
+  reverse-proxy:
+    image: nginx:alpine
+    volumes:
+    - /etc/letsencrypt:/etc/letsencrypt
+    - ./docker/nginx:/etc/nginx
+    ports:
+    - 2999:80
+    depends_on:
+      - front
+      - back
+
+  front:
+#    image: tma/front
+    build:
+      context: .
+      dockerfile: docker/front/Dockerfile
+    depends_on:
+      - back
+    ports:
+      - 3000:3000
+
+  back:
+#    image: tma/back
+    build:
+      context: .
+      dockerfile: docker/back/Dockerfile
+    depends_on:
+      - db
+    ports:
+      - 3001:3001
+    volumes:
+    - ./config:/back/config
+    - ./store:/back/store
+
   db:
     image: library/postgres:13-alpine
     restart: always
@@ -9,9 +43,5 @@ services:
       POSTGRES_USER: tma
       POSTGRES_PASSWORD: supersecret
     ports:
-      - "3002:5432"
-
-  cache:
-    image: redis
-    ports:
-      - "3003:6379"
+      - 3002:3002
+    command: -p 3002

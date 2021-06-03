@@ -1,22 +1,23 @@
-import { TagType } from "hamlet/api";
+import { TagType } from "@tma/api";
 import React from "react";
 
 export interface TagProps {
   type: TagType,
+
   onDelete?(): void;
 }
 
 function typeToColor(type: TagType): string {
   return ({
-    "redstone": "bg-tags-redstone",
-    "slimestone": "bg-tags-slimestone",
-    "storage": "bg-tags-storage",
-    "farms": "bg-tags-farms",
-    "mob-farms": "bg-tags-mob-farms",
-    "bedrock": "bg-tags-bedrock",
-    "computational": "bg-tags-computational",
-    "other": "bg-tags-other"
-  } as { [k: string]: string })[type]
+      "redstone": "bg-tags-redstone",
+      "slimestone": "bg-tags-slimestone",
+      "storage": "bg-tags-storage",
+      "farms": "bg-tags-farms",
+      "mob-farms": "bg-tags-mob-farms",
+      "bedrock": "bg-tags-bedrock",
+      "computational": "bg-tags-computational",
+      "other": "bg-tags-other"
+    } as { [k: string]: string })[type]
     || "border border-gray-300";
 }
 

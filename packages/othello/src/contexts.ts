@@ -5,5 +5,6 @@ export const DarkModeCtx = createContext<{
   setDark(dark: boolean): void
 }>({
   dark: false,
-  setDark() {}
+  setDark() {
+  }
 });

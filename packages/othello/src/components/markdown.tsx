@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import marked from "marked";
 import Monaco, { useMonaco } from "@monaco-editor/react";
 import { tags, versions } from "../constants";
@@ -105,7 +105,7 @@ export const Editor2: React.FC = () => {
   return (
     <div>
       <div className="flex w-full">
-        { files.map((file, i) => {
+        {files.map((file, i) => {
           let content = "";
           if (file.language == "yaml") {
             try {
@@ -117,24 +117,24 @@ export const Editor2: React.FC = () => {
             content = file.content;
           }
           return (
-            <div key={ i }>
-              <textarea name={ file.name } value={content} hidden/>
+            <div key={i}>
+              <textarea name={file.name} value={content} hidden/>
               <button
                 type="button"
-                className={ `font-mono mx-2 my-1 
-            ${ i == currentFileIndex ? "text-gray-600" : "text-gray-400 hover:text-gray-500" }` }
-                onClick={ () => {
+                className={`font-mono mx-2 my-1 
+            ${i == currentFileIndex ? "text-gray-600" : "text-gray-400 hover:text-gray-500"}`}
+                onClick={() => {
                   setCurrentFileIndex(i);
-                } }>
-                { file.name }</button>
+                }}>
+                {file.name}</button>
             </div>
           );
-        }) }
+        })}
       </div>
 
       <Monaco
-        language={ editableFile.language }
-        value={ editableFile.content }
+        language={editableFile.language}
+        value={editableFile.content}
         theme={dark ? "dark" : "light"}
         height="60vh"
         onChange={content => {
@@ -144,7 +144,7 @@ export const Editor2: React.FC = () => {
           mouseStyle: "text",
           minimap: { enabled: false },
           wordWrap: "on"
-        } }/>
+        }}/>
     </div>
   );
 }

@@ -3,30 +3,27 @@ import { User } from "./user-model";
 import { BOOLEAN, Optional } from "sequelize";
 
 export interface FtpUserAttributes {
-	userID: number,
-	password: string,
-	admin: boolean,
+  userID: number,
+  password: string,
+  admin: boolean,
 }
 
 @Table
 export class FtpUser
-	extends Model<
-		FtpUserAttributes,
-		Optional<
-			FtpUserAttributes,
-			"admin">>
-{
-	@Column
-	password!: string;
+  extends Model<FtpUserAttributes,
+    Optional<FtpUserAttributes,
+      "admin">> {
+  @Column
+  password!: string;
 
-	@Column({ type: BOOLEAN, defaultValue: false })
-	admin!: boolean;
+  @Column({ type: BOOLEAN, defaultValue: false })
+  admin!: boolean;
 
-	@Unique
-	@ForeignKey(() => User)
-	@Column
-	userID!: number;
+  @Unique
+  @ForeignKey(() => User)
+  @Column
+  userID!: number;
 
-	@BelongsTo(() => User)
-	user!: User;
+  @BelongsTo(() => User)
+  user!: User;
 }
