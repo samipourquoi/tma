@@ -1,11 +1,10 @@
-version: "3.8"
+version: "3.6"
 
 services:
   reverse-proxy:
     image: nginx:alpine
     volumes:
-    - /etc/letsencrypt:/etc/letsencrypt
-    - ./docker/nginx:/etc/nginx
+      - ./docker/nginx:/etc/nginx
     ports:
     - 2999:80
     depends_on:
@@ -32,8 +31,8 @@ services:
     ports:
       - 3001:3001
     volumes:
-    - ./config:/back/config
-    - ./store:/back/store
+      - ./config:/back/config
+      - ./store:/back/store
 
   db:
     image: library/postgres:13-alpine
