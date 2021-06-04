@@ -1,4 +1,5 @@
-## Technical Minecraft Archive
+# Technical Minecraft Archive [![Docker](https://github.com/samipourquoi/tma/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/samipourquoi/tma/actions/workflows/docker-publish.yml)
+
 TMA is a place to archive Minecraft contraptions for technical gameplay.
 
 ### Use
