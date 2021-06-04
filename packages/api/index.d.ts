@@ -92,5 +92,13 @@ export interface API {
         total: number
       }>, TResponse.BadRequest<string> | TResponse.Unauthorized]
     }
+  },
+  "/settings": {
+    GET: {
+      response: [TResponse.Ok | TResponse.Unauthorized]
+    },
+    PUT: {
+      response: [TResponse.Ok | TResponse.BadRequest<string> | TResponse.Unauthorized]
+    }
   }
 }

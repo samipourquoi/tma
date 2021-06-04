@@ -33,6 +33,9 @@ export interface LikeAttributes {
   archiveID: number
 }
 
+export interface SettingsAttributes {
+}
+
 export type IncludesOf<Attribute> =
   Attribute extends ArchiveAttributes ? { author: UserAttributes, likes: LikeAttributes[] } :
   never;

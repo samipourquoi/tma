@@ -4,6 +4,7 @@ import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
 import { UserAttributes } from "@tma/api/attributes";
+import { Settings } from "./settings-model";
 
 @Table
 export class User
@@ -35,4 +36,7 @@ export class User
 
   @HasMany(() => Comment)
   comments!: Comment[];
+
+  @HasOne(() => Settings)
+  settings!: Settings;
 }

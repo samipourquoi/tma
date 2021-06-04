@@ -4,6 +4,7 @@ import { User } from "./user-model";
 import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
+import { Settings } from "./settings-model";
 
 export const sequelize = new Sequelize({
   logging: false,
@@ -15,7 +16,7 @@ export const sequelize = new Sequelize({
     "localhost",
   password: "supersecret",
   port: 3002,
-  models: [Archive, User, FtpUser, Like, Comment],
+  models: [Archive, User, FtpUser, Like, Comment, Settings],
   omitNull: true
 });
 
