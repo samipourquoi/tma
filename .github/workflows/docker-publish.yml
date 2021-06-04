@@ -1,17 +1,12 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   push:
     branches: [ main ]
     tags: [ 'v*.*.*' ]
 
 jobs:
-  push:
+  publish:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
