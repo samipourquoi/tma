@@ -165,7 +165,9 @@ const OptionsBar: React.FC = () => {
 
   return (
     <div className="min-h-10 p-7 py-5 flex justify-start items-center children:cursor-pointer">
-      <div className="material-icons mr-5">settings</div>
+      <Link href="/settings">
+        <a className="material-icons mr-5 hover:text-contrast-600">settings</a>
+      </Link>
 
       <div className="material-icons text-gray-400 hover:text-yellow-500 mr-5" onClick={() => {
         setDark(!dark);
