@@ -6,3 +6,7 @@
 .click-button {
   @apply bg-purple-400 hover:bg-purple-500 active:bg-purple-600 text-contrast-400;
 }
+
+.input-button {
+  @apply px-4 py-2 bg-contrast-400 rounded-xl text-lg w-full lg:w-2/3 xl:w-1/2 2xl:w-1/3;
+}

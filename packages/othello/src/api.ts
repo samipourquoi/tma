@@ -146,3 +146,15 @@ export const getSaved = async (page: number, headers?: Record<string, string>): 
       throw unauthorized;
   }
 }
+
+export const updatePassword = async (password: string): Promise<void> => {
+  const res = await fetcher("/ftp/password", { method: "PUT", data: { password } });
+  switch (res.status) {
+    case 200:
+      break;
+    case 400:
+      throw defaultError;
+    case 401:
+      throw unauthorized;
+  }
+}
