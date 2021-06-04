@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import { fetcher } from "../api";
+import { fetcher, getFile, getFiles } from "../api";
 import { ApiResult } from "@tma/api";
+import { useQuery } from "react-query";
 
 
 // These are just copy pasted from Github... (they look cool though)
@@ -29,40 +30,29 @@ const FileBrowserContext = createContext<{
   archive: ApiResult<"/archive/:id">
 }>(null as any);
 
+/** @todo: add support for directory browsing */
 export const FileBrowser: React.FC<{
-  initialData: string[];
   archive: ApiResult<"/archive/:id">
-}> = ({ initialData, archive }) => {
+}> = ({ archive }) => {
   const [path, setPath] = useState("");
 
   return (
     <FileBrowserContext.Provider value={{ path, setPath, archive }}>
-      <Entries initialData={initialData}/>
+      <Entries/>
     </FileBrowserContext.Provider>
   );
 }
 
-const Entries: React.FC<{
-  initialData: string[];
-}> = ({ initialData }) => {
+const Entries: React.FC = () => {
   const { path, archive } = useContext(FileBrowserContext);
-  const { data = [] } = useSWR<ApiResult<"/archive/:id/store">>(
-    `/api/archive/${archive.id}/store/${path}`,
-    fetcher,
-    { initialData });
-  const entries = path == "" ? data : ["../", ...data];
-  const isDir = (file: string) => file.endsWith("/");
-  const dirs = entries.filter(isDir);
-  const files = entries.filter(file => !isDir(file));
+  const files = useQuery(["files", archive.id],
+    () => getFiles(archive.id));
 
   return (
     <div className="border border-dashed border-contrast-500 p-4 rounded-xl text-contrast-600 font-light">
       <h3>{path == "" ? "/" : path}</h3>
       <div className="entries">
-        {dirs.map(dir => (
-          <Entry type="directory" name={dir} key={dir}/>
-        ))}
-        {files.map(file => (
+        {files.data?.map(file => (
           <Entry type="file" name={file} key={file}/>
         ))}
       </div>

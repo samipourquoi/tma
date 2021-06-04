@@ -20,13 +20,12 @@ interface ArchiveViewProps extends PageProps {
 export default function ArchiveView({ id }: ArchiveViewProps) {
   const queryClient = useQueryClient();
   const archive = useQuery(["archive", id], () => getArchive(id));
-  const files = useQuery(["files", id], () => getFiles(id));
   const readme = useQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
   const mutation = useMutation(likeArchive, {
     onSuccess: archive =>
       void queryClient.setQueryData(["archive", id], archive)
   });
-  if (!(archive.isSuccess && files.isSuccess && readme.isSuccess))
+  if (!(archive.isSuccess && readme.isSuccess))
     return null;
 
   return (
@@ -69,7 +68,7 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
             }}/>
           </div>
 
-          {/*<FileBrowser initialData={files.data} archive={archive.data}/>*/}
+          <FileBrowser archive={archive.data}/>
         </section>
       </div>
     </DefaultLayout>
