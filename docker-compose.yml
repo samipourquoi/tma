@@ -20,6 +20,8 @@ services:
       - back
     ports:
       - 3000:3000
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   back:
     image: ghcr.io/samipourquoi/tma/back
@@ -33,6 +35,8 @@ services:
     volumes:
       - ./config:/back/config
       - ./store:/back/store
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   db:
     image: library/postgres:13-alpine
