@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NewHeader } from "../components/header";
 import { Table } from "../components/table";
 import { GetServerSideProps } from "next";
@@ -11,6 +11,8 @@ import { QueryClient, useQuery } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
 import { TableLayout } from "../layout/table-layout";
+import { SearchCtx } from "../contexts";
+import { ApiQuery } from "@tma/api";
 
 interface ArchivePageProps extends PageProps {
   initialPage: number,
@@ -18,10 +20,17 @@ interface ArchivePageProps extends PageProps {
 }
 
 export default function ArchivePage({ initialPage, initialVersion }: ArchivePageProps) {
-  const [page, setPage] = useState(initialPage);
-  const [version, setVersion] = useState(initialVersion);
-  const archives = useQuery(["archives", page],
-    () => getArchives({ page, version, tags: [] }),
+  const {
+    page: [page, setPage],
+    version: [version, setVersion],
+    search: [search],
+    tags: [tags]
+  } = useContext(SearchCtx);
+  const query: ApiQuery<"/archive"> = { page, search, tags: Array.from(tags), version }
+  console.log(tags);
+
+  const archives = useQuery(["archives", query],
+    () => getArchives(query),
     { keepPreviousData: true });
 
   return (
@@ -50,13 +59,15 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
 
 export const getServerSideProps: GetServerSideProps<ArchivePageProps> = async context => {
   const queryClient = new QueryClient();
-  const { page = "1", version = "any", tags = "" } = context.query as NodeJS.Dict<string>;
-
-  await queryClient.prefetchQuery(["archives", +page], () => getArchives({
+  const { page = "1", version = "any", tags = "", search = "" } = context.query as NodeJS.Dict<string>;
+  const query: ApiQuery<"/archive"> = {
     page: +page,
     version,
-    tags: tags.split(",")
-  }));
+    tags: tags.split(","),
+    search
+  };
+
+  await queryClient.prefetchQuery(["archives", query], () => getArchives(query));
   const { cookie } = context.req.headers;
   await queryClient.prefetchQuery("user", () => getUser(cookie ? { cookie } : {}));
 

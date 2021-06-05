@@ -1,4 +1,4 @@
-export const versions = [
+export const VERSIONS = [
   "any",
   "1.12",
   "1.13",
@@ -7,9 +7,9 @@ export const versions = [
   "1.16",
   "1.17",
   "*"
-];
+] as const;
 
-export const tags = [
+export const TAGS = [
   "redstone",
   "slimestone",
   "storage",
@@ -18,4 +18,4 @@ export const tags = [
   "bedrock",
   "computational",
   "other"
-];
+] as const;

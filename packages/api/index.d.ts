@@ -38,7 +38,8 @@ export interface API {
       query: {
         page: number,
         version: string,
-        tags: TagType[]
+        tags: TagType[],
+        search: string
       },
       response: [TResponse.Ok<{
         archives: Includes<ArchiveAttributes, "author" | "likes">[];

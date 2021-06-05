@@ -1,5 +1,5 @@
 import React from "react";
-import { versions } from "../../constants";
+import { VERSIONS } from "../../constants";
 
 export const VersionSelector: React.FC<{
   version: string;
@@ -16,7 +16,7 @@ export const VersionSelector: React.FC<{
         setVersion(ev.target.value);
       }}
     >
-      {versions.map(version => (
+      {VERSIONS.map(version => (
         <option key={version}>{version}</option>
       ))}
     </select>

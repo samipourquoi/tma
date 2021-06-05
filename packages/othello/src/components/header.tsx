@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { disconnect } from "../api";
@@ -6,6 +6,8 @@ import { useDarkMode } from "../hooks/use-dark-mode";
 import Scrollbar from "react-smooth-scrollbar"
 import { useQueryClient } from "react-query";
 import { useUser } from "../hooks/use-user";
+import Router from "next/router";
+import { SearchCtx } from "../contexts";
 
 export const NewHeader: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
@@ -111,50 +113,68 @@ const SearchBar: React.FC = () => {
     "Villager hall"
   ];
   const placeholder = `${placeholders[new Date().getMinutes() % placeholders.length]}...`;
+  const [internal, setInternal] = useState("");
+  const { search: [, setSearch] } = useContext(SearchCtx);
 
   return (
     <div className="py-9 my-9 border-t border-b border-contrast-600">
       <h2 className="mb-4 text-2xl">Search</h2>
-      <input type="text" placeholder={placeholder} className="
+      <input name="search-string" type="text" placeholder={placeholder} className="
         w-full outline-none border-none p-3.5 rounded-xl text-base font-light
         text-contrast-700 dark:text-gray-300 shadow bg-contrast-300 dark:bg-contrast-500
-      "/>
+      " value={internal} onChange={ev => setInternal(ev.target.value)} onKeyDown={ev => {
+        if (ev.key == "Enter")
+          setSearch(internal);
+      }}/>
     </div>
   );
 }
 
-const TagList: React.FC = () => {
-  const tags: {
-    color: string,
-    name: string
-  }[] = [
-    { color: "bg-tags-redstone", name: "Redstone" },
-    { color: "bg-tags-slimestone", name: "Slimestone" },
-    { color: "bg-tags-storage", name: "Storage" },
-    { color: "bg-tags-farms", name: "Farms" },
-    { color: "bg-tags-mob-farms", name: "Mob farms" },
-    { color: "bg-tags-bedrock", name: "Bedrock break." },
-    { color: "bg-tags-computational", name: "Computational" },
-    { color: "bg-tags-other", name: "Other" }
-  ];
+const TagList: React.FC = () => (
+  <div>
+    <h2 className="mb-4 text-2xl">Tags</h2>
+    <ul>
+      {[
+        { color: "bg-tags-redstone", name: "Redstone" },
+        { color: "bg-tags-slimestone", name: "Slimestone" },
+        { color: "bg-tags-storage", name: "Storage" },
+        { color: "bg-tags-farms", name: "Farms" },
+        { color: "bg-tags-mob-farms", name: "Mob farms" },
+        { color: "bg-tags-bedrock", name: "Bedrock break." },
+        { color: "bg-tags-computational", name: "Computational" },
+        { color: "bg-tags-other", name: "Other" }
+      ].map(TagListEntry)}
+    </ul>
+  </div>
+);
+
+const TagListEntry: React.FC<{
+  color: string,
+  name: string
+}> = ({ color, name }) => {
+  const [checked, setChecked] = useState(false);
+  const tagID = color.slice("bg-tags-".length);
+  const { tags: [tags, setTags] } = useContext(SearchCtx);
+
+  useEffect(() => {
+    const newTags = new Set(tags);
+    newTags[checked ? "add" : "delete"](tagID);
+    setTags(newTags);
+  }, [checked]);
 
   return (
-    <div>
-      <h2 className="mb-4 text-2xl">Tags</h2>
-      <ul>
-        {tags.map(tag => (
-          <li key={tag.name} className="my-5">
-            <Link href="">
-              <a className="flex items-center">
-                <div className={`${tag.color} w-5 h-5 rounded-full`}/>
-                <span className="ml-4 font-light hover:text-gray-500 ">
-                  {tag.name}</span>
-              </a>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <li>
+      <label key={name} className="my-5 flex items-center cursor-pointer">
+        <input name={tagID} className="hidden" type="checkbox" checked={checked} onChange={() => setChecked(!checked)}/>
+
+        <div className={`${color} w-5 h-5 rounded-full flex justify-center items-center text-contrast-400 material-icons`}>
+          {checked ? "close" : null}
+        </div>
+        <span className="ml-4 font-light hover:text-gray-500">
+          {name}
+        </span>
+      </label>
+    </li>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import marked from "marked";
 import Monaco, { useMonaco } from "@monaco-editor/react";
-import { tags, versions } from "../constants";
+import { TAGS, VERSIONS } from "../constants";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import * as YAML from "yaml";
 
@@ -49,7 +49,7 @@ title: My cool contraption
 # if you use them, but you can add custom tags if needed.
 tags:
   - other
-${tags
+${TAGS
   .filter(tag => tag != "other")
   .map(tag => `#  - ${tag}`)
   .join("\n")}
@@ -57,7 +57,7 @@ ${tags
 # Same here.
 versions:
   - any
-${versions
+${VERSIONS
   .filter(tag => tag != "any")
   .map(tag => `#  - "${tag}"`)
   .join("\n")}
