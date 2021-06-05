@@ -1,4 +1,5 @@
 docker
+.env
 
 # db
 *.db
