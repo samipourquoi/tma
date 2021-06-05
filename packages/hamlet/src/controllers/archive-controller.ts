@@ -63,7 +63,7 @@ export module ArchiveController {
     .post("/")
     .use(authed)
     .use(Middleware.wrapNative<{ files?: Express.Multer.File[] }>(
-      multer({ dest: "../../tmp" }).array("fields", 20)))
+      multer({ dest: "../../tmp" }).array("files", 20)))
     .use(async request => {
       if (request.req.body["meta.yml"]) {
         request.req.body["meta.yml"] = JSON.parse(request.req.body["meta.yml"]);
