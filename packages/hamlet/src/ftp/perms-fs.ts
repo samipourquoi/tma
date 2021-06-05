@@ -1,5 +1,6 @@
 import { FileSystem as FileSystemBase, FtpConnection } from "ftp-srv";
 import { Archive } from "../models/archive-model";
+import { SearchSystem } from "../search-system";
 
 export class PermsFs
   extends FileSystemBase {
@@ -13,7 +14,10 @@ export class PermsFs
 
   async write(fileName: string): Promise<any> {
     await this.throwIfNotOwner();
-    return await super.write(fileName);
+    const res = await super.write(fileName);
+    if (fileName == "readme.md")
+      SearchSystem.init();
+    return res;
   }
 
   async mkdir(path: string): Promise<any> {

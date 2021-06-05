@@ -9,32 +9,51 @@ import * as t from "io-ts"
 import { ArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
 import { ApiRoute } from "./controllers";
-
+import { NumberFromString } from "io-ts-types/lib/NumberFromString";
+import { nonEmptyArray } from "io-ts-types/lib/nonEmptyArray";
+import { SearchSystem } from "../search-system";
 
 export module ArchiveController {
   export const getArchives: ApiRoute<"/archive"> = route
     .get("/")
     .use(Parser.query(t.partial({
-      page: t.string,
+      page: NumberFromString,
       version: t.string,
-      tags: t.string
+      tags: t.string,
+      search: t.string
     })))
     .handler(async request => {
-      const { page = "1", version = "any", tags = "" } = request.query;
+      const { page = 1, version = "any", tags = "", search } = request.query;
+
       const where: WhereOptions<ArchiveAttributes> = {};
       if (version != "any")
         where.versions = { [Op.contains]: String(version) }
       if (tags)
         where.tags = { [Op.contains]: tags.split(",") }
-      const archives = await Archive.findAll({
-        limit: 30,
-        offset: (+page - 1) * 30,
-        include: [
-          { model: User, attributes: ["name"] },
-          Like
-        ],
-        where
-      });
+
+      let archives: Archive[];
+      if (search) {
+        const ids = SearchSystem.search(search);
+        archives = await Archive.findAll({
+          include: [
+            { model: User, attributes: ["name"] },
+            Like
+          ],
+          where
+        }).then(archives => ids
+          .map(id => archives.find(archive => archive.id == id)!)
+          .slice((+page - 1) * 30, +page * 30));
+      } else {
+        archives = await Archive.findAll({
+          limit: 30,
+          offset: (+page - 1) * 30,
+          include: [
+            { model: User, attributes: ["name"] },
+            Like
+          ],
+          where
+        });
+      }
 
       return Response.ok({
         archives,
@@ -92,6 +111,7 @@ export module ArchiveController {
       const path = `../../store/${archive.id}`;
       fs.mkdirSync(path);
       fs.writeFileSync(`${path}/readme.md`, request.body["readme.md"]);
+      SearchSystem.documents.addDocument(request.body["readme.md"]);
 
       request.files?.forEach(file => fs.copyFileSync(file.path, `${path}/${file.originalname}`));
 

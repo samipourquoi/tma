@@ -10,6 +10,7 @@ import "./ftp";
 import * as session from "express-session";
 import { v4 as uuid } from 'uuid';
 import * as passport from "passport";
+import { SearchSystem } from "./search-system";
 
 const port = +(process.env.PORT || 3001);
 export const app = express();
@@ -26,6 +27,7 @@ app.use(routes);
 
 app.listen(port, async () => {
   await sync();
+  SearchSystem.init();
   console.info(`API server listening to :${port}.`);
   console.info(`> http://localhost:${port}/`);
 });
