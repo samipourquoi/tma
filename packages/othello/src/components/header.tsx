@@ -113,8 +113,8 @@ const SearchBar: React.FC = () => {
     "Villager hall"
   ];
   const placeholder = `${placeholders[new Date().getMinutes() % placeholders.length]}...`;
-  const [internal, setInternal] = useState("");
-  const { search: [, setSearch] } = useContext(SearchCtx);
+  const { search: [search, setSearch] } = useContext(SearchCtx);
+  const [internal, setInternal] = useState(search);
 
   return (
     <div className="py-9 my-9 border-t border-b border-contrast-600">
@@ -152,9 +152,9 @@ const TagListEntry: React.FC<{
   color: string,
   name: string
 }> = ({ color, name }) => {
-  const [checked, setChecked] = useState(false);
   const tagID = color.slice("bg-tags-".length);
   const { tags: [tags, setTags] } = useContext(SearchCtx);
+  const [checked, setChecked] = useState(tags.has(tagID));
 
   useEffect(() => {
     const newTags = new Set(tags);
