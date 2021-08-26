@@ -5,10 +5,12 @@ import { Like } from "./like-model";
 import { Comment } from "./comment-model";
 import { UserAttributes } from "@tma/api/attributes";
 import { Settings } from "./settings-model";
+import { ForModel } from "./index";
 
 @Table
 export class User
-  extends Model<UserAttributes> {
+  extends Model<ForModel<UserAttributes>>
+{
   id!: number;
 
   @Unique

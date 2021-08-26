@@ -2,10 +2,12 @@ import { BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table } from "sequeli
 import { User } from "./user-model";
 import { Archive } from "./archive-model";
 import { LikeAttributes } from "@tma/api/attributes";
+import { ForModel } from "./index";
 
 @Table
 export class Like
-  extends Model<LikeAttributes> {
+  extends Model<ForModel<LikeAttributes>>
+{
   @PrimaryKey
   @ForeignKey(() => User)
   @Column

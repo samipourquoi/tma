@@ -5,11 +5,13 @@ import { ARRAY, Optional, STRING } from "sequelize";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
 import { ArchiveAttributes } from "@tma/api/attributes";
+import { ForModel } from "./index";
 
 @Table
 export class Archive
-  extends Model<ArchiveAttributes, Optional<ArchiveAttributes, "id">>
-  implements ArchiveAttributes {
+  extends Model<ForModel<ArchiveAttributes>>
+  implements ForModel<ArchiveAttributes>
+{
   id!: number;
 
   @Column

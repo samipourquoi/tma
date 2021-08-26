@@ -1,18 +1,15 @@
 import { BelongsTo, Column, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Archive } from "./archive-model";
 import { User } from "./user-model";
+import { CommentAttributes } from "@tma/api/attributes";
+import { ForModel } from "./index";
 
-export interface CommentAttributes {
-  authorID: number,
-  archiveID: number,
-  content: string,
-  date: Date
-}
+
 
 @Table
 export class Comment
-  extends Model<CommentAttributes>
-  implements CommentAttributes {
+  extends Model<ForModel<CommentAttributes>>
+{
   @ForeignKey(() => Archive)
   @Column
   archiveID!: number;

@@ -11,16 +11,24 @@ passport.use(new DiscordStrategy({
   scope: ["identify", "email"],
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
-    const [user] = await User.findOrCreate({
+    const user = await User.findOne({
       where: {
-        discordID: profile.id,
-        name: profile.username,
-        email: profile.email,
-        avatar: profile.avatar
+        discordID: profile.id
       }
     });
 
-    cb(null, user);
+    if (!user) {
+      return await User.create({
+        discordID: profile.id,
+        name: profile.username,
+        avatar: profile.avatar,
+        email: profile.email!
+      }).then(user => cb(null, user))
+    } else {
+      return user.set("avatar", profile.avatar)
+        .save()
+        .then(user => cb(null, user));
+    }
   } catch (e) {
     cb(e);
   }
