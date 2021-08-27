@@ -27,7 +27,6 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
     tags: [tags]
   } = useContext(SearchCtx);
   const query: ApiQuery<"/archive"> = { page, search, tags: Array.from(tags), version }
-  console.log(tags);
 
   const archives = useQuery(["archives", query],
     () => getArchives(query),

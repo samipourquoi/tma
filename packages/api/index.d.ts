@@ -38,8 +38,12 @@ export interface API {
       }>, TResponse.BadRequest<string>]
     },
     POST: {
-      request: any, // its using the multipart/form-data format
-      response: [TResponse.Redirect<301, string, { location: string }>, TResponse.Unauthorized, TResponse.BadRequest<string>]
+      body: {
+        title: string,
+        readme: object,
+        tags: TagType[],
+      }, // its using the multipart/form-data format
+      response: [TResponse.Created<ArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id": {

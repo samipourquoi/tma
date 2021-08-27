@@ -1,11 +1,11 @@
 import { BelongsTo, Column, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { User } from "./user-model";
-import { TagType } from "../../api";
 import { ARRAY, Optional, STRING } from "sequelize";
 import { Like } from "./like-model";
 import { Comment } from "./comment-model";
 import { ArchiveAttributes } from "@tma/api/attributes";
 import { ForModel } from "./index";
+import { TagType } from "@tma/api";
 
 @Table
 export class Archive

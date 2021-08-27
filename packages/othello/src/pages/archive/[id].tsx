@@ -12,6 +12,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 import { ApiResult } from "@tma/api";
 import { PageProps } from "../_app";
 import { dehydrate } from "react-query/hydration";
+import { ArchiveAttributes } from "@tma/api/attributes";
 
 interface ArchiveViewProps extends PageProps {
   id: number
@@ -116,7 +117,7 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
   }
 }
 
-export function getTitleUriFromArchive(archive: ApiResult<"/archive/:id">) {
+export function getTitleUriFromArchive(archive: ArchiveAttributes) {
   return `${archive.id}-${encodeURI(archive.title
     .toLowerCase()
     .replace(/( )|(%20)/g, "-"))}`;

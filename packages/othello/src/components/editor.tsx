@@ -1,5 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ContentBlock, ContentState, EditorState, genKey, Modifier, SelectionState, EditorBlock } from "draft-js";
+import {
+  ContentBlock,
+  ContentState,
+  EditorState,
+  genKey,
+  Modifier,
+  SelectionState,
+  EditorBlock,
+  RawDraftContentState, convertToRaw
+} from "draft-js";
 import dynamic from "next/dynamic";
 import type { PluginEditorProps } from "@draft-js-plugins/editor";
 import createToolbarPlugin from "@draft-js-plugins/static-toolbar";
@@ -11,6 +20,7 @@ import { TagType } from "@tma/api";
 import { CustomTag, Tag, TagsSelector2 } from "./tag";
 import { TAGS } from "../constants";
 import { TagsSelector } from "./widgets/tags-selector";
+import { createArchive } from "../api";
 
 const DraftEditor: React.FC<PluginEditorProps> = dynamic(
   () => import("@draft-js-plugins/editor").then(draftjs => draftjs.default) as any,
@@ -87,13 +97,24 @@ const toolbarPlugin = createToolbarPlugin({
 });
 const { Toolbar } = toolbarPlugin;
 
-export const Editor3: React.FC = () => {
+export const Editor3: React.FC<{
+  onSubmit: (
+    title: string,
+    readme: RawDraftContentState,
+    tags: TagType[]
+  ) => void
+}> = ({ onSubmit }) => {
   const [tags, setTags] = useState<Set<TagType>>(new Set);
   const [state, setState] = useState(() => EditorState.createEmpty());
   const plugins = useMemo(() => [
     createMarkdownShortcutsPlugin(),
     toolbarPlugin
   ], []);
+  const title = useMemo(() => {
+    const content = state.getCurrentContent();
+    const block = content.getFirstBlock();
+    return block.getText();
+  }, [state]);
 
   const onChange = (newState: EditorState) => {
     newState = enforceTitle(newState);
@@ -119,6 +140,16 @@ export const Editor3: React.FC = () => {
           // readOnly={true}
         />
       </div>
+
+      <button onClick={() => title && onSubmit(
+        title,
+        convertToRaw(state.getCurrentContent()),
+        Array.from(tags)
+      )} className={`bg-green-400 ${title ? "hover:bg-green-300" : "bg-green-200 cursor-not-allowed"} py-1.5 
+        px-3 rounded-lg text-contrast-300`}
+      >
+        Archive
+      </button>
     </div>
   );
 }

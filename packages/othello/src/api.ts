@@ -1,5 +1,6 @@
-import { API, ApiQuery, ApiResponse, ApiResult } from "@tma/api";
+import { API, ApiQuery, ApiResponse, ApiResult, TagType } from "@tma/api";
 import axios from "axios";
+import { RawDraftContentState } from "draft-js";
 
 export const ip = (() => {
   if (process.env.DOCKER)
@@ -12,38 +13,29 @@ export const ip = (() => {
 // This basically maps the API, enforcing the right URI, HTTP verb,
 // request body, and response code.
 export const fetcher =
-  async <URI extends keyof API, Method extends keyof API[URI] = "GET" extends keyof API[URI] ? "GET" : never>
-  (
+  async <
+    URI extends keyof API,
+    Method extends keyof API[URI] = "GET" extends keyof API[URI] ? "GET" : never,
+    Path = API[URI][Method]
+  >(
     uri: URI,
-    options?: RequestInit & (Method extends "GET" ? {
-      method?: Method
-    } : {
-      method: Method
-    }) & ("body" extends keyof API[URI][Method] ? {
-      data: API[URI][Method]["body"]
-    } : {
-      data?: never
-    }) & ("params" extends keyof API[URI][Method] ? {
-      params: API[URI][Method]["params"]
-    } : {
-      params?: never
-    }) & ("query" extends keyof API[URI][Method] ? {
-      query: API[URI][Method]["query"]
-    } : {
-      query?: never
-    }) & ({
+    options?: RequestInit & {
+      method?: Method,
+      data?: "body" extends keyof Path ? Path["body"] : undefined,
+      params?: "params" extends keyof Path ? Path["params"] : undefined,
+      query?: "query" extends keyof Path ? Path["query"] : undefined,
       text?: boolean
-    })
+    }
   ): Promise<ApiResponse<URI, Method>[number]> => {
     const data = options?.data;
     const params = (options?.params || {}) as Record<string, any>;
-    const query = options?.query;
+    const query = options?.query ?? {};
     let url = `${ip}/api/${uri.startsWith("/") ? uri.slice(1) : uri}`;
     Object.entries(params).forEach(([key, value]) => url = url.replace(`:${key}`, value));
 
     if (query) {
       url += "?" + Object.entries(query)
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as any)}`)
         .join("&");
     }
 
@@ -72,6 +64,22 @@ export const getArchive = async (id: number): Promise<ApiResult<"/archive/:id">>
   switch (res.status) {
     case 200:
       return res.body;
+    default:
+      throw defaultError;
+  }
+};
+
+export const createArchive = async (
+  title: string,
+  readme: RawDraftContentState,
+  tags: TagType[]
+): Promise<ApiResult<"/archive", "POST">> => {
+  const res = await fetcher("/archive", { method: "POST", data: { readme, tags, title } });
+  switch (res.status) {
+    case 201:
+      return res.body;
+    case 401:
+      throw unauthorized;
     default:
       throw defaultError;
   }

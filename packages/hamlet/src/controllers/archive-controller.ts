@@ -12,6 +12,7 @@ import { ApiRoute } from "./controllers";
 import { NumberFromString } from "io-ts-types/lib/NumberFromString";
 import { nonEmptyArray } from "io-ts-types/lib/nonEmptyArray";
 import { SearchSystem } from "../search-system";
+import simpleGit from "simple-git";
 
 export module ArchiveController {
   export const getArchives: ApiRoute<"/archive"> = route
@@ -78,46 +79,74 @@ export module ArchiveController {
         Response.notFound();
     });
 
+
   export const createArchive: ApiRoute<"/archive", "POST"> = route
     .post("/")
     .use(authed)
-    .use(Middleware.wrapNative<{ files?: Express.Multer.File[] }>(
-      multer({ dest: "../../tmp", limits: { fileSize: 4 * 1024 * 1024 /* 4mB */ } }).array("files", 6)))
-    .use(async request => {
-      if (request.req.body["meta.yml"]) {
-        request.req.body["meta.yml"] = JSON.parse(request.req.body["meta.yml"]);
-        return Middleware.next({});
-      } else {
-        return Middleware.stop(Response.badRequest("invalid meta"));
-      }
-    })
     .use(Parser.body(t.type({
-      "readme.md": t.string,
-      "meta.yml": t.type({
-        title: t.string,
-        tags: t.array(t.string),
-        versions: t.array(t.string)
-      })
+      title: t.string,
+      readme: t.UnknownRecord,
+      tags: t.array(t.string)
     })))
     .handler(async request => {
-      const { title, tags, versions } = request.body["meta.yml"];
+      const { title, readme, tags } = request.body;
       const archive = await Archive.create({
         title,
         tags,
-        versions,
+        versions: [],
         authorID: request.user.id
       });
-
       const path = `../../store/${archive.id}`;
       fs.mkdirSync(path);
-      fs.writeFileSync(`${path}/readme.md`, request.body["readme.md"]);
-      SearchSystem.documents.addDocument(request.body["readme.md"]);
+      const git = simpleGit(path);
+      git.init();
+      fs.writeFileSync(`${path}/readme.json`, JSON.stringify(readme));
+      fs.writeFileSync(`${path}/tags.json`, JSON.stringify(tags));
+      git.commit("initial commit");
 
-      request.files?.forEach(file => fs.copyFileSync(file.path, `${path}/${file.originalname}`));
-
-      // return Response.created(archive);
-      return Response.redirect(301, "/");
+      return Response.created(archive);
     });
+
+  // export const createArchive: ApiRoute<"/archive", "POST"> = route
+  //   .post("/")
+  //   .use(authed)
+  //   .use(Middleware.wrapNative<{ files?: Express.Multer.File[] }>(
+  //     multer({ dest: "../../tmp", limits: { fileSize: 4 * 1024 * 1024 /* 4mB */ } }).array("files", 6)))
+  //   .use(async request => {
+  //     if (request.req.body["meta.yml"]) {
+  //       request.req.body["meta.yml"] = JSON.parse(request.req.body["meta.yml"]);
+  //       return Middleware.next({});
+  //     } else {
+  //       return Middleware.stop(Response.badRequest("invalid meta"));
+  //     }
+  //   })
+  //   .use(Parser.body(t.type({
+  //     "readme.md": t.string,
+  //     "meta.yml": t.type({
+  //       title: t.string,
+  //       tags: t.array(t.string),
+  //       versions: t.array(t.string)
+  //     })
+  //   })))
+  //   .handler(async request => {
+  //     const { title, tags, versions } = request.body["meta.yml"];
+  //     const archive = await Archive.create({
+  //       title,
+  //       tags,
+  //       versions,
+  //       authorID: request.user.id
+  //     });
+  //
+  //     const path = `../../store/${archive.id}`;
+  //     fs.mkdirSync(path);
+  //     fs.writeFileSync(`${path}/readme.md`, request.body["readme.md"]);
+  //     SearchSystem.documents.addDocument(request.body["readme.md"]);
+  //
+  //     request.files?.forEach(file => fs.copyFileSync(file.path, `${path}/${file.originalname}`));
+  //
+  //     // return Response.created(archive);
+  //     return Response.redirect(301, "/");
+  //   });
 
   export const getFiles: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
