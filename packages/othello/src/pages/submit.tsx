@@ -1,21 +1,20 @@
-import { DefaultLayout } from "../layout/default-layout";
-import { FileUploader } from "../components/file-uploader";
-import React, { useEffect } from "react";
-import { Editor2 } from "../components/markdown";
-import Router from "next/router";
-import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
-import { PageProps } from "./_app";
-import { getUser } from "../api";
+import { createArchive, getUser } from "../api";
 import { dehydrate } from "react-query/hydration";
+import { PageProps } from "./_app";
+import { DefaultLayout } from "../layout/default-layout";
+import { Editor3 } from "../components/editor";
+import { Head } from "next/document";
+import Router from "next/router";
+import { getTitleUriFromArchive } from "./archive/[id]";
 import { useUser } from "../hooks/use-user";
+import { useEffect } from "react";
 
-interface SubmitPageProps extends PageProps {
+interface SubmitPageProps
+  extends PageProps {}
 
-}
-
-export default function SubmitPage({}: SubmitPageProps) {
+export default function _SubmitPage() {
   const user = useUser();
 
   useEffect(() => {
@@ -26,32 +25,16 @@ export default function SubmitPage({}: SubmitPageProps) {
 
   return (
     <DefaultLayout>
-      <Head>
-        <title>TMA - Submit</title>
-      </Head>
-
       <h1 className="text-6xl">Submit</h1>
 
-      <form encType="multipart/form-data" action="/api/archive" method="POST">
-        <div className="block xl:flex mt-8">
-          <section className="w-full xl:w-2/3 xl:mr-5 children:mb-8 text-gray-700">
-            <Editor2/>
-          </section>
-
-          <section className="w-full xl:w-1/3 mt-5 xl:mt-0">
-            <FileUploader/>
-          </section>
-        </div>
-
-        <button type="submit" className="
-          click-button px-4 py-2 rounded-xl
-          transition-all duration-200 mt-8 xl:mt-0
-        ">
-          Archive
-        </button>
-      </form>
+      <div className="mt-8">
+        <Editor3 onSubmit={(title, readme, tags) => {
+          createArchive(title, readme, tags)
+            .then(archive => Router.push(`/archive/${getTitleUriFromArchive(archive)}`));
+        }}/>
+      </div>
     </DefaultLayout>
-  );
+  )
 }
 
 export const getServerSideProps: GetServerSideProps<SubmitPageProps> = async ctx => {
