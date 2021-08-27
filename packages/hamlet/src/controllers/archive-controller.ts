@@ -99,62 +99,28 @@ export module ArchiveController {
       const path = `../../store/${archive.id}`;
       fs.mkdirSync(path);
       const git = simpleGit(path);
-      git.init();
+      await git.init();
       fs.writeFileSync(`${path}/readme.json`, JSON.stringify(readme));
       fs.writeFileSync(`${path}/tags.json`, JSON.stringify(tags));
-      git.commit("initial commit");
+      await git.add(".");
+      await git.commit("initial commit");
 
       return Response.created(archive);
     });
 
-  // export const createArchive: ApiRoute<"/archive", "POST"> = route
-  //   .post("/")
-  //   .use(authed)
-  //   .use(Middleware.wrapNative<{ files?: Express.Multer.File[] }>(
-  //     multer({ dest: "../../tmp", limits: { fileSize: 4 * 1024 * 1024 /* 4mB */ } }).array("files", 6)))
-  //   .use(async request => {
-  //     if (request.req.body["meta.yml"]) {
-  //       request.req.body["meta.yml"] = JSON.parse(request.req.body["meta.yml"]);
-  //       return Middleware.next({});
-  //     } else {
-  //       return Middleware.stop(Response.badRequest("invalid meta"));
-  //     }
-  //   })
-  //   .use(Parser.body(t.type({
-  //     "readme.md": t.string,
-  //     "meta.yml": t.type({
-  //       title: t.string,
-  //       tags: t.array(t.string),
-  //       versions: t.array(t.string)
-  //     })
-  //   })))
-  //   .handler(async request => {
-  //     const { title, tags, versions } = request.body["meta.yml"];
-  //     const archive = await Archive.create({
-  //       title,
-  //       tags,
-  //       versions,
-  //       authorID: request.user.id
-  //     });
-  //
-  //     const path = `../../store/${archive.id}`;
-  //     fs.mkdirSync(path);
-  //     fs.writeFileSync(`${path}/readme.md`, request.body["readme.md"]);
-  //     SearchSystem.documents.addDocument(request.body["readme.md"]);
-  //
-  //     request.files?.forEach(file => fs.copyFileSync(file.path, `${path}/${file.originalname}`));
-  //
-  //     // return Response.created(archive);
-  //     return Response.redirect(301, "/");
-  //   });
-
   export const getFiles: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
+    .use(Parser.query(t.type({
+      path: t.string
+    })))
     .handler(async request => {
-      const path = `../../store/${request.routeParams.id}`;
-      const files = fs.readdirSync(path);
-      const isDir = (file: string) => fs.lstatSync(`${path}/${file}`).isDirectory();
-      return Response.ok(files.map(file => `${file}${isDir(file) ? "/" : ""}`))
+      const path = `../../store/${request.routeParams.id}/${request.query.path}`;
+      const isDir = fs.lstatSync(path).isDirectory();
+      if (!fs.existsSync(path))
+        return Response.notFound();
+      return Response.ok(isDir ?
+        fs.readdirSync(path).filter(f => f != ".git") :
+        fs.readFileSync(path).toString())
     });
 
   export const like: ApiRoute<"/archive/:id/like", "POST"> = route

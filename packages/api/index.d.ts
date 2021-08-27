@@ -55,13 +55,8 @@ export interface API {
   "/archive/:id/store": {
     GET: {
       params: { id: number },
-      response: [TResponse.Ok<string[]>]
-    }
-  },
-  "/archive/:id/store/:path": {
-    GET: {
-      params: { id: number, path: string },
-      response: [TResponse.Ok<string, { "Content-Type": string }>, TResponse.NotFound]
+      query: { path: string }
+      response: [TResponse.Ok<string[] | string>, TResponse.NotFound, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id/like": {

@@ -7,7 +7,8 @@ export module SearchSystem {
   export const init = () => fs
     .readdirSync("../../store")
     .sort((a, b) => + a - +b)
-    .forEach(id => documents.addFileSync(`../../store/${id}/readme.md`, void 0, id));
+    // TODO: read readme.json
+    .forEach(id => documents.addFileSync(`../../store/${id}/readme.json`, void 0, id));
 
   export const search = (query: string) => {
     let ratings: { id: number, measure: number }[] = [];

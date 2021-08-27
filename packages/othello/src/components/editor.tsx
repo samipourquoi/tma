@@ -7,7 +7,7 @@ import {
   Modifier,
   SelectionState,
   EditorBlock,
-  RawDraftContentState, convertToRaw
+  RawDraftContentState, convertToRaw, convertFromRaw
 } from "draft-js";
 import dynamic from "next/dynamic";
 import type { PluginEditorProps } from "@draft-js-plugins/editor";
@@ -20,7 +20,9 @@ import { TagType } from "@tma/api";
 import { CustomTag, Tag, TagsSelector2 } from "./tag";
 import { TAGS } from "../constants";
 import { TagsSelector } from "./widgets/tags-selector";
-import { createArchive } from "../api";
+import { createArchive, getFile } from "../api";
+import { useQuery } from "react-query";
+import { ArchiveAttributes } from "@tma/api/attributes";
 
 const DraftEditor: React.FC<PluginEditorProps> = dynamic(
   () => import("@draft-js-plugins/editor").then(draftjs => draftjs.default) as any,
@@ -96,6 +98,10 @@ const toolbarPlugin = createToolbarPlugin({
   theme: { buttonStyles, toolbarStyles }
 });
 const { Toolbar } = toolbarPlugin;
+const plugins = [
+  createMarkdownShortcutsPlugin(),
+  toolbarPlugin
+];
 
 export const Editor3: React.FC<{
   onSubmit: (
@@ -106,10 +112,6 @@ export const Editor3: React.FC<{
 }> = ({ onSubmit }) => {
   const [tags, setTags] = useState<Set<TagType>>(new Set);
   const [state, setState] = useState(() => EditorState.createEmpty());
-  const plugins = useMemo(() => [
-    createMarkdownShortcutsPlugin(),
-    toolbarPlugin
-  ], []);
   const title = useMemo(() => {
     const content = state.getCurrentContent();
     const block = content.getFirstBlock();
@@ -150,6 +152,26 @@ export const Editor3: React.FC<{
       >
         Archive
       </button>
+    </div>
+  );
+}
+
+export const ReadonlyEditor: React.FC<{
+  state: EditorState
+}> = ({ state }) => {
+  if (!state) return null;
+
+  return (
+    <div>
+      <div className="mt-4 px-4 pt-2 markdown editor color-contrast-700">
+        <DraftEditor
+          editorState={state}
+          plugins={plugins}
+          blockStyleFn={styling}
+          blockRendererFn={render}
+          readOnly={true}
+          onChange={() => void 0}/>
+      </div>
     </div>
   );
 }

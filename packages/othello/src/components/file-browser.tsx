@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import useSWR from "swr";
-import { fetcher, getFile, getFiles } from "../api";
+import { fetcher, getFile } from "../api";
 import { ApiResult } from "@tma/api";
 import { useQuery } from "react-query";
 
@@ -45,8 +45,8 @@ export const FileBrowser: React.FC<{
 
 const Entries: React.FC = () => {
   const { path, archive } = useContext(FileBrowserContext);
-  const files = useQuery(["files", archive.id],
-    () => getFiles(archive.id!));
+  const files = useQuery(["file", archive.id, ""],
+    () => getFile(archive.id!, "") as Promise<string[]>);
 
   return (
     <div className="border border-dashed border-contrast-500 p-4 rounded-xl text-contrast-600 font-light">

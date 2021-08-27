@@ -53,7 +53,7 @@ const Row: React.FC<{
       </ul>
     </td>
     <td className="text-center hidden md:table-cell">
-      {row ? formatDate(new Date((row as unknown as Attributes /* oopsie */).createdAt)) : ""}
+      {row ? formatDate(new Date((row as unknown as Attributes /* oopsie */).createdAt!)) : ""}
     </td>
   </tr>
 )

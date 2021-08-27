@@ -45,7 +45,8 @@ export const fetcher =
       url: url,
       data,
       headers: options?.headers,
-      validateStatus: () => true
+      validateStatus: () => true,
+      transformResponse: options?.text ? [] : undefined
     });
 
     return {
@@ -105,16 +106,17 @@ export const likeArchive = async (id: number): Promise<ApiResult<"/archive/:id/l
   }
 };
 
-export const getFiles = async (id: number): Promise<ApiResult<"/archive/:id/store">> => {
-  const res = await fetcher("/archive/:id/store", { params: { id } });
-  return res.body;
-};
-
-export const getFile = async (id: number, path: string): Promise<ApiResult<"/archive/:id/store/:path">> => {
-  const res = await fetcher("/archive/:id/store/:path", { params: { id, path }, text: true });
+export const getFile = async (id: number, path: string): Promise<ApiResult<"/archive/:id/store">> => {
+  const res = await fetcher("/archive/:id/store", { params: { id }, query: { path }, text: true });
   switch (res.status) {
     case 200:
+      let json;
+      try { json = JSON.parse(res.body as string); } catch (e) {}
+      if (Array.isArray(json))
+        return json;
       return res.body;
+    case 400:
+      throw defaultError;
     case 404:
       throw notFoundError;
   }

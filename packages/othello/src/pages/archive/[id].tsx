@@ -1,18 +1,18 @@
 import { DefaultLayout } from "../../layout/default-layout";
-import { Preview } from "../../components/markdown";
-import React from "react";
+import React, { useMemo } from "react";
 import { GetServerSideProps } from "next";
-import { getArchive, getFile, getFiles, getUser, likeArchive } from "../../api";
+import { getArchive, getFile, getUser, likeArchive } from "../../api";
 import Link from "next/link";
 import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
 import { LikeButton } from "../../components/like-button";
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
-import { ApiResult } from "@tma/api";
 import { PageProps } from "../_app";
 import { dehydrate } from "react-query/hydration";
 import { ArchiveAttributes } from "@tma/api/attributes";
+import { convertFromRaw, EditorState } from "draft-js";
+import { ReadonlyEditor } from "../../components/editor";
 
 interface ArchiveViewProps extends PageProps {
   id: number
@@ -21,12 +21,23 @@ interface ArchiveViewProps extends PageProps {
 export default function ArchiveView({ id }: ArchiveViewProps) {
   const queryClient = useQueryClient();
   const archive = useQuery(["archive", id], () => getArchive(id));
-  const readme = useQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
+  const readme = useQuery(
+    ["file", id, "readme.json"],
+    () => getFile(id, "readme.json")
+
+  );
+  const editor = useMemo(() => {
+    if (!readme.data)
+      return EditorState.createEmpty();
+    const content = convertFromRaw(JSON.parse(readme.data as string));
+    return EditorState.createWithContent(content);
+  }, [readme]);
+
   const mutation = useMutation(likeArchive, {
     onSuccess: archive =>
       void queryClient.setQueryData(["archive", id], archive)
   });
-  if (!(archive.isSuccess && readme.isSuccess))
+  if (!archive.isSuccess || !readme.data)
     return null;
 
   return (
@@ -58,7 +69,8 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
       <div className="block xl:flex">
         <section className="w-full xl:w-4/5 xl:pr-10">
           <div className="max-w-prose">
-            <Preview content={readme.data}/>
+            {/*<Preview content={readme.data}/>*/}
+            <ReadonlyEditor state={editor}/>
           </div>
         </section>
 
@@ -98,12 +110,10 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
         notFound: true
       };
 
-    // const files = await fetcher("/archive/:id/store", { params: { id } }).then(f => f.body);
-    // const readme: string = await fetch(`${ip}/api/archive/${id}/store/readme.md`).then(res => res.text());
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery(["archive", id], () => archive);
-    await queryClient.prefetchQuery(["file", id, "readme.md"], () => getFile(id, "readme.md"));
-    await queryClient.prefetchQuery(["files", id], () => getFiles(id));
+    await queryClient.prefetchQuery(["file", id, "readme.json"], () => getFile(id, "readme.json"));
+    await queryClient.prefetchQuery(["file", id, ""], () => getFile(id, ""));
     const { cookie } = context.req.headers;
     await queryClient.prefetchQuery("user", () => getUser(cookie ? { cookie } : {}));
 
@@ -120,5 +130,6 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
 export function getTitleUriFromArchive(archive: ArchiveAttributes) {
   return `${archive.id}-${encodeURI(archive.title
     .toLowerCase()
-    .replace(/( )|(%20)/g, "-"))}`;
+    .replace(/[ ?&]|(%20)/g, "-"))
+    .replace(/-*$/, "")}`;
 }
