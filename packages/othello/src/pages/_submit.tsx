@@ -13,7 +13,11 @@ interface SubmitPageProps
 export default function _SubmitPage() {
   return (
     <DefaultLayout>
-      <Editor3/>
+      <h1 className="text-6xl">Submit</h1>
+
+      <div className="mt-8">
+        <Editor3/>
+      </div>
     </DefaultLayout>
   )
 }

@@ -1,0 +1,37 @@
+.buttonWrapper {
+  display: inline-block;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--cl-contrast-300);
+  font-size: 18px;
+  border: 0;
+  padding-top: 5px;
+  vertical-align: bottom;
+  height: 34px;
+  width: 36px;
+  @apply rounded-lg;
+}
+
+.button svg {
+  fill: var(--cl-contrast-500);
+}
+
+.button:hover, .button:focus {
+  outline: 0;
+
+  svg {
+    fill: var(--cl-contrast-700);
+  }
+}
+
+.active {
+  color: #6a9cc9;
+
+  svg {
+    fill: #6a9cc9;
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "farm kind": {
+    "color": "#aeb2d7",
+    "tags": [
+      "overworld mob farm",
+      "nether forteress farm",
+      "end farm",
+      "iron farm",
+      "end of light",
+      "side-accel",
+      "down-accel",
+      "portal spam",
+      "tnt looting"
+    ]
+  },
+  "hostile mob": {
+    "color": "red",
+    "tags": [
+      "hostile mob",
+      "slime",
+      "creeper",
+      "zombie",
+      "spider",
+      "witch",
+      "raid",
+      "blaze",
+      "enderman"
+    ]
+  },
+  "passive mob": {
+    "color": "#aeb2d7",
+    "tags": [
+      "passive mob",
+      "pig",
+      "cow",
+      "chicken"
+    ]
+  },
+  "blocks": {
+    "color": "#46504e",
+    "tags": [
+      "ice farm",
+      "snow farm",
+      "stones farm"
+    ]
+  },
+  "crops": {
+    "color": "#f1e0a4",
+    "tags": [
+      "crop farm",
+      "leaves farm",
+      "tree farm",
+      "melon & pumpkin farm",
+      "mushroom farm",
+      "sugar cane & bamboo farm"
+    ]
+  },
+  "storage": {
+    "color": "brown",
+    "tags": [
+      "storage tech",
+      "storage hall",
+      "binary storage",
+      "item sorter",
+      "unstackable sorter",
+      "item transport",
+      "bulk storage",
+      "box sorter"
+    ]
+  },
+  "redstone": {
+    "color": "#f29ea0",
+    "tags": [
+      "redstone",
+      "quarry",
+      "computational",
+      "instant wires"
+    ]
+  },
+  "slimestone": {
+    "color": "#b0d9af",
+    "tags": [
+      "slimestone",
+      "flying machine",
+      "duper"
+    ]
+  },
+  "advanced": {
+    "color": "green",
+    "tags": [
+      "chunk loading",
+      "rng",
+      "bedrock breaking"
+    ]
+  },
+  "other": {
+    "color": "#d5d9d5",
+    "tags": [
+      "programs",
+      "textures",
+      "other"
+    ]
+  }
+}

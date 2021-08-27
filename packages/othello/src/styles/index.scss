@@ -1,8 +1,10 @@
 @use "components/table";
 @use "components/widget";
 @use "components/markdown";
-@use "scrollbar";
 @use "components/like-button";
+@use "components/editor";
+@use "tags";
+@use "scrollbar";
 
 @tailwind base;
 @tailwind components;

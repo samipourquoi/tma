@@ -46,7 +46,7 @@ export const FileBrowser: React.FC<{
 const Entries: React.FC = () => {
   const { path, archive } = useContext(FileBrowserContext);
   const files = useQuery(["files", archive.id],
-    () => getFiles(archive.id));
+    () => getFiles(archive.id!));
 
   return (
     <div className="border border-dashed border-contrast-500 p-4 rounded-xl text-contrast-600 font-light">

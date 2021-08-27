@@ -35,8 +35,14 @@
     @apply list-decimal list-disc;
   }
 
-  h1.show-placeholder > div:first-child::before {
-    content: "Undefined";
+  strong {
+    font-weight: 300;
+    display: none;
+  }
+
+  h1.show-placeholder::before {
+    content: "Untitled";
+    position: absolute;
     color: var(--cl-contrast-600);
   }
 }

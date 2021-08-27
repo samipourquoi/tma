@@ -2,16 +2,7 @@ import { Response as TResponse } from "typera-common";
 import { ArchiveAttributes, Includes, UserAttributes } from "./attributes";
 export { TResponse };
 
-export type TagType
-  = "redstone"
-  | "slimestone"
-  | "storage"
-  | "farms"
-  | "mob-farms"
-  | "bedrock"
-  | "computational"
-  | "other"
-  | string;
+export type TagType = string;
 
 /** The result is the data you're fetching. */
 export type ApiResult<URI extends keyof API, Method extends keyof API[URI] | "GET" = "GET">
