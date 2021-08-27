@@ -34,4 +34,9 @@
   ol {
     @apply list-decimal list-disc;
   }
+
+  h1.show-placeholder > div:first-child::before {
+    content: "Undefined";
+    color: var(--cl-contrast-600);
+  }
 }

@@ -68,11 +68,11 @@ const SearchBarProvider: React.FC<{
   const [version, setVersion] = useState(searchQuery?.version || "any");
   const [page, setPage] = useState(searchQuery?.page || 1);
 
-  useEffect(() => {
-    if (Router.route != "/") {
-      Router.push("/");
-    }
-  }, [searchString]);
+  // useEffect(() => {
+  //   if (Router.route != "/") {
+  //     Router.push("/");
+  //   }
+  // }, [searchString]);
 
   return (
     <SearchCtx.Provider value={{

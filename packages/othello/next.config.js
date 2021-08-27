@@ -1,5 +1,5 @@
-
 module.exports = {
+  mode: "jit",
 	async rewrites() {
 		return [
 			{

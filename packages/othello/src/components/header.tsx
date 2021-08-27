@@ -143,7 +143,7 @@ const TagList: React.FC = () => (
         { color: "bg-tags-bedrock", name: "Bedrock break." },
         { color: "bg-tags-computational", name: "Computational" },
         { color: "bg-tags-other", name: "Other" }
-      ].map(TagListEntry)}
+      ].map((tag, i) => <TagListEntry name={tag.name} color={tag.color} key={i}/>)}
     </ul>
   </div>
 );
