@@ -20,7 +20,7 @@ export const LikeButton: React.FC<{
   return user ? (
     <div className="flex items-center">
       <div className="w-[40px] h-[40px]">
-        <div className={`heart ${pressed ? "heart-active" : ""}`} onClick={() => {
+        <div className={`heart ${pressed ? "heart-active" : ""} ${user.data == null ? "cursor-not-allowed" : ""}`} onClick={() => {
           if (user.data) {
             setPressed(!pressed);
             onLike();

@@ -1,5 +1,11 @@
 import { Response as TResponse } from "typera-common";
-import { ArchiveAttributes, Includes, UserAttributes } from "./attributes";
+import {
+  ArchiveBaseAttributes,
+  ArchiveAttributes,
+  Includes,
+  UserAttributes,
+  FullArchiveAttributes
+} from "./attributes";
 export { TResponse };
 
 export type TagType = string;
@@ -33,7 +39,7 @@ export interface API {
         search: string
       },
       response: [TResponse.Ok<{
-        archives: Includes<ArchiveAttributes, "author" | "likes">[];
+        archives: FullArchiveAttributes[];
         total: number
       }>, TResponse.BadRequest<string>]
     },
@@ -43,26 +49,27 @@ export interface API {
         readme: object,
         tags: TagType[],
       }, // its using the multipart/form-data format
-      response: [TResponse.Created<ArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest<string>]
+      response: [TResponse.Created<FullArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id": {
     GET: {
       params: { id: number },
-      response: [TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">>, TResponse.NotFound]
+      query: { commit?: string }
+      response: [TResponse.Ok<FullArchiveAttributes>, TResponse.NotFound]
     }
   },
   "/archive/:id/store": {
     GET: {
       params: { id: number },
-      query: { path: string }
+      query: { path: string, commit?: string }
       response: [TResponse.Ok<string[] | string>, TResponse.NotFound, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id/like": {
     POST: {
       params: { id: number },
-      response: [TResponse.Ok<Includes<ArchiveAttributes, "author" | "likes">>, TResponse.Unauthorized]
+      response: [TResponse.Ok<FullArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest]
     }
   },
   "/ftp/password": {
@@ -79,7 +86,7 @@ export interface API {
         page: number
       },
       response: [TResponse.Ok<{
-        archives: Includes<ArchiveAttributes, "author" | "likes">[],
+        archives: Includes<FullArchiveAttributes>[],
         total: number
       }>, TResponse.BadRequest<string> | TResponse.Unauthorized]
     }

@@ -25,10 +25,18 @@ export interface UserAttributes
 export interface ArchiveAttributes
   extends Attributes
 {
+  baseID: number,
   title: string,
   tags: TagType[],
   versions: string[],
-  authorID: number
+  authorID: number,
+  commit: string
+}
+
+export interface ArchiveBaseAttributes
+  extends Attributes
+{
+  id: number
 }
 
 export interface LikeAttributes
@@ -60,8 +68,10 @@ export interface FtpUserAttributes
 }
 
 type GetIncludesOf<Attribute> =
-  Attribute extends ArchiveAttributes ? { author: UserAttributes, likes: LikeAttributes[] } :
+  Attribute extends ArchiveAttributes ? { author: UserAttributes, likes: LikeAttributes[], base: ArchiveBaseAttributes } :
   never;
 
-export type Includes<Attribute, Keys> =
+export type Includes<Attribute, Keys extends keyof GetIncludesOf<Attribute>> =
   Attribute & Pick<GetIncludesOf<Attribute>, Keys>;
+
+type FullArchiveAttributes = Includes<ArchiveAttributes, "author" | "likes" | "base">

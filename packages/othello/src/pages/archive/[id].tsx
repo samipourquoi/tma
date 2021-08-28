@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async co
 }
 
 export function getTitleUriFromArchive(archive: ArchiveAttributes) {
-  return `${archive.id}-${encodeURI(archive.title
+  return `${archive.baseID}-${encodeURI(archive.title
     .toLowerCase()
     .replace(/[ ?&]|(%20)/g, "-"))
     .replace(/-*$/, "")}`;

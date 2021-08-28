@@ -103,6 +103,8 @@ export const likeArchive = async (id: number): Promise<ApiResult<"/archive/:id/l
       return res.body;
     case 401:
       throw unauthorized;
+    case 400:
+      throw defaultError;
   }
 };
 

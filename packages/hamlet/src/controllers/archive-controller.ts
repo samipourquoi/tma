@@ -1,4 +1,4 @@
-import { Archive } from "../models/archive-model";
+import { ArchiveBase, Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
 import * as fs from "fs";
 import * as multer from "multer";
@@ -6,7 +6,7 @@ import { Op, WhereOptions } from "sequelize";
 import { Like } from "../models/like-model";
 import { Middleware, Parser, Response, route } from "typera-express";
 import * as t from "io-ts"
-import { ArchiveAttributes } from "@tma/api/attributes";
+import { ArchiveAttributes, FullArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
 import { ApiRoute } from "./controllers";
 import { NumberFromString } from "io-ts-types/lib/NumberFromString";
@@ -38,11 +38,12 @@ export module ArchiveController {
         archives = await Archive.findAll({
           include: [
             { model: User, attributes: ["name"] },
-            Like
+            Like,
+            ArchiveBase
           ],
           where
         }).then(archives => ids
-          .map(id => archives.find(archive => archive.id == id)!)
+          .map(id => archives.find(archive => archive.base.id == id)!)
           .slice((+page - 1) * 30, +page * 30));
       } else {
         archives = await Archive.findAll({
@@ -50,7 +51,8 @@ export module ArchiveController {
           offset: (+page - 1) * 30,
           include: [
             { model: User, attributes: ["name"] },
-            Like
+            Like,
+            ArchiveBase
           ],
           where
         });
@@ -67,10 +69,10 @@ export module ArchiveController {
     .handler(async request => {
       const { id } = request.routeParams;
       const archive = await Archive.findOne({
-        where: { id },
         include: [
           { model: User, attributes: ["name"] },
-          Like
+          Like,
+          { model: ArchiveBase, where: { id } }
         ]
       });
 
@@ -90,20 +92,26 @@ export module ArchiveController {
     })))
     .handler(async request => {
       const { title, readme, tags } = request.body;
-      const archive = await Archive.create({
-        title,
-        tags,
-        versions: [],
-        authorID: request.user.id
-      });
-      const path = `../../store/${archive.id}`;
+
+      const base = await ArchiveBase.create();
+
+      const path = `../../store/${base.id}`;
       fs.mkdirSync(path);
       const git = simpleGit(path);
       await git.init();
       fs.writeFileSync(`${path}/readme.json`, JSON.stringify(readme));
       fs.writeFileSync(`${path}/tags.json`, JSON.stringify(tags));
       await git.add(".");
-      await git.commit("initial commit");
+      const { commit } = await git.commit("initial commit");
+
+      const archive = await Archive.create({
+        title,
+        tags,
+        versions: [],
+        authorID: request.user.id,
+        commit,
+        baseID: base.id
+      }, { include: ArchiveBase });
 
       return Response.created(archive);
     });
@@ -127,7 +135,15 @@ export module ArchiveController {
     .post("/:id(int)/like")
     .use(authed)
     .handler(async request => {
-      const { id } = request.routeParams;
+      const { id: baseID } = request.routeParams;
+      const { id } = await Archive.findOne({
+        where: {
+          commit: await ArchiveBase.getLatestCommit(baseID)
+        }
+      }) ?? {};
+
+      if (!id)
+        return Response.badRequest();
 
       const [, created] = await Like.findOrCreate({
         where: {
@@ -146,7 +162,11 @@ export module ArchiveController {
 
       return Response.ok(await Archive.findOne({
         where: { id },
-        include: [{ model: User, attributes: ["name"] }, Like]
-      }).then(arch => arch!));
+        include: [
+          { model: User, attributes: ["name"] },
+          Like,
+          { model: ArchiveBase }
+        ]
+      }) as FullArchiveAttributes);
     });
 }

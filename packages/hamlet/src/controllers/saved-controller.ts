@@ -3,7 +3,7 @@ import { Parser, Response, route } from "typera-express";
 import { authed } from "../middlewares";
 import * as t from "io-ts";
 import { Op, WhereOptions } from "sequelize";
-import { Archive } from "../models/archive-model";
+import { Archive, ArchiveBase } from "../models/archive-model";
 import { User } from "../models/user-model";
 import { Like } from "../models/like-model";
 import { LikeAttributes } from "@tma/api/attributes";
@@ -33,7 +33,9 @@ export module SavedController {
               {
                 model: User,
                 attributes: ["name"]
-              }
+              },
+              Like,
+              ArchiveBase
             ]
           }
         ],

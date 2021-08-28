@@ -45,8 +45,8 @@ export const FileBrowser: React.FC<{
 
 const Entries: React.FC = () => {
   const { path, archive } = useContext(FileBrowserContext);
-  const files = useQuery(["file", archive.id, ""],
-    () => getFile(archive.id!, "") as Promise<string[]>);
+  const files = useQuery(["file", archive.baseID, ""],
+    () => getFile(archive.baseID!, "") as Promise<string[]>);
 
   return (
     <div className="border border-dashed border-contrast-500 p-4 rounded-xl text-contrast-600 font-light">

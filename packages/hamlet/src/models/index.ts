@@ -1,5 +1,5 @@
 import { Model, Sequelize } from "sequelize-typescript";
-import { Archive } from "./archive-model";
+import { ArchiveBase, Archive } from "./archive-model";
 import { User } from "./user-model";
 import { FtpUser } from "./ftp-user-model";
 import { Like } from "./like-model";
@@ -20,7 +20,7 @@ export const sequelize = new Sequelize({
     "localhost",
   password: "supersecret",
   port: 3002,
-  models: [Archive, User, FtpUser, Like, Comment, Settings],
+  models: [ArchiveBase, Archive, User, FtpUser, Like, Comment, Settings],
   omitNull: true
 });
 
