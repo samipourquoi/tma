@@ -108,7 +108,7 @@ export module ArchiveController {
       return Response.created(archive);
     });
 
-  export const getFiles: ApiRoute<"/archive/:id/store"> = route
+  export const getFile: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
     .use(Parser.query(t.type({
       path: t.string
@@ -119,7 +119,7 @@ export module ArchiveController {
       if (!fs.existsSync(path))
         return Response.notFound();
       return Response.ok(isDir ?
-        fs.readdirSync(path).filter(f => f != ".git") :
+        fs.readdirSync(path).filter(f => ![".git", "readme.json", "tags.json"].includes(f)) :
         fs.readFileSync(path).toString())
     });
 

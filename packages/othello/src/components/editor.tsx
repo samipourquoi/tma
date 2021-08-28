@@ -67,26 +67,26 @@ const enforceTitle = (state: EditorState): EditorState => {
   // Always put a title at the top
   const title = content.getFirstBlock();
   if (title.getType() != "title-placeholder" || title.isEmpty()) {
-    const placeholder = "";
     const key = genKey();
     const title = new ContentBlock({
       key,
-      text: placeholder,
+      text: "",
       type: "title-placeholder"
     });
     const blocks2 = Immutable.OrderedMap().set(key, title).concat(blocks);
     content = content.set("blockMap", blocks2) as ContentState;
   }
 
-  // Coerces the second block to a paragraph.
-  // At the same time, prevents duplicating the title.
+  // Coerces the second block to a paragraph if it is a title-placeholder.
   blocks = content.getBlockMap();
   const secondBlockKey: string | undefined = blocks.keySeq().get(1);
   if (secondBlockKey) {
     const secondBlock = blocks.get(secondBlockKey);
-    const secondBlockCoerced = secondBlock.set("type", "paragraph");
-    blocks = blocks.set(secondBlockKey, secondBlockCoerced as ContentBlock);
-    content = content.set("blockMap", blocks) as ContentState;
+    if (secondBlock.getType() == "title-placeholder") {
+      const secondBlockCoerced = secondBlock.set("type", "paragraph");
+      blocks = blocks.set(secondBlockKey, secondBlockCoerced as ContentBlock);
+      content = content.set("blockMap", blocks) as ContentState;
+    }
   }
 
   return EditorState.set(state, {

@@ -5,7 +5,7 @@ export default router(
   ArchiveController.getArchives,
   ArchiveController.getArchive,
   ArchiveController.createArchive,
-  ArchiveController.getFiles,
+  ArchiveController.getFile,
   ArchiveController.like)
   .handler()
   .get("/:id/store/*", (req, res, next) => {
