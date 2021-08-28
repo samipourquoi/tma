@@ -12,11 +12,17 @@ export class PermsFs
     );
   }
 
+  async list(path?: string): Promise<any> {
+    return await super.list(path)
+      .then((files: any[]) =>
+        files.filter((file: any) =>
+            ![".git", "readme.json", "tags.json"].includes(file.name)));
+  }
+
   async write(fileName: string): Promise<any> {
     await this.throwIfNotOwner();
     const res = await super.write(fileName);
-    if (fileName == "readme.md")
-      SearchSystem.init();
+    this.throwIfUndeletableFile(fileName);
     return res;
   }
 
@@ -27,6 +33,7 @@ export class PermsFs
 
   async delete(path: string): Promise<any> {
     await this.throwIfNotOwner();
+    await this.throwIfUndeletableFile(path)
     return await super.delete(path);
   }
 
@@ -39,13 +46,18 @@ export class PermsFs
     throw new Error("you don't have rights to do that");
   }
 
+  throwIfUndeletableFile(file: string) {
+    if ([".git", "readme.json", "tags.json"].some(f => file.endsWith(f)))
+      throw new Error("you can't delete that file")
+  }
+
   async throwIfNotOwner() {
     if (this.cwd == "/")
       throw new Error("you don't have write access to the root.");
 
     const archiveID = +this.cwd.split("/")[1];
     if (Number.isNaN(archiveID))
-      throw new Error("you are supposed to be in an archive directory. :thonk:");
+      throw new Error("you shouldn't be able to see this...");
 
     const isOwner = Boolean(await Archive.count({
       where: {
