@@ -1,16 +1,14 @@
 import { ArchiveBase, Archive } from "../models/archive-model";
 import { User } from "../models/user-model";
 import * as fs from "fs";
-import * as multer from "multer";
 import { Op, WhereOptions } from "sequelize";
 import { Like } from "../models/like-model";
-import { Middleware, Parser, Response, route } from "typera-express";
+import { Parser, Response, route } from "typera-express";
 import * as t from "io-ts"
 import { ArchiveAttributes, FullArchiveAttributes } from "@tma/api/attributes";
 import { authed } from "../middlewares";
 import { ApiRoute } from "./controllers";
 import { NumberFromString } from "io-ts-types/lib/NumberFromString";
-import { nonEmptyArray } from "io-ts-types/lib/nonEmptyArray";
 import { SearchSystem } from "../search-system";
 import simpleGit from "simple-git";
 
@@ -66,9 +64,14 @@ export module ArchiveController {
 
   export const getArchive: ApiRoute<"/archive/:id"> = route
     .get("/:id(int)")
+    .use(Parser.query(t.partial({
+      commit: t.string
+    })))
     .handler(async request => {
       const { id } = request.routeParams;
+      const { commit } = request.query;
       const archive = await Archive.findOne({
+        where: commit ? { commit } : {},
         include: [
           { model: User, attributes: ["name"] },
           Like,
@@ -81,6 +84,19 @@ export module ArchiveController {
         Response.notFound();
     });
 
+  export const getArchiveCommits: ApiRoute<"/archive/:id/commits"> = route
+    .get("/:id(int)/commits")
+    .handler(async request => {
+      const { id } = request.routeParams;
+      try {
+        const git = simpleGit(`../../store/${id}`);
+        const logs = await git.log();
+        const formatted = logs.all.map(({ hash, date }) => ({ hash: hash.slice(0, 7), date }));
+        return Response.ok(formatted);
+      } catch (e) {
+        return Response.notFound();
+      }
+    });
 
   export const createArchive: ApiRoute<"/archive", "POST"> = route
     .post("/")
@@ -119,16 +135,25 @@ export module ArchiveController {
   export const getFile: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
     .use(Parser.query(t.type({
-      path: t.string
+      path: t.string,
+      commit: t.union([t.string, t.undefined])
     })))
     .handler(async request => {
-      const path = `../../store/${request.routeParams.id}/${request.query.path}`;
-      const isDir = fs.lstatSync(path).isDirectory();
-      if (!fs.existsSync(path))
+      const { id } = request.routeParams;
+      const { path, commit = "HEAD" } = request.query;
+      try {
+        const git = simpleGit(`../../store/${id}`);
+        const result = await git.show(`${commit}:${path}`);
+
+        // Directories output always start with that line.
+        return Response.ok(
+          result.startsWith(`tree ${commit}:\n`) ?
+            result.split("\n").slice(2, -1).filter(file => !["readme.json", "tags.json"].includes(file)) :
+            result
+        );
+      } catch (e) {
         return Response.notFound();
-      return Response.ok(isDir ?
-        fs.readdirSync(path).filter(f => ![".git", "readme.json", "tags.json"].includes(f)) :
-        fs.readFileSync(path).toString())
+      }
     });
 
   export const like: ApiRoute<"/archive/:id/like", "POST"> = route

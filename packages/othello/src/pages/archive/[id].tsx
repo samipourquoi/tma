@@ -90,21 +90,25 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
 
 export const getServerSideProps: GetServerSideProps<ArchiveViewProps> = async context => {
   try {
-    let { id: queryId } = context.query;
-    if (!queryId)
+    const { id: paramID } = context.params!;
+    let { commit } = context.query;
+
+    if (!paramID)
       return { notFound: true };
+    if (Array.isArray(commit))
+      commit = commit[0];
 
     // Let an archive with ID #1 and title 'Birch farm'.
-    // I want the uri to access it to be /archive/1-birch-farm,
-    // and not something like /archive/1 (you can't tell what the archive
+    // I want the uri for accessing it to be /archive/1-birch-farm,
+    // and not something like /archive/1 (you obviously can't tell what the archive
     // is from the url if you don't include the title in it).
     //
     // However, you fetch an archive from the API with its ID.
     // So this checks if the URI is corresponding to the wanted format.
-    const id = +(typeof queryId == "string" ?
-      queryId.split("-")[0] :
-      queryId);
-    const archive = await getArchive(id);
+    const id = +(typeof paramID == "string" ?
+      paramID.split("-")[0] :
+      paramID);
+    const archive = await getArchive(id, commit);
     if (context.query.id != getTitleUriFromArchive(archive))
       return {
         notFound: true

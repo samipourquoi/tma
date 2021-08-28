@@ -48,7 +48,7 @@ export interface API {
         title: string,
         readme: object,
         tags: TagType[],
-      }, // its using the multipart/form-data format
+      },
       response: [TResponse.Created<FullArchiveAttributes>, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
@@ -56,7 +56,13 @@ export interface API {
     GET: {
       params: { id: number },
       query: { commit?: string }
-      response: [TResponse.Ok<FullArchiveAttributes>, TResponse.NotFound]
+      response: [TResponse.Ok<FullArchiveAttributes>, TResponse.NotFound, TResponse.BadRequest<string>]
+    }
+  },
+  "/archive/:id/commits": {
+    GET: {
+      params: { id: number },
+      response: [TResponse.Ok<{ date: string, hash: string }[]>, TResponse.NotFound]
     }
   },
   "/archive/:id/store": {

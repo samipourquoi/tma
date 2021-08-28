@@ -39,7 +39,6 @@ export const fetcher =
         .join("&");
     }
 
-    // const res = await fetch(url, options ? { ...options as object, body: data ? JSON.stringify(data) : undefined } : undefined)
     const res = await axios.request({
       method: options?.method || "GET" as any,
       url: url,
@@ -60,8 +59,11 @@ const defaultError = new Error("an unexpected error has occured");
 const notFoundError = new Error("not found");
 const unauthorized = new Error("login first");
 
-export const getArchive = async (id: number): Promise<ApiResult<"/archive/:id">> => {
-  const res = await fetcher("/archive/:id", { params: { id } });
+export const getArchive = async (id: number, commit?: string): Promise<ApiResult<"/archive/:id">> => {
+  const res = await fetcher("/archive/:id", {
+    params: { id },
+    query: commit ? { commit } : {}
+  });
   switch (res.status) {
     case 200:
       return res.body;

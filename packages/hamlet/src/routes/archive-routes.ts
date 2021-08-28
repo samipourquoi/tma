@@ -4,6 +4,7 @@ import { router } from "typera-express";
 export default router(
   ArchiveController.getArchives,
   ArchiveController.getArchive,
+  ArchiveController.getArchiveCommits,
   ArchiveController.createArchive,
   ArchiveController.getFile,
   ArchiveController.like)
