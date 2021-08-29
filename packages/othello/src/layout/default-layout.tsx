@@ -1,12 +1,12 @@
 import React from "react";
-import { NewHeader } from "../components/header";
+import { Header } from "../components/header";
 import Scrollbar from "react-smooth-scrollbar";
 
 export const DefaultLayout: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => (
   <div className="flex page">
-    <NewHeader/>
+    <Header/>
 
     <div className="w-full h-full bg-contrast-300">
       {/*<Scrollbar>*/}

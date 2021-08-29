@@ -1,6 +1,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
+  mode: "jit",
 	purge: [
 	  "./src/**/*.tsx"
   ],
@@ -36,6 +37,6 @@ module.exports = {
     },
   },
 	plugins: [
-	  require("tailwindcss-children")
+	  // require("tailwindcss-children")
   ],
 }

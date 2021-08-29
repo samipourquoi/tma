@@ -1,5 +1,8 @@
 import { createContext } from "react";
 import { VERSIONS } from "./constants";
+import { ArchiveAttributes } from "@tma/api/attributes";
+
+type UseState<T> = [T, (state: T) => void];
 
 export const DarkModeCtx = createContext<{
   readonly dark: boolean,
@@ -11,8 +14,17 @@ export const DarkModeCtx = createContext<{
 });
 
 export const SearchCtx = createContext<Readonly<{
-  search: [string, (str: string) => void],
-  tags: [Set<string>, (set: Set<string>) => void],
-  page: [number, (number: number) => void],
-  version: [string, (version: string) => void]
+  search: UseState<string>,
+  tags: UseState<Set<string>>,
+  page: UseState<number>,
+  version: UseState<string>
 }>>(null as any);
+
+export const EditorCtx = createContext<{
+  editing: boolean,
+  files?: UseState<Set<File>>
+}>(null as any);
+
+export const ArchiveViewCtx = createContext<
+  ArchiveAttributes | null
+>(null);

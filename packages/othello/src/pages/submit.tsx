@@ -4,7 +4,7 @@ import { createArchive, getUser } from "../api";
 import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
 import { DefaultLayout } from "../layout/default-layout";
-import { Editor3 } from "../components/editor";
+import { Editor } from "../components/editor";
 import Head from "next/head";
 import Router from "next/router";
 import { getTitleUriFromArchive } from "./archive/[id]";
@@ -32,7 +32,7 @@ export default function SubmitPage({}: SubmitPageProps) {
       <h1 className="text-6xl">Submit</h1>
 
       <div className="mt-8">
-        <Editor3 onSubmit={(title, readme, tags) => {
+        <Editor onSubmit={(title, readme, tags) => {
           createArchive(title, readme, tags)
             .then(archive => Router.push(`/archive/${getTitleUriFromArchive(archive)}`));
         }}/>

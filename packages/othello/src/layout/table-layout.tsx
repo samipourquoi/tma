@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { NewHeader } from "../components/header";
+import { Header } from "../components/header";
 import Scrollbar from "react-smooth-scrollbar";
 import { PageSelector } from "../components/widgets/page-selector";
 import { VersionSelector } from "../components/widgets/version-selector";
@@ -11,7 +11,7 @@ export const TableLayout: React.FC<{
   rows: ApiResult<"/archive/:id">[]
 }> = ({ rows, children }) => (
   <div className="flex bg-contrast-300 text-contrast-800">
-    <NewHeader/>
+    <Header/>
 
     <div className="w-full">
       <Scrollbar>

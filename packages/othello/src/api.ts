@@ -1,6 +1,7 @@
 import { API, ApiQuery, ApiResponse, ApiResult, TagType } from "@tma/api";
 import axios from "axios";
 import { RawDraftContentState } from "draft-js";
+import { ArchiveAttributes } from "@tma/api/attributes";
 
 export const ip = (() => {
   if (process.env.DOCKER)
@@ -125,6 +126,9 @@ export const getFile = async (id: number, path: string): Promise<ApiResult<"/arc
       throw notFoundError;
   }
 };
+
+export const getFileUri = (archive: Pick<ArchiveAttributes, "id" | "commit">, path: string) =>
+  `/api/archive/${archive.id}/store?path=${encodeURIComponent(path)}&commit=${encodeURIComponent(archive.commit)}`;
 
 export const getUser = async (headers: Record<string, string> = {}): Promise<ApiResult<"/auth/user"> | null> => {
   const res = await fetcher("/auth/user", { headers });

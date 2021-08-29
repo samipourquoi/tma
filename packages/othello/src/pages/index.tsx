@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { NewHeader } from "../components/header";
+import { Header } from "../components/header";
 import { Table } from "../components/table";
 import { GetServerSideProps } from "next";
 import { getArchives, getUser } from "../api";

@@ -9,7 +9,7 @@ import { useUser } from "../hooks/use-user";
 import Router from "next/router";
 import { SearchCtx } from "../contexts";
 
-export const NewHeader: React.FC = () => {
+export const Header: React.FC = () => {
   const [isForcedVisible, setForcedVisible] = useState(false);
 
   return (

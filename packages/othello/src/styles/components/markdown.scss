@@ -23,7 +23,7 @@
     @apply text-red-400 bg-gray-50 p-4 block rounded-xl;
   }
 
-  a {
+  a:not(.no-markdown) {
     @apply hover:underline text-blue-700;
   }
 
