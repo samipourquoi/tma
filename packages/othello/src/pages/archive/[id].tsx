@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import { GetServerSideProps } from "next";
 import { getArchive, getFile, getUser, likeArchive } from "../../api";
 import Link from "next/link";
-import { FileBrowser } from "../../components/file-browser";
 import { Tag } from "../../components/tag";
 import Head from "next/head";
 import { LikeButton } from "../../components/like-button";
@@ -55,35 +54,35 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
             </a>
           </Link>
 
-          <span className="mb-1.5 break-all">
-          {archive.data.title}
-        </span>
+          <div className="flex items-center">
+            <span className="mb-1.5 break-all">
+              {archive.data.title}
+            </span>
 
-          <ul className="mb-2 block ml-2.5">
-            {archive.data.tags.map(tag =>
-                <span className="mr-1.5">
+            <ul className="mb-2 block ml-2.5">
+              {archive.data.tags.map(tag =>
+                  <span className="mr-1.5">
               <Tag type={tag} key={tag}/>
             </span>
-            )}
-          </ul>
+              )}
+            </ul>
+          </div>
+
+          <div className="ml-auto">
+            <LikeButton likes={archive.data.likes} onLike={() => {
+              mutation.mutate(id);
+            }}/>
+          </div>
         </h1>
 
         <div className="block xl:flex">
           <section className="w-full xl:w-4/5 xl:pr-10">
             <div className="max-w-prose">
-              {/*<Preview content={readme.data}/>*/}
               <ReadonlyEditor state={editor}/>
             </div>
           </section>
 
           <section className="w-full xl:w-2/5 2xl:w-1/5">
-            <div className="mb-1">
-              <LikeButton likes={archive.data.likes} onLike={() => {
-                mutation.mutate(id);
-              }}/>
-            </div>
-
-            <FileBrowser archive={archive.data}/>
           </section>
         </div>
       </ArchiveViewCtx.Provider>
