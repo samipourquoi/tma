@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   AtomicBlockUtils,
   ContentBlock,
@@ -19,7 +19,7 @@ import { TagsSelector2 } from "../tag";
 import * as Icons from "phosphor-react";
 import { IconProps } from "phosphor-react";
 import Popup from "reactjs-popup";
-import { FileDownload, FilePopupCreation, SchematicDownload } from "./file";
+import { EditorFileEntry, FileDownload, FilePopupCreation, SchematicDownload } from "./file";
 import { EditorCtx } from "../../contexts";
 
 const DraftEditor: React.FC<PluginEditorProps> = dynamic(
@@ -147,7 +147,7 @@ const Toolbar: React.FC<{
   setState: (state: EditorState) => void
 }> = ({ state, setState }) => {
   const [filePopup, setFilePopup] = useState<"file" | "schematic" | null>(null);
-  const { files: [files, setFiles] = [] } = useContext(EditorCtx);
+  const { files: [files, setFiles] } = useContext(EditorCtx);
 
   // https://github.com/webdeveloperpr/draft-js-custom-styles/issues/3
   const toggleStyle = (style: string) => (toggle: boolean) => {
@@ -190,7 +190,7 @@ const Toolbar: React.FC<{
           <FilePopupCreation
             onClose={() => setFilePopup(null)}
             onCreation={file => {
-              setFiles!(new Set([ ...files!, file ]));
+              setFiles(new Set([ ...files, { added: true, file }]));
 
               // https://github.com/facebook/draft-js/issues/543
               const content = state.getCurrentContent();
@@ -216,26 +216,47 @@ export const Editor: React.FC<{
   onSubmit: (
     title: string,
     readme: RawDraftContentState,
-    tags: TagType[]
+    tags: TagType[],
+    deletedFiles: string[],
+    addedFiles: File[]
   ) => void
 }> = ({ onSubmit }) => {
   const [tags, setTags] = useState<Set<TagType>>(new Set);
   const [state, setState] = useState(() => EditorState.createEmpty());
-  const [files, setFiles] = useState<Set<File>>(new Set);
   const title = useMemo(() => {
     const content = state.getCurrentContent();
     const block = content.getFirstBlock();
     return block.getText();
   }, [state]);
+  const [initialFiles] = useState<Set<EditorFileEntry>>(() =>
+    new Set(
+      state.getCurrentContent()
+        .getAllEntities()
+        .filter(entity => entity?.getType() == "FILE-DOWNLOAD:FILE")
+        .map(entity => ({ added: false, file: entity!.getData().name as string }) as EditorFileEntry)
+        .toArray()
+    )
+  );
+  const [files, setFiles] = useState<Set<EditorFileEntry>>(initialFiles);
 
   const onChange = (newState: EditorState) => {
     newState = enforceTitle(newState);
     setState(newState);
   }
 
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
   return (
-    <EditorCtx.Provider value={{ editing: true, files: [files, setFiles] }}>
+    <EditorCtx.Provider value={{ status: "creating", files: [files, setFiles] }}>
       <div>
+        {process.env.NODE_ENV == "development" ?
+          <p>WARNING: make sure to reload the page and to not let it auto-refresh if
+            if you are uploading a file. It will corrupt some state due to how NextJS
+            handles auto-refreshing.<br/>
+            PS: this message only appears in a dev environment.</p> : null}
+
         <TagsSelector2 tags={tags} setTags={setTags}/>
 
         <div className="mt-4 px-4 pt-2 markdown editor color-contrast-700">
@@ -251,15 +272,24 @@ export const Editor: React.FC<{
           />
         </div>
 
-        <button onClick={() => {
-          console.log(files);
+        <button onClick={async () => {
+          if (!title)
+            return;
 
-          if (title)
-            onSubmit(
-              title,
-              convertToRaw(state.getCurrentContent()),
-              Array.from(tags)
-            )
+          const deleted = Array.from(initialFiles)
+            .filter(f => !f.added && !files.has(f))
+            .map(f => f.file as string);
+          const added = Array.from(files)
+            .filter(f => f.added)
+            .map(f => f.file as File);
+
+          onSubmit(
+            title,
+            convertToRaw(state.getCurrentContent()),
+            Array.from(tags),
+            deleted,
+            added
+          );
         }} className={`bg-green-400 ${title ? "hover:bg-green-300" : "bg-green-200 cursor-not-allowed"} py-1.5 
           px-3 rounded-lg text-contrast-300`}
         >
@@ -273,10 +303,12 @@ export const Editor: React.FC<{
 export const ReadonlyEditor: React.FC<{
   state: EditorState
 }> = ({ state }) => {
+  const [files, setFiles] = useState<Set<EditorFileEntry>>(new Set);
+
   if (!state) return null;
 
   return (
-    <EditorCtx.Provider value={{ editing: false }}>
+    <EditorCtx.Provider value={{ status: "viewing", files: [files, setFiles] }}>
       <div className="mt-4 px-4 pt-2 markdown editor color-contrast-700">
         <DraftEditor
           editorState={state}

@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { VERSIONS } from "./constants";
 import { ArchiveAttributes } from "@tma/api/attributes";
+import { EditorFileEntry } from "./components/editor/file";
 
 type UseState<T> = [T, (state: T) => void];
 
@@ -21,8 +22,8 @@ export const SearchCtx = createContext<Readonly<{
 }>>(null as any);
 
 export const EditorCtx = createContext<{
-  editing: boolean,
-  files?: UseState<Set<File>>
+  status: "creating" | "editing" | "viewing",
+  files: UseState<Set<EditorFileEntry>>
 }>(null as any);
 
 export const ArchiveViewCtx = createContext<

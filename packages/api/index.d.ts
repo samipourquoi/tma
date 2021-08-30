@@ -70,6 +70,16 @@ export interface API {
       params: { id: number },
       query: { path: string, commit?: string }
       response: [TResponse.Ok<string[] | string>, TResponse.NotFound, TResponse.BadRequest<string>]
+    },
+    POST: {
+      params: { id: number },
+      body: FormData,
+      response: [TResponse.Created, TResponse.Unauthorized, TResponse.BadRequest<string>]
+    },
+    DELETE: {
+      params: { id: number },
+      body: { paths: string[] },
+      response: [TResponse.Ok, TResponse.Unauthorized, TResponse.BadRequest<string>]
     }
   },
   "/archive/:id/like": {

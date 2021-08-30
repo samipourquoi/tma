@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
-import { createArchive, getUser } from "../api";
+import { createArchive, getUser, uploadFiles } from "../api";
 import { dehydrate } from "react-query/hydration";
 import { PageProps } from "./_app";
 import { DefaultLayout } from "../layout/default-layout";
@@ -32,9 +32,11 @@ export default function SubmitPage({}: SubmitPageProps) {
       <h1 className="text-6xl">Submit</h1>
 
       <div className="mt-8">
-        <Editor onSubmit={(title, readme, tags) => {
-          createArchive(title, readme, tags)
-            .then(archive => Router.push(`/archive/${getTitleUriFromArchive(archive)}`));
+        <Editor onSubmit={async (title, readme, tags, deleted, added) => {
+          console.log(added, deleted);
+          const archive = await createArchive(title, readme, tags);
+          await uploadFiles(archive.baseID, added);
+          await Router.push(`/archive/${getTitleUriFromArchive(archive)}`)
         }}/>
       </div>
     </DefaultLayout>

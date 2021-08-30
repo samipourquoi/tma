@@ -3,19 +3,22 @@ import * as Icons from "phosphor-react";
 import { ArchiveViewCtx, EditorCtx } from "../../contexts";
 import { getFileUri } from "../../api";
 
+export type EditorFileEntry =
+  | { added: true, file: File }
+  | { added: false, file: string };
+
 export const FileDownload: React.FC<{
   name: string
 }> = ({ name }) => {
-  const { editing } = useContext(EditorCtx);
+  const { status } = useContext(EditorCtx);
   const archive = useContext(ArchiveViewCtx);
 
   const OptionalLink: React.FC = ({ children }) =>
-    !editing && archive ? (
-      <a className="no-markdown" download href={getFileUri(archive, name)}>
+    status == "viewing" && archive ? (
+      <a className="no-markdown" download={name} href={getFileUri(archive, name)}>
         {children}
       </a>
     ) : <>{children}</>;
-
 
   return (
     <OptionalLink>
@@ -82,7 +85,11 @@ export const FilePopupCreation: React.FC<{
         <div className="mt-4">
           <button className="click-button px-2 py-1 rounded" onClick={() => {
             onClose();
-            onCreation({ ...file, name: fileName });
+            // onCreation({ ...file, name: fileName });
+            onCreation(Object.defineProperty(file, "name", {
+              writable: true,
+              value: fileName
+            }));
           }}>
             Upload
           </button>

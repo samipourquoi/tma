@@ -3,14 +3,15 @@ import { User } from "../models/user-model";
 import * as fs from "fs";
 import { Op, WhereOptions } from "sequelize";
 import { Like } from "../models/like-model";
-import { Parser, Response, route } from "typera-express";
+import { Middleware, Parser, Response, route } from "typera-express";
 import * as t from "io-ts"
 import { ArchiveAttributes, FullArchiveAttributes } from "@tma/api/attributes";
-import { authed } from "../middlewares";
+import { authed, ownsArchive } from "../middlewares";
 import { ApiRoute } from "./controllers";
 import { NumberFromString } from "io-ts-types/lib/NumberFromString";
 import { SearchSystem } from "../search-system";
 import simpleGit from "simple-git";
+import * as multer from "multer";
 
 export module ArchiveController {
   export const getArchives: ApiRoute<"/archive"> = route
@@ -23,38 +24,36 @@ export module ArchiveController {
     })))
     .handler(async request => {
       const { page = 1, version = "any", tags = "", search } = request.query;
-
+      const ids = search ? SearchSystem.search(search) : void 0;
       const where: WhereOptions<ArchiveAttributes> = {};
       if (version != "any")
-        where.versions = { [Op.contains]: String(version) }
+        where.versions = { [Op.contains]: String(version) };
       if (tags)
-        where.tags = { [Op.contains]: tags.split(",") }
+        where.tags = { [Op.contains]: tags.split(",") };
+      if (ids)
+        where.id = { [Op.in]: ids };
 
-      let archives: Archive[];
-      if (search) {
-        const ids = SearchSystem.search(search);
-        archives = await Archive.findAll({
+      const bases = await ArchiveBase.findAll({
+        limit: 30,
+        offset: (+page - 1) * 30,
+        where,
+        include: {
+          model: Archive,
           include: [
             { model: User, attributes: ["name"] },
             Like,
             ArchiveBase
-          ],
-          where
-        }).then(archives => ids
-          .map(id => archives.find(archive => archive.base.id == id)!)
-          .slice((+page - 1) * 30, +page * 30));
-      } else {
-        archives = await Archive.findAll({
-          limit: 30,
-          offset: (+page - 1) * 30,
-          include: [
-            { model: User, attributes: ["name"] },
-            Like,
-            ArchiveBase
-          ],
-          where
-        });
-      }
+          ]
+        }
+      });
+
+      const archives = await Promise.all(
+        bases.map(base =>
+          base.archives.find(async archive =>
+            archive.commit == await base.getLatestCommit()
+          )
+        )
+      ).then(archives => archives.filter(archive => archive) as Archive[]);
 
       return Response.ok({
         archives,
@@ -69,13 +68,16 @@ export module ArchiveController {
     })))
     .handler(async request => {
       const { id } = request.routeParams;
-      const { commit } = request.query;
+      const { commit = await ArchiveBase.getLatestCommit(id) } = request.query;
       const archive = await Archive.findOne({
-        where: commit ? { commit } : {},
+        where: {
+          commit,
+          baseID: id
+        },
         include: [
           { model: User, attributes: ["name"] },
           Like,
-          { model: ArchiveBase, where: { id } }
+          { model: ArchiveBase }
         ]
       });
 
@@ -132,7 +134,7 @@ export module ArchiveController {
       return Response.created(archive);
     });
 
-  export const getFile: ApiRoute<"/archive/:id/store"> = route
+  export const getFiles: ApiRoute<"/archive/:id/store"> = route
     .get("/:id(int)/store")
     .use(Parser.query(t.type({
       path: t.string,
@@ -154,6 +156,54 @@ export module ArchiveController {
       } catch (e) {
         return Response.notFound();
       }
+    });
+
+  const upload = multer({ dest: `../../tmp` });
+  export const createFiles: ApiRoute<"/archive/:id/store", "POST"> = route
+    .post("/:id(int)/store")
+    .use(authed)
+    .use(ownsArchive)
+    .use(Middleware.wrapNative(
+      upload.array("files"),
+      request => ({ files: request.req.files as Express.Multer.File[] })
+    ))
+    .handler(async request => {
+      const { id } = request.routeParams;
+      for (const file of request.files) {
+        if ([".git", "readme.json"].includes(file.originalname))
+          continue;
+        fs.renameSync(file.path, `../../store/${id}/${file.originalname}`);
+      }
+      const archive = await Archive.findOne({
+        where: {
+          baseID: id
+        }
+      });
+      await archive!.commitFiles(`upload files: ${request.files.map(f => f.originalname).join(", ")}`);
+      return Response.created();
+    });
+
+  export const deleteFiles: ApiRoute<"/archive/:id/store", "DELETE"> = route
+    .delete("/:id(int)/store")
+    .use(authed)
+    .use(ownsArchive)
+    .use(Parser.body(t.type({
+      paths: t.array(t.string)
+    })))
+    .handler(async request => {
+      const { id } = request.routeParams;
+      for (const path of request.body.paths) {
+        if ([".git", "readme.json"].includes(path))
+          continue;
+        fs.unlinkSync(`../../store/${id}/${path}`);
+      }
+      const archive = await Archive.findOne({
+        where: {
+          baseID: id
+        }
+      });
+      await archive!.commitFiles(`delete files: ${request.body.paths.join(", ")}`);
+      return Response.ok();
     });
 
   export const like: ApiRoute<"/archive/:id/like", "POST"> = route

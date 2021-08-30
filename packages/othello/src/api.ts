@@ -111,7 +111,7 @@ export const likeArchive = async (id: number): Promise<ApiResult<"/archive/:id/l
   }
 };
 
-export const getFile = async (id: number, path: string): Promise<ApiResult<"/archive/:id/store">> => {
+export const getFile = async (id: number, path: string = "/"): Promise<ApiResult<"/archive/:id/store">> => {
   const res = await fetcher("/archive/:id/store", { params: { id }, query: { path }, text: true });
   switch (res.status) {
     case 200:
@@ -127,8 +127,43 @@ export const getFile = async (id: number, path: string): Promise<ApiResult<"/arc
   }
 };
 
-export const getFileUri = (archive: Pick<ArchiveAttributes, "id" | "commit">, path: string) =>
-  `/api/archive/${archive.id}/store?path=${encodeURIComponent(path)}&commit=${encodeURIComponent(archive.commit)}`;
+export const getFileUri = (archive: Pick<ArchiveAttributes, "baseID" | "commit">, path: string) =>
+  `/api/archive/${archive.baseID}/store?path=${encodeURIComponent(path)}&commit=${encodeURIComponent(archive.commit)}`;
+
+export const uploadFiles = async (id: number, files: File[]): Promise<ApiResult<"/archive/:id/store", "POST">> => {
+  const form = new FormData();
+  for (const file of files)
+    form.append("files", file);
+  const res = await fetcher("/archive/:id/store", {
+    params: { id },
+    method: "POST",
+    data: form,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+  switch (res.status) {
+    case 201:
+      return res.body;
+    case 401:
+      throw unauthorized;
+    default:
+      console.warn(res);
+      throw defaultError;
+  }
+};
+
+export const deleteFiles = async (id: number, files: string[]): Promise<ApiResult<"/archive/:id/store", "DELETE">> => {
+  const res = await fetcher("/archive/:id/store", { params: { id }, method: "DELETE", data: { paths: files } });
+  switch (res.status) {
+    case 200:
+      return res.body;
+    case 401:
+      throw unauthorized;
+    default:
+      throw defaultError;
+  }
+}
 
 export const getUser = async (headers: Record<string, string> = {}): Promise<ApiResult<"/auth/user"> | null> => {
   const res = await fetcher("/auth/user", { headers });

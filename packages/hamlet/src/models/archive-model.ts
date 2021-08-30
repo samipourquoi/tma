@@ -72,4 +72,18 @@ export class Archive
 
   @HasMany(() => Comment)
   comments!: Comment;
+
+  async commitFiles(message: string): Promise<Archive> {
+    const git = simpleGit(`../../store/${this.baseID}`);
+    await git.add(".");
+    const { commit } = await git.commit(message);
+    return await Archive.create({
+      title: this.title,
+      tags: this.tags,
+      versions: this.versions,
+      baseID: this.baseID,
+      authorID: this.authorID,
+      commit
+    });
+  }
 }
