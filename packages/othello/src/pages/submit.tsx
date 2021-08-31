@@ -31,7 +31,6 @@ export default function SubmitPage({}: SubmitPageProps) {
 
       <div className="mt-8">
         <Editor onSubmit={async (title, readme, tags, deleted, added) => {
-          console.log(added, deleted);
           const archive = await createArchive(title, readme, tags);
           await uploadFiles(archive.baseID, added);
           await Router.push(`/archive/${getTitleUriFromArchive(archive)}`)

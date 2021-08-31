@@ -9,20 +9,27 @@ export interface TagProps {
   onDelete?(): void;
 }
 
+const tagToIndex = Object.fromEntries(
+  Object.entries(tagsSpec)
+    .map(([group, tags]) => tags as string[])
+    .flat()
+    .map((tag, i) => [tag, i])
+);
+
 const style = (type: TagType): React.CSSProperties => {
-  for (const [group, { color, tags }] of Object.entries(tagsSpec)) {
-    const style: React.CSSProperties = {
-      background: `${color} `,
+  const index: number | null = tagToIndex[type] ?? null;
+  if (index == null)
+    return {
+      borderWidth: "1px",
+      borderColor: "gray",
+      backgroundColor: "rgba(212, 212, 212, 1)"
     }
 
-    if (tags.includes(type))
-      return style;
-  }
-
+  // 360 goes back to red, so we stop at purple which is at 310.
+  const perc = index * 310 / Object.entries(tagToIndex).length;
+  console.log(perc);
   return {
-    borderWidth: "1px",
-    borderColor: "gray",
-    backgroundColor: "rgba(212, 212, 212, 1)"
+    background: `hsl(${perc}, 50%, 50%)`
   }
 }
 
@@ -79,8 +86,8 @@ export const TagsSelector2: React.FC<{
   return (
     <div className="">
       <ul className="tags-selector2">
-        {Object.entries(tagsSpec).map(([group, { color, tags: tags2 }]) =>
-          tags2.map(tag => (
+        {Object.entries(tagsSpec).map(([group, tags2]) =>
+          tags2.map((tag: string) => (
             <li
               className={`cursor-pointer inline-block m-0.5 ${tags.has(tag) ? "" : "opacity-[0.45]"} transition-opacity`}
               onClick={() => {
