@@ -59,7 +59,7 @@ export const NewHeader: React.FC = () => {
       <header className="p-4 md:px-[10%] text-gray-800 border-b">
         <div className="mx-auto lg:max-w-[1200px] font-medium flex justify-between items-center">
           <Link href="/">
-            <a className="font-logo text-4xl">TMA</a>
+            <a className="font-logo text-4xl">tma</a>
           </Link>
 
           <nav className="flex justify-between items-center">

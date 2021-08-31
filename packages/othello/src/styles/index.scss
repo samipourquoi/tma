@@ -11,11 +11,14 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap");
-@import url("http://fonts.cdnfonts.com/css/arlon");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap");
+
+@font-face {
+  font-family: "Backflip";
+  src: url("/fonts/backflip.otf");
+}
 
 * {
   transition: color, background-color .2s ease;

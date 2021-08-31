@@ -32,7 +32,7 @@ module.exports = {
         }
       },
       fontFamily: {
-        "logo": ["Arlon", "sans-serif"],
+        "logo": ["Backflip", "sans-serif"],
         "sans": ["Rubik", "sans-serif"],
         "serif": ["Lora", "serif"],
         "helvetica": ["Helvetica", "sans-serif"],
