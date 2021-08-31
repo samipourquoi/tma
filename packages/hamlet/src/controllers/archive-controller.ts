@@ -117,6 +117,8 @@ export module ArchiveController {
       fs.mkdirSync(path);
       const git = simpleGit(path);
       await git.init();
+      await git.addConfig("user.email", "auto@tmc-archive.org");
+      await git.addConfig("user.name", "auto");
       fs.writeFileSync(`${path}/readme.json`, JSON.stringify(readme));
       fs.writeFileSync(`${path}/tags.json`, JSON.stringify(tags));
       await git.add(".");
