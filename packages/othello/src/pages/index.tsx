@@ -41,7 +41,8 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
       <TableLayout title={
         <>
           <h1 className="text-6xl">Archive</h1>
-          <p className="mt-4">Save an archive by clicking on the heart icon</p>
+          <p className="mt-4">TMA is a place to archive Minecraft contraptions
+            for technical gameplay.</p>
         </>
       } archives={archives.data?.archives || []} total={archives.data?.total || 1}/>
     </>

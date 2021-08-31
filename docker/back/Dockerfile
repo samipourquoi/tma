@@ -2,6 +2,9 @@ FROM node:14-alpine
 
 WORKDIR /back
 
+RUN apk -U upgrade \
+  && apk add --no-cache git
+
 COPY ./packages/api/package.json    ./packages/api/package.json
 COPY ./packages/hamlet/package.json ./packages/hamlet/package.json
 COPY ./package.json ./yarn.lock     ./
