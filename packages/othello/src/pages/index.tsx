@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { Table } from "../components/table";
 import { GetServerSideProps } from "next";
@@ -33,26 +33,18 @@ export default function ArchivePage({ initialPage, initialVersion }: ArchivePage
     { keepPreviousData: true });
 
   return (
-    <TableLayout rows={archives.data?.archives || []}>
+    <>
       <Head>
         <title>TMA - Home</title>
       </Head>
 
-      <h1 className="text-6xl">Archive</h1>
-      <div className="flex md:items-center flex-col md:flex-row">
-        <p className="mt-8 font-light text-contrast-700">
-          TMA is a place to archive Minecraft contraptions for Technical gameplay.
-        </p>
-
-        <div className="
-          flex flex-wrap justify-center children:mb-2 md:children:mt-0 md:justify-start
-          md:flex-nowrap mt-4 md:mt-0 md:ml-auto children:mx-2
-        ">
-          <PageSelector pageAmount={archives.data?.total || 1} page={page} setPage={setPage}/>
-          <VersionSelector version={version} setVersion={setVersion}/>
-        </div>
-      </div>
-    </TableLayout>
+      <TableLayout title={
+        <>
+          <h1 className="text-6xl">Archive</h1>
+          <p className="mt-4">Save an archive by clicking on the heart icon</p>
+        </>
+      } archives={archives.data?.archives || []} total={archives.data?.total || 1}/>
+    </>
   );
 };
 

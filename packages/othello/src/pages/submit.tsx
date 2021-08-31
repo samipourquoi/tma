@@ -24,12 +24,10 @@ export default function SubmitPage({}: SubmitPageProps) {
   }, [user]);
 
   return (
-    <DefaultLayout>
+    <DefaultLayout title={<h1 className="text-6xl">Submit</h1>}>
       <Head>
         <title>TMA - Submit</title>
       </Head>
-
-      <h1 className="text-6xl">Submit</h1>
 
       <div className="mt-8">
         <Editor onSubmit={async (title, readme, tags, deleted, added) => {

@@ -47,7 +47,7 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
           <title>TMA - {archive.data.title}</title>
         </Head>
 
-        <h1 className="flex items-center uppercase">
+        <h1 className="flex items-center uppercase font-sans font-normal">
           <Link href="/">
             <a>
               <span className="material-icons mr-1">first_page</span>
@@ -75,16 +75,9 @@ export default function ArchiveView({ id }: ArchiveViewProps) {
           </div>
         </h1>
 
-        <div className="block xl:flex">
-          <section className="w-full xl:w-4/5 xl:pr-10">
-            <div className="max-w-prose">
-              <ReadonlyEditor state={editor}/>
-            </div>
-          </section>
-
-          <section className="w-full xl:w-2/5 2xl:w-1/5">
-          </section>
-        </div>
+        <section className="">
+          <ReadonlyEditor state={editor}/>
+        </section>
       </ArchiveViewCtx.Provider>
     </DefaultLayout>
   );

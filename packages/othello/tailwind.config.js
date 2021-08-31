@@ -23,11 +23,21 @@ module.exports = {
           "bedrock":       "#262626",
           "computational": "#fcac55",
           "other":         "#d5d9d5"
+        },
+        main: {
+          "green": "#8EC67B",
+          "beige": "#ECCFAA",
+          "dark-beige": "#D1B898",
+          "dark-green": "#0E2F16"
         }
       },
       fontFamily: {
         "logo": ["Arlon", "sans-serif"],
-        "sans": ["Rubik", "sans-serif"]
+        "sans": ["Rubik", "sans-serif"],
+        "serif": ["Lora", "serif"],
+        "helvetica": ["Helvetica", "sans-serif"],
+        "mono": ["Source Code Pro", "mono"]
+        // "sans": ["Arial"]
       }
     }
 	},

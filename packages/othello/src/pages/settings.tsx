@@ -24,9 +24,7 @@ export default function SettingsPage({}: SettingsPageProps) {
   }, [user]);
 
   return (
-    <DefaultLayout>
-      <h1 className="text-6xl">Settings</h1>
-
+    <DefaultLayout title={<h1 className="text-6xl">Settings</h1>}>
       <section className="text-contrast-700 mt-5">
         <h2 className="text-3xl my-3 text-contrast-800">FTP</h2>
         <p className="font-light text-base">
@@ -36,9 +34,11 @@ export default function SettingsPage({}: SettingsPageProps) {
           what you will enter in this section.</p>
 
         <label className="m-2">
-          <h3 className="">FTP Password</h3>
-          <input className="mt-2 input-button" type="text" value={password}
-                 onChange={ev => setPassword(ev.target.value)}/>
+          <h4 className="">FTP Password</h4>
+          <input
+            className="mt-2 p-3 bg-contrast-400 rounded outline-none font-helvetica"
+            type="text" value={password}
+            onChange={ev => setPassword(ev.target.value)}/>
         </label>
       </section>
 
@@ -49,10 +49,7 @@ export default function SettingsPage({}: SettingsPageProps) {
           discord server. In the mean time, just ask <pre className="inline text-contrast-700">samipourquoi#9267</pre>.</p>
       </section>
 
-      <button type="submit" className="
-        click-button px-4 py-2 rounded-xl
-        transition-all duration-200 mt-8
-      " onClick={() => {
+      <button type="submit" className="click-button mt-8" onClick={() => {
         ftpPasswordMutation.mutate(password);
         setPassword("");
       }}>

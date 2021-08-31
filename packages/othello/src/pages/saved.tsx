@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { PageSelector } from "../components/widgets/page-selector";
 import { useUser } from "../hooks/use-user";
 import Router from "next/router";
+import Head from "next/head";
 
 interface SavedPageProps extends PageProps {
 }
@@ -24,13 +25,19 @@ export default function SavedPage({}: SavedPageProps) {
   }, [user]);
 
   return (
-    <TableLayout rows={saved.data?.archives || []}>
-      <h1 className="text-6xl">Saved</h1>
+    <TableLayout
+      archives={saved.data?.archives || []}
+      total={saved.data?.total || 1}
+      title={<>
+        <Head>
+          <title>TMA - Saved</title>
+        </Head>
 
-      <div className="flex justify-end mt-2">
-        <PageSelector pageAmount={saved.data?.total || 1} page={page} setPage={setPage}/>
-      </div>
-    </TableLayout>
+        <h1 className="text-6xl">Saved</h1>
+        <p className="mt-4">Click on the heart
+          when viewing an archive to save it and find it back here.</p>
+      </>}
+    />
   );
 }
 

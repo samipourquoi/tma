@@ -290,8 +290,7 @@ export const Editor: React.FC<{
             deleted,
             added
           );
-        }} className={`bg-green-400 ${title ? "hover:bg-green-300" : "bg-green-200 cursor-not-allowed"} py-1.5 
-          px-3 rounded-lg text-contrast-300`}
+        }} className={`click-button ${!title ? "bg-green-200 cursor-not-allowed" : ""}`}
         >
           Archive
         </button>
@@ -309,7 +308,7 @@ export const ReadonlyEditor: React.FC<{
 
   return (
     <EditorCtx.Provider value={{ status: "viewing", files: [files, setFiles] }}>
-      <div className="mt-4 px-4 pt-2 markdown editor color-contrast-700">
+      <div className="pt-2 markdown editor color-contrast-700">
         <DraftEditor
           editorState={state}
           plugins={plugins}

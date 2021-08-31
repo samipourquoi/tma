@@ -13,7 +13,7 @@
     h#{$i} {
       $size: 1 + $step * (7 - $i);
       font-size: #{$size}em;
-      line-height: 1.2em;
+      line-height: 1.6em;
 
       @apply mb-2 text-contrast-800;
     }

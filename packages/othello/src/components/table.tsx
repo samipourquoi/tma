@@ -3,10 +3,10 @@ import { Tag } from "./tag";
 import Link from "next/link";
 import { getTitleUriFromArchive } from "../pages/archive/[id]";
 import { ApiResult } from "@tma/api";
-import { Attributes } from "@tma/api/attributes";
+import { ArchiveAttributes, Attributes, FullArchiveAttributes } from "@tma/api/attributes";
 
 export const Table: React.FC<{
-  rows: ApiResult<"/archive/:id">[]
+  rows: FullArchiveAttributes[]
 }> = ({ rows }) => {
   const shownRows = Array(30)
     .fill(null)
@@ -31,7 +31,7 @@ export const Table: React.FC<{
 }
 
 const Row: React.FC<{
-  row: ApiResult<"/archive/:id"> | null
+  row: FullArchiveAttributes | null
 }> = ({ row }) => (
   <tr className="table-row odd:bg-contrast-400 dark:odd:bg-gray-800 even:bg-contrast-300">
     <td className="text-center">
